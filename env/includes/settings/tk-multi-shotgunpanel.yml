@@ -17,6 +17,7 @@ includes:
 
 # generic
 settings.tk-multi-shotgunpanel:
+  actions_hook: "{self}/general_actions.py:{config}/tk-multi-shotgunpanel/rv_actions.py"
   action_mappings:
     PublishedFile:
     - actions: [publish_clipboard]
@@ -104,7 +105,7 @@ settings.tk-multi-shotgunpanel.maya:
     - actions: [assign_task, task_to_ip]
       filters: {}
     Version:
-    - actions: [quicktime_clipboard, sequence_clipboard, add_to_playlist,play_in_rv]
+    - actions: [quicktime_clipboard, sequence_clipboard, add_to_playlist]
       filters: {}
   location: "@apps.tk-multi-shotgunpanel.location"
 
