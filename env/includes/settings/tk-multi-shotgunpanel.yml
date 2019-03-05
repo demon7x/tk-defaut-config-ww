@@ -82,7 +82,7 @@ settings.tk-multi-shotgunpanel.houdini:
 
 # maya
 settings.tk-multi-shotgunpanel.maya:
-  actions_hook: "{self}/tk-maya_actions.py:{config}/panel/maya_actions.py"
+  actions_hook: "{self}/tk-maya_actions.py:{config}/tk-multi-shotgunpanel/rv_actions.py"
   action_mappings:
     PublishedFile:
     - actions: [reference, import]
@@ -105,12 +105,13 @@ settings.tk-multi-shotgunpanel.maya:
     - actions: [assign_task, task_to_ip]
       filters: {}
     Version:
-    - actions: [quicktime_clipboard, sequence_clipboard, add_to_playlist]
+    - actions: [play_in_rv,quicktime_clipboard, sequence_clipboard, add_to_playlist]
       filters: {}
   location: "@apps.tk-multi-shotgunpanel.location"
 
 # nuke
 settings.tk-multi-shotgunpanel.nuke:
+  actions_hook: "{self}/tk-nuke_actions.py:{config}/tk-multi-shotgunpanel/rv_actions.py"
   action_mappings:
     PublishedFile:
     - actions: [read_node]
@@ -139,7 +140,7 @@ settings.tk-multi-shotgunpanel.nuke:
     - actions: [assign_task, task_to_ip]
       filters: {}
     Version:
-    - actions: [quicktime_clipboard, sequence_clipboard, add_to_playlist]
+    - actions: [play_in_rv,quicktime_clipboard, sequence_clipboard, add_to_playlist]
       filters: {}
   location: "@apps.tk-multi-shotgunpanel.location"
 
