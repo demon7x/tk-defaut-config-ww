@@ -34,9 +34,9 @@ ENGINES = {
 
 
 REZ_SETTINGS = {
-    'maya-2017':('maya-2017','ww_maya_shelf','nodeAuth','golaem','fracture ,"shapes"'),
+    'maya-2017':('maya-2017','ww_maya_shelf','nodeAuth','golaem','fracture' ,"shapes","ScenegraphXML"),
     'maya-2018':('maya-2018','ww_maya_shelf','nodeAuth',),
-    'maya-2019':('maya-2019','ww_maya_shelf',"usd","shapes"),
+    'maya-2019':('maya-2019','ww_maya_shelf',"usd","shapes","ScenegraphXML","nodeAuth"),
     'nuke-10.0v5':('nuke-10.0.5',),
     'nuke-11.2v5':('nuke-11.2.5',),
     'katana-2.6v4':('katana-2.6.4',"renderman-21.8","usd"),
