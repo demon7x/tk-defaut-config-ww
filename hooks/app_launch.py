@@ -39,7 +39,7 @@ REZ_SETTINGS = {
     'maya-2019':('maya-2019','ww_maya_shelf',"usd","shapes","ScenegraphXML","nodeAuth"),
     'nuke-10.0v5':('nuke-10.0.5',),
     'nuke-11.2v5':('nuke-11.2.5',),
-    'katana-2.6v4':('katana-2.6.4',"renderman-21.8","usd"),
+    'katana-2.6v4':('katana-2.6.4',"renderman-21.8"),
     'katana-3.0v5':('katana-3.0.5','renderman-21.7'),
     'katana-3.1v2':('katana-3.1.2','renderman-22.4',"usd")
     }
@@ -87,7 +87,6 @@ class AppLaunch(tank.Hook):
             command = adapter.get_command(app_path, app_args)
             return_code = os.system(command)
             return {'command': command, 'return_code': return_code}
-        print packages
         context = resolved_context.ResolvedContext(packages)
         return adapter.execute(context, app_args,app_name)
         
