@@ -33,16 +33,6 @@ ENGINES = {
 }
 
 
-REZ_SETTINGS = {
-    'maya-2017':('maya-2017','ww_maya_shelf','nodeAuth','golaem','fracture' ,"shapes","ScenegraphXML"),
-    'maya-2018':('maya-2018','ww_maya_shelf','nodeAuth',),
-    'maya-2019':('maya-2019','ww_maya_shelf',"usd","shapes","ScenegraphXML","nodeAuth"),
-    'nuke-10.0v5':('nuke-10.0.5',),
-    'nuke-11.2v5':('nuke-11.2.5',),
-    'katana-2.6v4':('katana-2.6.4',"renderman-21.8"),
-    'katana-3.0v5':('katana-3.0.5','renderman-21.7'),
-    'katana-3.1v2':('katana-3.1.2','renderman-22.4',"usd")
-    }
 
 class AppLaunch(tank.Hook):
     """
@@ -62,6 +52,15 @@ class AppLaunch(tank.Hook):
 
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
+        app_name = ENGINES[engine_name]
+        sg = self.tank.shotgun
+        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])[0]['sg_rez']
+        
+        if packages:
+            packages = [ x for x in packages.split(",")] 
+        else:
+            packages = None
+        
 
         system = sys.platform
         
@@ -78,9 +77,6 @@ class AppLaunch(tank.Hook):
         
         from rez import resolved_context
         
-        app_name = ENGINES[engine_name]
-        
-        packages = REZ_SETTINGS[app_name+"-"+version]
 
         if not packages:
             self.logger.debug('No rez packages were found. The default boot, instead.')
