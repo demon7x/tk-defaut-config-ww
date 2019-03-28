@@ -112,8 +112,12 @@ settings.tk-multi-loader2.mari:
 
 # maya
 settings.tk-multi-loader2.maya:
+  actions_hook: '{self}/tk-maya_actions.py:{config}/tk-multi-loader2/tk-maya_actions.py'
   action_mappings:
-    Alembic Cache: [reference, import]
+    Alembic Cache: [reference, import,viewer]
+    Component USD: [usd_reference,viewer]
+    Assembly USD: [usd_reference, viewer]
+    Camera USD: [usd_reference, viewer]
     Image: [texture_node, image_plane]
     Maya Scene: [reference, import]
     Photoshop Image: [texture_node, image_plane]
@@ -280,9 +284,13 @@ settings.tk-multi-loader2.motionbuilder:
 
 # Katana
 settings.tk-multi-loader2.katana:
-  actions_hook: '{engine}/tk-multi-loader2/tk-katana_actions.py'
+  actions_hook: '{config}/tk-multi-loader2/tk-katana_actions.py'
   action_mappings:
-    Alembic Cache: [create_node_Alembic_In]
+    Alembic Cache: [create_node_Alembic_In,viewer]
+    Component USD: [create_pxrusd_in,viewer]
+    Camera USD: [create_pxrusd_in,viewer]
+    Assembly USD: [create_pxrusd_in,viewer]
+    scenegraphXML: [create_scenegraphXml]
     Image: [texture_node, image_plane]
     Katana Scene: [reference, import]
     Photoshop Image: [texture_node, image_plane]

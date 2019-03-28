@@ -130,6 +130,15 @@ keys:
         alias: extension
     tail:
         type: str
+    asset_namespace:
+        type: str
+
+    shot_file_extension:
+        type: str
+        choices:
+            usd: USD
+            abc: Alembic
+            ma: Maya Ascii
 
 #
 # The paths section contains all the the key locations where files are to be stored
@@ -246,7 +255,7 @@ paths:
     maya_shot_alembic:
         definition: '@shot_root/pub/almebic/{name}.abc'
     maya_shot_mov:
-        definition: '@shot_root/pub/preview/{Shot}_{Step}_v{version}.{timestamp}_{tail}.mov' 
+        definition: '@shot_root/pub/preview/{Shot}_{Step}_v{version}.{timestamp}_{tail}.mov'    
 
     #
     # Katana
@@ -403,7 +412,31 @@ paths:
 
     asset_alembic_cache:
         definition: '@asset_root/pub/caches/{Asset}.v{version}.abc'
+    
+    
+    #westworld cache type
 
+    asset_component_alembic:
+        definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version}.abc'
+    asset_cmpt_asmb_usd:
+        definition: '@asset_root/pub/caches/usd/{Asset}_{Step}_v{version}.usd'
+    asset_scenegraphXML:
+        definition: '@asset_root/pub/caches/xml/{Asset}_{Step}_v{version}.xml'
+
+
+    shot_component_alembic:
+        definition: '@shot_root/pub/caches/abc/{asset_namespace}_{Step}_v{version}.abc'
+    shot_cmpt_asmb_usd:
+        definition: '@shot_root/pub/caches/usd/{asset_namespace}_{Step}_v{version}.usd'
+    shot_usd:
+        definition: '@shot_root/pub/caches/usd/{Shot}_{Step}_v{version}.usd'
+    shot_scenegraphXML:
+        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}.xml'
+    shot_scenegraphXML:
+        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}.xml'
+    shot_camera_dummy:
+        definition: '@shot_root/pub/caches/{shot_file_extension}/{name}_{Step}_v{version}.{shot_file_extension}'
+    
 
     #
     # Photoshop

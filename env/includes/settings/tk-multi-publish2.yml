@@ -160,7 +160,7 @@ settings.tk-multi-publish2.mari.asset_step:
 
 # asset step
 settings.tk-multi-publish2.maya.asset_step:
-  collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  collector: "{self}/collector.py:{config}/tk-multi-publish2/maya/collector.py"
   collector_settings:
       Work Template: maya_asset_work
   publish_plugins:
@@ -178,15 +178,27 @@ settings.tk-multi-publish2.maya.asset_step:
     settings:
         Publish Template: maya_asset_publish
   - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_session_geometry.py"
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_alembic.py"
     settings:
-        Publish Template: asset_alembic_cache
+        Publish Template: asset_component_alembic
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_usd.py"
+    settings:
+        Publish Template: asset_cmpt_asmb_usd
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_scenegraphXML.py"
+    settings:
+        Publish Template: asset_scenegraphXML
+  - name: Publish to Shotgu
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_assembly_usd.py"
+    settings:
+        Publish Template: asset_cmpt_asmb_usd
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
 
 # shot step
 settings.tk-multi-publish2.maya.shot_step:
-  collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  collector: "{self}/collector.py:{config}/tk-multi-publish2/maya/collector.py"
   collector_settings:
       Work Template: maya_shot_work
   publish_plugins:
@@ -203,10 +215,34 @@ settings.tk-multi-publish2.maya.shot_step:
     hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_session.py"
     settings:
         Publish Template: maya_shot_publish
-  - name: Publish Alembic
-    hook: "{self}/publish_file.py:{config}/publish/maya/publish_alembic.py"
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_usd.py"
     settings:
-        Publish Template: maya_shot_alembic
+        Publish Template: shot_usd
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_scenegraphXML.py"
+    settings:
+        Publish Template: shot_scenegraphXML
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_component_usd.py"
+    settings:
+        Publish Template: shot_cmpt_asmb_usd
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_component_abc.py"
+    settings:
+        Publish Template: shot_component_alembic
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_camera_usd.py"
+    settings:
+        Publish Template: shot_camera_dummy
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_camera_abc.py"
+    settings:
+        Publish Template: shot_camera_dummy
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_camera_ma.py"
+    settings:
+        Publish Template: shot_camera_dummy
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
 
