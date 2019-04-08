@@ -200,9 +200,19 @@ apps.tk-iomanager.location:
 
 apps.tk-maya-makemov.location:
   name: tk-maya-makemov
-  type: git
-  path: https://github.com/demon7x/tk-maya-makemov.git
-  version: v0.0.1
+  type: dev
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-maya-makemov
+  #type: git
+  #path: https://github.com/demon7x/tk-maya-makemov.git
+  #version: v0.0.1
+
+apps.tk-katana-output.location:
+  name: tk-katana-output
+  type: dev
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-katana-output
+  #type: git
+  #path: https://github.com/demon7x/tk-maya-makemov.git
+  #version: v0.0.1
 
 ################################################################################
 # reference all of the common frameworks
