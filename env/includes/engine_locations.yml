@@ -82,4 +82,11 @@ engines.tk-shotgun.location:
 #Katana
 engines.tk-katana.location:
   type: path
+  #linux_path: /home/westworld/tk-katana
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-katana
+
+#3de
+engines.tk-3de4.location:
+  type: path
+  #linux_path: /home/westworld/tk-3de4
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-3de4

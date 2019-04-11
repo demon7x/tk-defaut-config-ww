@@ -27,6 +27,7 @@ includes:
 - ./includes/settings/tk-shell.yml
 - ./includes/settings/tk-shotgun.yml
 - ./includes/settings/tk-katana.yml
+- ./includes/settings/tk-3de4.yml
 
 ################################################################################
 # configuration for all engines to load in a project context
@@ -46,6 +47,7 @@ engines:
   tk-shell: "@settings.tk-shell.project"
   tk-shotgun: "@settings.tk-shotgun.project"
   tk-katana: "@settings.tk-katana.project"
+  tk-3de4: "@settings.tk-3de4.project"
 
 ################################################################################
 # reference all of the common frameworks

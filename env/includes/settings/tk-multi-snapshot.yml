@@ -135,3 +135,15 @@ settings.tk-multi-snapshot.katana.shot_step:
   location: "@apps.tk-multi-snapshot.location"
 
 ################################################################################
+
+# ---- 3DE4
+
+
+# shot step
+settings.tk-multi-snapshot.3de4.shot_step:
+  hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-3de4.py'
+  template_snapshot: 3de4_shot_snapshot
+  template_work: 3de4_shot_work
+  location: "@apps.tk-multi-snapshot.location"
+
+################################################################################

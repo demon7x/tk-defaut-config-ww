@@ -29,7 +29,8 @@ ENGINES = {
     'tk-maya': 'maya' ,
     'tk-nuke': 'nuke',
     'tk-katana': 'katana',
-    'tk-mari' : 'mari'
+    'tk-mari' : 'mari',
+    'tk-3de4' : '3de'
 }
 
 

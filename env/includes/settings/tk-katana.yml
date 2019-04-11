@@ -65,12 +65,14 @@ settings.tk-katana.project:
   apps:
     tk-multi-about:
       location: "@apps.tk-multi-about.location"
+    tk-multi-loader2: "@settings.tk-multi-loader2.katana"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.katana.project"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-katana-output: "@settings.tk-katana-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
+  - {app_instance: tk-multi-workfiles2, name: File Save...}
   debug_logging: false
   location: "@engines.tk-katana.location"
 

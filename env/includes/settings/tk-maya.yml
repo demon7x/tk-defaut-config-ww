@@ -70,6 +70,7 @@ settings.tk-maya.project:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
+  - {app_instance: tk-multi-workfiles2, name: File Save...}
   location: "@engines.tk-maya.location"
 
 # sequence
