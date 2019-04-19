@@ -31,12 +31,6 @@ engines.tk-flame.location:
   name: tk-flame
   version: v1.14.6
 
-# Houdini
-engines.tk-houdini.location:
-  type: app_store
-  name: tk-houdini
-  version: v1.5.6
-
 # Mari
 engines.tk-mari.location:
   type: app_store
@@ -47,7 +41,7 @@ engines.tk-mari.location:
 engines.tk-maya.location:
   type: app_store
   name: tk-maya
-  version: v0.9.6
+  version: v0.9.7
 
 # Motion Builder
 engines.tk-motionbuilder.location:
@@ -82,11 +76,15 @@ engines.tk-shotgun.location:
 #Katana
 engines.tk-katana.location:
   type: path
-  #linux_path: /home/westworld/tk-katana
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-katana
+
 
 #3de
 engines.tk-3de4.location:
   type: path
-  #linux_path: /home/westworld/tk-3de4
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-3de4
+
+# Houdini
+engines.tk-houdini.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-houdini
