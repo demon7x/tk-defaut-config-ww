@@ -77,14 +77,19 @@ engines.tk-shotgun.location:
 engines.tk-katana.location:
   type: path
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-katana
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-katana
 
 
 #3de
 engines.tk-3de4.location:
   type: path
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-3de4
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-3de4
 
 # Houdini
 engines.tk-houdini.location:
   type: path
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-houdini
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-houdini
+
+

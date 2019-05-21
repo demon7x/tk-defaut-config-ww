@@ -7,6 +7,6 @@ primary:
   linux_path: /show
   mac_path: null
   shotgun_storage_id: 3
-  windows_path: null
+  windows_path: \\10.0.0.148\show
 
 # End of file.

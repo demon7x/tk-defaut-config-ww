@@ -55,17 +55,11 @@ class AppLaunch(tank.Hook):
         """
         app_name = ENGINES[engine_name]
         sg = self.tank.shotgun
-        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])[0]['sg_rez']
-        
-        if packages:
-            packages = [ x for x in packages.split(",")] 
-        else:
-            packages = None
-        
-
         system = sys.platform
         
         adapter = get_adapter(platform.system())
+        
+        packages = get_rez_packages(sg,app_name,version,system)
 
         try:
             import rez as _
@@ -89,6 +83,19 @@ class AppLaunch(tank.Hook):
         
 
 
+def get_rez_packages(sg,app_name,version,system):
+    print system
+    
+    if system == "linux2":
+        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])[0]['sg_rez']
+    else:
+        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_win_rez'])[0]['sg_win_rez']
+    if packages:
+        packages = [ x for x in packages.split(",")] 
+    else:
+        packages = None
+        
+    return packages
 
 
 class BaseAdapter(object):

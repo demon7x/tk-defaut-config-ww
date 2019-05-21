@@ -19,6 +19,7 @@ includes:
 - ./tk-multi-screeningroom.yml
 - ./tk-multi-demo.yml
 - ./tk-iomanager.yml
+- ./tk-desktop-timecard.yml
 
 ################################################################################
 
@@ -43,6 +44,7 @@ settings.tk-desktop.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-demo: "@settings.tk-multi-demo.standalone"
     tk-iomanager: "@settings.tk-iomanager.standalone"
+    tk-iomanager: "@settings.tk-desktop-timecard.standalone"
   groups:
   - matches:
     - "Katana*"
