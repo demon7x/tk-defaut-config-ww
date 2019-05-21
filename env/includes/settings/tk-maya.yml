@@ -71,6 +71,7 @@ settings.tk-maya.project:
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
+  automatic_context_switch: false
   location: "@engines.tk-maya.location"
 
 # sequence
