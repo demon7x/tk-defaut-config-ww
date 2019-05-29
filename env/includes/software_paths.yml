@@ -15,7 +15,7 @@
 ################################################################################
 
 # Mari
-path.linux.mari: "/opt/Mari4.1v1/mari"
+path.linux.mari: "mari"
 path.mac.mari: "/Applications/Mari3.4v2/Mari3.4v2.app"
 path.windows.mari: C:\Program Files\Mari4.2v1\Bundle\bin\Mari4.2v1.exe
 

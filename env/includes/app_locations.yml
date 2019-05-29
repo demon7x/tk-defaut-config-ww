@@ -197,13 +197,13 @@ apps.tk-iomanager.location:
   name: tk-iomanager
   type: dev
   linux_path: /home/westworld/tk-iomanager
-  windows_path: \\10.0.0.148\inhouse\tool\shotgun\application\tk-maya-makemov
+  windows_path: \\10.0.20.148\inhouse\tool\shotgun\application\tk-maya-makemov
 
 apps.tk-maya-makemov.location:
   name: tk-maya-makemov
   type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-maya-makemov
-  windows_path: \\10.0.0.148\inhouse\tool\shotgun\application\tk-maya-makemov
+  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-maya-makemov
+  windows_path: \\10.0.20.148\inhouse\tool\shotgun\application\tk-maya-makemov
   #type: git
   #path: https://github.com/demon7x/tk-maya-makemov.git
   #version: v0.0.1
@@ -211,14 +211,14 @@ apps.tk-maya-makemov.location:
 apps.tk-katana-output.location:
   name: tk-katana-output
   type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-katana-output
-  windows_path: \\10.0.0.148\inhouse\tool\shotgun\application\tk-katna-output
+  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-katana-output
+  windows_path: \\10.0.20.148\inhouse\tool\shotgun\application\tk-katna-output
 
 apps.tk-desktop-timecard.location:
   name: tk-desktop-timecard
   type: dev
   linux_path: /westworld/inhouse/pipeline/shotgun/tk-desktop-timecard
-  windows_path: \\10.0.0.148\inhouse\pipeline\shotgun\tk-desktop-timecard
+  windows_path: \\10.0.20.148\inhouse\pipeline\shotgun\tk-desktop-timecard
   #type: git
   #path: https://github.com/demon7x/tk-maya-makemov.git
   #version: v0.0.1
