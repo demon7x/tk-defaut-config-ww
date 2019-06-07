@@ -9,15 +9,17 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import sys
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
 
+
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionAlembicPublishPlugin(HookBaseClass):
+class MayaSessionComponentScenegraphXMLPublishPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -65,7 +67,7 @@ class MayaSessionAlembicPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionAlembicPublishPlugin, self).settings or {}
+        base_settings = super(MayaSessionComponentScenegraphXMLPublishPlugin, self).settings or {}
 
         # settings specific to this class
         maya_publish_settings = {
@@ -81,6 +83,23 @@ class MayaSessionAlembicPublishPlugin(HookBaseClass):
         # update the base settings
         base_settings.update(maya_publish_settings)
 
+        file_type = {
+            "File Types": {
+                "type": "list",
+                "default": [
+                    ["scenegraphXML", "xml"],
+                ],
+                "description": (
+                    "List of file types to include. Each entry in the list "
+                    "is a list in which the first entry is the Shotgun "
+                    "published file type and subsequent entries are file "
+                    "extensions that should be associated."
+                )
+            },
+        }
+
+        base_settings.update(file_type)
+
         return base_settings
 
     @property
@@ -92,7 +111,7 @@ class MayaSessionAlembicPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.component.abc"]
+        return ["maya.session.component.scenegraphxml"]
 
     def accept(self, settings, item):
         """
@@ -233,75 +252,42 @@ class MayaSessionAlembicPublishPlugin(HookBaseClass):
             item.properties["publish_version"] = work_fields["version"]
 
         # run the base class validation
-        return super(MayaSessionAlembicPublishPlugin, self).validate(
+        return super(MayaSessionComponentScenegraphXMLPublishPlugin, self).validate(
             settings, item)
 
     def publish(self, settings, item):
-        """
-        Executes the publish logic for the given item and settings.
-
-        :param settings: Dictionary of Settings. The keys are strings, matching
-            the keys returned in the settings property. The values are `Setting`
-            instances.
-        :param item: Item to process
-        """
         
-
+        
+        import maya2scenegraphXML
+        reload(maya2scenegraphXML)
         publisher = self.parent
 
-        # get the path to create and publish
         publish_path = item.properties["path"]
 
-        # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
 
-        # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an Alembic file that contains
-        # all visible geometry from the current scene together with UV's and
-        # face sets for use in Mari.
-        alembic_args = [
-            # only renderable objects (visible and not templated)
-            "-renderableOnly",
-            # write shading group set assignments (Maya 2015+)
-            "-writeFaceSets",
-            # write uv's (only the current uv set gets written)
-            "-uvWrite",
-            
-            #ATNT
-            "-attrPrefix UC", 
-            "-attr MtlTag ",
-            "-attr Doubleside", 
-            "-attr Subdivision ",
-            "-attr Displace ",
-            "-attr UserAttr"
-        ]
 
-        # find the animated frame range to use:
-        start_frame, end_frame = _find_scene_animation_range()
-        if start_frame and end_frame:
-            alembic_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        alembic_args.append("-root %s" % item.properties['name'])
-
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-        alembic_args.append("-file %s" % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed Alembic export help
-        abc_export_cmd = ("AbcExport -j \"%s\"" % " ".join(alembic_args))
-
-        # ...and execute it:
+        component = item.properties['name']
         try:
-            self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            mel.eval(abc_export_cmd)
+
+            
+
+            maya2scenegraphXML.setComponent([component],publish_path.replace("xml","abc"))
+            start_frame, end_frame = _find_scene_animation_range()
+
+            if start_frame and end_frame:
+                maya2scenegraphXML.maya2ScenegraphXML([component],publish_path  ,start_frame,end_frame)
+            else:
+                maya2scenegraphXML.maya2ScenegraphXML([component],publish_path,1,1 )
+            maya2scenegraphXML.deleteSgxmlAttrs([component])
+
         except Exception, e:
-            self.logger.error("Failed to export Geometry: %s" % e)
+            self.logger.error("Failed to export SceneGraph: %s" % e)
             return
 
-        # Now that the path has been generated, hand it off to the
-        super(MayaSessionAlembicPublishPlugin, self).publish(settings, item)
+
+        super(MayaSessionComponentScenegraphXMLPublishPlugin, self).publish(settings, item)
 
 
 def _find_scene_animation_range():

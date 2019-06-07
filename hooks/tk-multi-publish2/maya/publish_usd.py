@@ -272,6 +272,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
+        self._append_mesh_attr_usd()
 
         # set the alembic args that make the most sense when working with Mari.
         # These flags will ensure the export of an USD file that contains
@@ -328,6 +329,38 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         # Now that the path has been generated, hand it off to the
         super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+
+    def _append_mesh_attr_usd(self):
+        import sys
+        from collections import OrderedDict
+        import json
+        try:
+            meshes = cmds.ls(typ="mesh")
+            for mesh in meshes:
+
+
+                mesh_attributes = OrderedDict()
+                if cmds.listAttr(mesh,ud=1):
+                    for meshTag in cmds.listAttr(mesh, ud=True):
+                        if meshTag in  ["Meshtype","USD_UserExportedAttributesJson"] :
+                            continue
+                        elif meshTag in ["MtlTag","Doubleside","Subdivision","Displace"]:
+                            mesh_attributes[meshTag] = cmds.getAttr("%s.%s" % (mesh, meshTag), asString=True)
+            
+                    if mesh_attributes:
+                        if cmds.attributeQuery("USD_UserExportedAttributesJson", node = mesh, exists=True):
+                            cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=False)
+                        else:
+                            cmds.addAttr(mesh,ln="USD_UserExportedAttributesJson",dt="string")
+                        usd_attr = json.dumps(mesh_attributes, ensure_ascii=False, indent=4)
+                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", usd_attr, type="string")
+                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=True)
+        except Exception as e:
+            _, _ , tb = sys.exc_info() 
+            print 'file name = ', __file__ 
+            print 'error line No = {}'.format(tb.tb_lineno)
+            print e
+            raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
 
 
 def _find_scene_animation_range():

@@ -189,6 +189,10 @@ settings.tk-multi-publish2.maya.asset_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_scenegraphXML.py"
     settings:
         Publish Template: asset_scenegraphXML
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_component_scenegraphXML.py"
+    settings:
+        Publish Template: asset_scenegraphXML
   - name: Publish to Shotgu
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_assembly_usd.py"
     settings:

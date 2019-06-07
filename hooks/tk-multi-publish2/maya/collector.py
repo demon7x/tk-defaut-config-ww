@@ -385,8 +385,26 @@ class MayaSessionCollector(HookBaseClass):
                 
 
         abc_item.properties['name'] = component_name
-
         abc_item.set_icon_from_path(abc_icon_path)
+
+        xml_item = parent_item.create_item(
+            "maya.session.component.scenegraphxml",
+            "XML",
+            "Export scenegraphXML"
+        )
+
+
+        xml_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "xml.png"
+        )
+                
+
+
+        xml_item.properties['name'] = component_name
+        xml_item.set_icon_from_path(xml_icon_path)
+
         self.logger.debug("Collected component : %s"%(component_name))
     
     def collect_assembly(self,parent_item):
