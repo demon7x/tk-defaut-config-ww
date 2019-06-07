@@ -273,7 +273,8 @@ class MayaSessionComponentScenegraphXMLPublishPlugin(HookBaseClass):
 
             
 
-            maya2scenegraphXML.setComponent([component],publish_path.replace("xml","abc"))
+            maya2scenegraphXML.setReference([component],publish_path.replace("xml","abc"),"abc")
+            maya2scenegraphXML.enableCustomBounds([component])
             start_frame, end_frame = _find_scene_animation_range()
 
             if start_frame and end_frame:
