@@ -153,17 +153,17 @@ class KatanaActions(HookBaseClass):
             self._open_project(path, sg_publish_data)
 
         if name == "create_node_Alembic_In":
-            self._create_node("Alembic_In", path, sg_publish_data, asset_parameter="abcAsset")
+            self._create_node("ABC", path, sg_publish_data, asset_parameter="abcAsset")
         
         if name == "create_node_ImageRead":
             self._create_node("ImageRead", path, sg_publish_data, asset_parameter="file")
 
         if name == "create_pxrusd_in":
 
-            self._create_node("PxrUsdIn", path, sg_publish_data, asset_parameter="fileName")
+            self._create_node("USD", path, sg_publish_data, asset_parameter="fileName")
 
         if name == "create_scenegraphXml":
-            self._create_node("ScenegraphXml_In", path, sg_publish_data, asset_parameter="asset")
+            self._create_node("XML", path, sg_publish_data, asset_parameter="asset")
 
         if name == "viewer":
 
@@ -186,21 +186,54 @@ class KatanaActions(HookBaseClass):
         """
         return
 
-    def _create_node(self, node_type, path, sg_publish_data, asset_parameter="file"):
+    def _create_node(self, file_type, path, sg_publish_data, asset_parameter="file"):
         """
         Generic node creation method.
         """
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
-                
-        name = "%s %s" % (sg_publish_data.get("entity").get("name"), sg_publish_data.get("name"))
+        
+        select = {"ABC":2,"USD":1,"XML":0}
+        version = sg_publish_data.get("version_number")
+        entity_type = sg_publish_data.get("entity").get("type")
+        root = NodegraphAPI.GetRootNode()
+        pos=NodegraphAPI.GetViewPortPosition(root) 
 
+        if entity_type == "Asset":
+            
+            name = sg_publish_data.get("entity").get("name")
+            node = NodegraphAPI.CreateNode("Asset_In", parent=root)
+            NodegraphAPI.SetNodePosition(node, (pos[0][0], pos[0][1]))
+            file_type_param = node.getParameters().getChild("user").getChild("Pubfile_Type")
+            file_type_param.setValue(select[file_type],0)
+            name_param = node.getParameters().getChild("user").getChild("name")
+            name_param.setValue(name,0)
+
+            version_param = node.getParameters().getChild("user").getChild("version")
+            version_param.setValue("v%03d"%version,0)
+            
+            if not file_type == "XML":
+
+                path_param = node.getParameters().getChild("user").getChild(file_type)
+                path_param.setValue(path,0)
+            else:
+                path_param = node.getParameters().getChild("user").getChild("sgxml")
+                path_param.setValue(path,0)
+        
+        else:
 
         # Create node
-        root = NodegraphAPI.GetRootNode()
-        node = NodegraphAPI.CreateNode(node_type, parent=root)
-        parm = node.getParameter(asset_parameter)
-        parm.setValue(path, 0)
+
+            name = sg_publish_data.get("name")
+            node = NodegraphAPI.CreateNode("Geo_In", parent=root)
+            NodegraphAPI.SetNodePosition(node, (pos[0][0], pos[0][1]))
+            file_type_param = node.getParameters().getChild("user").getChild("fileType")
+            file_type_param.setValue(select[file_type],0)
+            path_param = node.getParameters().getChild("user").getChild("asset")
+            path_param.setValue(path,0)
+            name_param = node.getParameters().getChild("user").getChild("rename")
+            name_param.setValue(name,0)
+
         return node
 
 
