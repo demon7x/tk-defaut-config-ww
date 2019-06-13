@@ -219,14 +219,10 @@ settings.tk-multi-publish2.maya.shot_step:
     hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_session.py"
     settings:
         Publish Template: maya_shot_publish
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_usd.py"
-    settings:
-        Publish Template: shot_usd
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_scenegraphXML.py"
-    settings:
-        Publish Template: shot_scenegraphXML
+  #- name: Publish to Shotgun
+  #  hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_usd.py"
+  #  settings:
+  #      Publish Template: shot_usd
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/publish_shot_component_usd.py"
     settings:
