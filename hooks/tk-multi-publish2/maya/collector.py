@@ -484,6 +484,7 @@ class MayaSessionCollector(HookBaseClass):
         usd_item.set_icon_from_path(usd_icon_path)
         
         self.collect_shot_assets(usd_item,"usd")
+        self.collect_shot_set_assets(usd_item,"usd")
 
         xml_item = parent_item.create_item(
             "maya.session.shot.scenegraphxml",
@@ -504,12 +505,71 @@ class MayaSessionCollector(HookBaseClass):
         xml_item.set_icon_from_path(xml_icon_path)
 
         self.collect_shot_assets(xml_item,"abc")
+        self.collect_shot_set_assets(xml_item,"abc")
 
         self.logger.debug("Collected shot : %s"%(shot_name))
 
+    def collect_shot_set_assets(self,parent_item,cache_type):
+        
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('setgrp') == -1 ] 
+        
+        for asset in shot_asset_list:
+
+            component_name = asset
+        
+            if cache_type == "usd":
+
+                usd_item = parent_item.create_item(
+                    "maya.session.shot.component.usd",
+                    "USD",
+                    "Export %s USD"%component_name
+                    )
+        
+
+                usd_icon_path = os.path.join(
+                    self.disk_location,
+                    "icons",
+                    "usd.png"
+                    )
+                
+
+
+                usd_item.properties['name'] = component_name
+                usd_item.properties['namespace'] = component_name.split(":")[0]
+                usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
+                usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
+                usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                usd_item.set_icon_from_path(usd_icon_path)
+            
+            else:
+                abc_item = parent_item.create_item(
+                    "maya.session.shot.component.abc",
+                    "Alembic",
+                    "Export %s Alembic"%component_name
+                    )
+        
+
+                abc_icon_path = os.path.join(
+                    self.disk_location,
+                    "icons",
+                    "alembic.png"
+                    )
+                
+
+                abc_item.properties['name'] = component_name
+                abc_item.properties['namespace'] = component_name.split(":")[0]
+                abc_item.properties['matrix'] = cmds.xform(component_name,q=1,m=1)
+                abc_item.properties['translaate'] = cmds.xform(component_name,q=1,t=1)
+                abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
+                abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                abc_item.set_icon_from_path(abc_icon_path)
+            
+    
+            self.logger.debug("Collected shot asset : %s"%(component_name))
+
     def collect_shot_assets(self,parent_item,cache_type):
         
-        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_GRP') == -1 or not x.find('cache_grp') == -1 ]
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_GRP') == -1 ] 
         
         for asset in shot_asset_list:
 
