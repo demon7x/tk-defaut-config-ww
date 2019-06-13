@@ -509,7 +509,7 @@ class MayaSessionCollector(HookBaseClass):
 
     def collect_shot_assets(self,parent_item,cache_type):
         
-        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_GRP') == -1]
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_GRP') == -1 or not x.find('cache_grp') == -1 ]
         
         for asset in shot_asset_list:
 

@@ -264,6 +264,8 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
 
             "-eulerFilter",
 
+            "-worldSpace",
+
         ]
 
         # find the animated frame range to use:

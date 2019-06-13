@@ -263,6 +263,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
             "-eulerFilter",
 
+            "-step '0.25'"
+
         ]
 
         # find the animated frame range to use:
