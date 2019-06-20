@@ -17,7 +17,7 @@ import sgtk
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
+class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -65,7 +65,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionComponentAlembicPublishPlugin, self).settings or {}
+        base_settings = super(MayaSessionShotComponentUSDPublishPlugin, self).settings or {}
 
         # settings specific to this class
         maya_publish_settings = {
@@ -81,6 +81,24 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # update the base settings
         base_settings.update(maya_publish_settings)
 
+
+        file_type = {
+            "File Types": {
+                "type": "list",
+                "default": [
+                    ["Set USD", "usd"],
+                ],
+                "description": (
+                    "List of file types to include. Each entry in the list "
+                    "is a list in which the first entry is the Shotgun "
+                    "published file type and subsequent entries are file "
+                    "extensions that should be associated."
+                )
+            },
+        }
+
+        base_settings.update(file_type)
+        
         return base_settings
 
     @property
@@ -92,7 +110,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.shot.component.abc"]
+        return ["maya.session.shot.set.usd"]
 
     def accept(self, settings, item):
         """
@@ -146,10 +164,10 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # for use in subsequent methods
         item.properties["publish_template"] = publish_template
 
-        # check that the AbcExport command is available!
-        if not mel.eval("exists \"AbcExport\""):
+        if not mel.eval("exists \"usdExport\""):
+
             self.logger.debug(
-                "Item not accepted because alembic export command 'AbcExport' "
+                "Item not accepted because alembic export command 'usdExport' "
                 "is not available. Perhaps the plugin is not enabled?"
             )
             accepted = False
@@ -195,6 +213,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # get the normalized path
         path = sgtk.util.ShotgunPath.normalize(path)
 
+
+
         # get the configured work file template
         work_template = item.parent.parent.properties.get("work_template")
         publish_template = item.properties.get("publish_template")
@@ -202,9 +222,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # get the current scene path and extract fields from it using the work
         # template:
 
-
         work_fields = work_template.get_fields(path)
-        work_fields["asset_namespace"]= item.properties['name'].split(":")[0]
+        work_fields["asset_namespace"]= item.properties['namespace']
 
         # ensure the fields work for the publish template
         missing_keys = publish_template.missing_keys(work_fields)
@@ -226,7 +245,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             item.properties["publish_version"] = work_fields["version"]
 
         # run the base class validation
-        return super(MayaSessionComponentAlembicPublishPlugin, self).validate(
+        return super(MayaSessionShotComponentUSDPublishPlugin, self).validate(
             settings, item)
 
     def publish(self, settings, item):
@@ -238,8 +257,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
-        
 
+        
         publisher = self.parent
 
         # get the path to create and publish
@@ -250,48 +269,67 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         self.parent.ensure_folder_exists(publish_folder)
 
         # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an Alembic file that contains
+        # These flags will ensure the export of an USD file that contains
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
-        alembic_args = [
-            # only renderable objects (visible and not templated)
-            "-renderableOnly",
-            # write shading group set assignments (Maya 2015+)
-            "-writeFaceSets",
-            # write uv's (only the current uv set gets written)
-            "-uvWrite",
+        
+        usd_args = [
+            '-shd "none"',
+            '-dms "none"',
+            '-uvs 1',
+            '-cls 0',
+            '-vis 0',
+            '-mt 1',
+            '-sl',
+            ]
 
-            "-eulerFilter",
 
-            "-step '0.25'"
-
-        ]
 
         # find the animated frame range to use:
         start_frame, end_frame = _find_scene_animation_range()
         if start_frame and end_frame:
-            alembic_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        alembic_args.append("-root %s" % item.properties['name'])
+            usd_args.append("-fr %d %d" % (start_frame, end_frame))
 
         # Set the output path: 
         # Note: The AbcExport command expects forward slashes!
-        alembic_args.append("-file %s" % publish_path.replace("\\", "/"))
+
+        usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
 
         # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed Alembic export help
-        abc_export_cmd = ("AbcExport -j \"%s\"" % " ".join(alembic_args))
+        # more detailed USD export help
+        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
 
         # ...and execute it:
         try:
-            self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            mel.eval(abc_export_cmd)
+            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+            
+            select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1) if not x.find("cache_grp") == -1 ]
+            for obj in select_list:
+                if not cmds.attributeQuery("USD_kind", node = obj, exists=True):
+                    cmds.addAttr(obj, longName="USD_kind",dataType="string")
+                cmds.setAttr(obj+".USD_kind","component",type="string")
+
+            cmds.select(select_list)
+            mel.eval(usd_export_cmd)
         except Exception, e:
-            self.logger.error("Failed to export Geometry: %s" % e)
+            import traceback
+            
+            print usd_export_cmd
+            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+            self.logger.error("Failed to export USD: %s"% e, 
+                extra = {
+                "action_show_more_info": {
+                    "label": "Error Details",
+                    "tooltip": "Show the full error stack trace",
+                    "text": "<pre>%s</pre>" % (traceback.format_exc(),)
+                }
+            }
+
+            )
             return
 
         # Now that the path has been generated, hand it off to the
-        super(MayaSessionComponentAlembicPublishPlugin, self).publish(settings, item)
+        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
 
 
 def _find_scene_animation_range():
@@ -309,7 +347,7 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True)) - 20
+    start = int(cmds.playbackOptions(q=True, min=True)) -20 
     end = int(cmds.playbackOptions(q=True, max=True)) + 20
 
     return start, end

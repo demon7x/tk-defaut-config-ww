@@ -17,7 +17,7 @@ import sgtk
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionUSDPublishPlugin(HookBaseClass):
+class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -65,7 +65,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionUSDPublishPlugin, self).settings or {}
+        base_settings = super(MayaSessionShotComponentUSDPublishPlugin, self).settings or {}
 
         # settings specific to this class
         maya_publish_settings = {
@@ -110,7 +110,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.component.usd"]
+        return ["maya.session.shot.component.usd"]
 
     def accept(self, settings, item):
         """
@@ -143,7 +143,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         template_name = settings["Publish Template"].value
 
         # ensure a work file template is available on the parent item
-        work_template = item.parent.properties.get("work_template")
+        work_template = item.parent.parent.properties.get("work_template")
         if not work_template:
             self.logger.debug(
                 "A work template is required for the session item in order to "
@@ -213,23 +213,17 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         # get the normalized path
         path = sgtk.util.ShotgunPath.normalize(path)
 
-        check_component = cmds.ls(item.context.entity['name'])
-
-        if not check_component or not len(check_component) == 1:
-            error_msg = "Componen is not."
-            self.logger.error(
-                error_msg,
-            )
-            raise Exception(error_msg)
 
 
         # get the configured work file template
-        work_template = item.parent.properties.get("work_template")
+        work_template = item.parent.parent.properties.get("work_template")
         publish_template = item.properties.get("publish_template")
 
         # get the current scene path and extract fields from it using the work
         # template:
+
         work_fields = work_template.get_fields(path)
+        work_fields["asset_namespace"]= item.properties['namespace']
 
         # ensure the fields work for the publish template
         missing_keys = publish_template.missing_keys(work_fields)
@@ -251,7 +245,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             item.properties["publish_version"] = work_fields["version"]
 
         # run the base class validation
-        return super(MayaSessionUSDPublishPlugin, self).validate(
+        return super(MayaSessionShotComponentUSDPublishPlugin, self).validate(
             settings, item)
 
     def publish(self, settings, item):
@@ -272,7 +266,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
-        self._append_mesh_attr_usd()
 
         # set the alembic args that make the most sense when working with Mari.
         # These flags will ensure the export of an USD file that contains
@@ -286,7 +279,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             '-cls 0',
             '-vis 0',
             '-mt 1',
-            '-sl'
+            '-sl',
+            '-sn 1'
             ]
 
 
@@ -328,39 +322,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
-        super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
-
-    def _append_mesh_attr_usd(self):
-        import sys
-        from collections import OrderedDict
-        import json
-        try:
-            meshes = cmds.ls(typ="mesh")
-            for mesh in meshes:
-
-
-                mesh_attributes = OrderedDict()
-                if cmds.listAttr(mesh,ud=1):
-                    for meshTag in cmds.listAttr(mesh, ud=True):
-                        if meshTag in  ["Meshtype","USD_UserExportedAttributesJson"] :
-                            continue
-                        elif meshTag in ["MtlTag","Doubleside","Subdivision","Displace"]:
-                            mesh_attributes[meshTag] = cmds.getAttr("%s.%s" % (mesh, meshTag), asString=True)
-            
-                    if mesh_attributes:
-                        if cmds.attributeQuery("USD_UserExportedAttributesJson", node = mesh, exists=True):
-                            cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=False)
-                        else:
-                            cmds.addAttr(mesh,ln="USD_UserExportedAttributesJson",dt="string")
-                        usd_attr = json.dumps(mesh_attributes, ensure_ascii=False, indent=4)
-                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", usd_attr, type="string")
-                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=True)
-        except Exception as e:
-            _, _ , tb = sys.exc_info() 
-            print 'file name = ', __file__ 
-            print 'error line No = {}'.format(tb.tb_lineno)
-            print e
-            raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
+        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
 
 
 def _find_scene_animation_range():
@@ -378,8 +340,8 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True))
-    end = int(cmds.playbackOptions(q=True, max=True))
+    start = int(cmds.playbackOptions(q=True, min=True)) - 20
+    end = int(cmds.playbackOptions(q=True, max=True)) + 20
 
     return start, end
 

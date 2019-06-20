@@ -9,15 +9,17 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import copy
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
+from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
+class MayaSessionUSDPublishPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -65,7 +67,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionShotComponentUSDPublishPlugin, self).settings or {}
+        base_settings = super(MayaSessionUSDPublishPlugin, self).settings or {}
 
         # settings specific to this class
         maya_publish_settings = {
@@ -110,7 +112,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.shot.component.usd"]
+        return ["maya.session.component.usd"]
 
     def accept(self, settings, item):
         """
@@ -143,7 +145,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         template_name = settings["Publish Template"].value
 
         # ensure a work file template is available on the parent item
-        work_template = item.parent.parent.properties.get("work_template")
+        work_template = item.parent.properties.get("work_template")
         if not work_template:
             self.logger.debug(
                 "A work template is required for the session item in order to "
@@ -213,17 +215,23 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # get the normalized path
         path = sgtk.util.ShotgunPath.normalize(path)
 
+        check_component = cmds.ls(item.context.entity['name'])
+
+        if not check_component or not len(check_component) == 1:
+            error_msg = "Componen is not."
+            self.logger.error(
+                error_msg,
+            )
+            raise Exception(error_msg)
 
 
         # get the configured work file template
-        work_template = item.parent.parent.properties.get("work_template")
+        work_template = item.parent.properties.get("work_template")
         publish_template = item.properties.get("publish_template")
 
         # get the current scene path and extract fields from it using the work
         # template:
-
         work_fields = work_template.get_fields(path)
-        work_fields["asset_namespace"]= item.properties['namespace']
 
         # ensure the fields work for the publish template
         missing_keys = publish_template.missing_keys(work_fields)
@@ -245,7 +253,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             item.properties["publish_version"] = work_fields["version"]
 
         # run the base class validation
-        return super(MayaSessionShotComponentUSDPublishPlugin, self).validate(
+        return super(MayaSessionUSDPublishPlugin, self).validate(
             settings, item)
 
     def publish(self, settings, item):
@@ -266,11 +274,14 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
+        self._append_mesh_attr_usd()
 
         # set the alembic args that make the most sense when working with Mari.
         # These flags will ensure the export of an USD file that contains
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
+
+
         
         usd_args = [
             '-shd "none"',
@@ -279,8 +290,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-cls 0',
             '-vis 0',
             '-mt 1',
-            '-sl',
-            '-sn 1'
+            '-sl'
             ]
 
 
@@ -293,21 +303,71 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # Set the output path: 
         # Note: The AbcExport command expects forward slashes!
 
-        usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
+        #usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
 
         # build the export command.  Note, use AbcExport -help in Maya for
         # more detailed USD export help
-        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+        sub_components = [ x for x in cmds.ls(allPaths=1,ca=0,transforms=1,l=1) 
+        if cmds.listRelatives(x,p=1) 
+        and cmds.attributeQuery("Meshtype",node=x,exists=1) 
+        and cmds.getAttr(x+".Meshtype", asString=True) == "component"]
+        
+        if not sub_components:
+            
+            usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
+            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+            cmds.select(item.properties['name'])
+            mel.eval(usd_export_cmd)
+            
+            super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+            return
+
+        sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
+
+        root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
+        component_stage = Usd.Stage.Open(root_layer)
+        component_prim = UsdGeom.Xform.Define(component_stage,"/%s"%item.properties['name']).GetPrim()
+        component_stage.SetDefaultPrim(component_prim)
+        UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
+        model = Usd.ModelAPI(component_prim)
+        model.SetKind(Kind.Tokens.assembly)
+
+        status = component_stage.GetRootLayer().Save()
+
+        for parent in sub_component_parents:
+
+            child_prim = UsdGeom.Xform.Define(component_stage,parent.replace("|","/")).GetPrim()
+            model = Usd.ModelAPI(child_prim)
+            model.SetKind(Kind.Tokens.assembly)
+            self._set_xform(parent,child_prim)
+            
+
+        for sub_component in sub_components:
+            
+
+            sub_component_path = self._get_sub_component_path(sub_component,item)
+            sub_usd_args = usd_args
+            sub_usd_args.append('-f "%s"' % sub_component_path.replace("\\", "/"))
+            usd_export_cmd = ("usdExport %s" % " ".join(sub_usd_args))
+            sub_usd_args.pop(-1)
+            cmds.select(sub_component)
+            mel.eval(usd_export_cmd)
+
+            #child_prim = component_stage.OverridePrim(sub_component.replace("|","/"))
+            child_prim = UsdGeom.Xform.Define(component_stage,sub_component.replace("|","/")).GetPrim()
+            model = Usd.ModelAPI(child_prim)
+            #model.SetKind(Kind.Tokens.group)
+            child_prim.SetInstanceable(1)
+            component_prim.GetReferences().AddReference(sub_component_path)
+            self._set_xform(sub_component,child_prim)
 
         # ...and execute it:
         try:
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            cmds.select(item.properties['name'])
-            mel.eval(usd_export_cmd)
+            status = component_stage.GetRootLayer().Save()
         except Exception, e:
             import traceback
             
-            print usd_export_cmd
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             self.logger.error("Failed to export USD: %s"% e, 
                 extra = {
@@ -322,7 +382,58 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
-        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
+        super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+
+    
+    def _get_sub_component_path(self,sub_component,item):
+        path = os.path.splitext(item.properties["path"])[0]
+        path = os.path.join(path,sub_component.replace("|","_")+'.usd')
+        
+        return path
+
+    def _set_xform(self,node,prim):
+
+        translate = cmds.xform(node,q=1,t=1)
+        rotate = cmds.xform(node,q=1,ro=1)
+        scale = cmds.xform(node,q=1,s=1)
+
+        xformAPI = UsdGeom.XformCommonAPI(prim)
+        xformAPI.SetTranslate(translate)
+        xformAPI.SetRotate(rotate)
+        xformAPI.SetScale(scale)
+       
+
+    def _append_mesh_attr_usd(self):
+        import sys
+        from collections import OrderedDict
+        import json
+        try:
+            meshes = cmds.ls(typ="mesh")
+            for mesh in meshes:
+
+
+                mesh_attributes = OrderedDict()
+                if cmds.listAttr(mesh,ud=1):
+                    for meshTag in cmds.listAttr(mesh, ud=True):
+                        if meshTag in  ["Meshtype","USD_UserExportedAttributesJson"] :
+                            continue
+                        elif meshTag in ["MtlTag","Doubleside","Subdivision","Displace"]:
+                            mesh_attributes[meshTag] = cmds.getAttr("%s.%s" % (mesh, meshTag), asString=True)
+            
+                    if mesh_attributes:
+                        if cmds.attributeQuery("USD_UserExportedAttributesJson", node = mesh, exists=True):
+                            cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=False)
+                        else:
+                            cmds.addAttr(mesh,ln="USD_UserExportedAttributesJson",dt="string")
+                        usd_attr = json.dumps(mesh_attributes, ensure_ascii=False, indent=4)
+                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", usd_attr, type="string")
+                        cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=True)
+        except Exception as e:
+            _, _ , tb = sys.exc_info() 
+            print 'file name = ', __file__ 
+            print 'error line No = {}'.format(tb.tb_lineno)
+            print e
+            raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
 
 
 def _find_scene_animation_range():

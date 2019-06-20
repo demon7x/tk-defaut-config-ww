@@ -94,7 +94,13 @@ class KatanaActions(HookBaseClass):
             action_instances.append( {"name": "viewer", 
                                       "params": None,
                                       "caption": "View File", 
-                                      "description": "This will add the item to the scene as a usd reference."} )
+                                      "description": "launch usdviewer."} )
+
+        if "copy_path" in actions:
+            action_instances.append( {"name": "copy_path", 
+                                      "params": None,
+                                      "caption": "Copy Path to clipboard", 
+                                      "description": "Copy path to clipboard."} )
 
         return action_instances
 
@@ -178,6 +184,18 @@ class KatanaActions(HookBaseClass):
                                  stdin = False,
                                  block=False,
                                  )
+
+        if name == "copy_path":
+
+            rez_path = self._get_rez_module()
+            sys.path.append(rez_path)
+            from rez import resolved_context
+            packages = ("pyperclip",)
+            context = resolved_context.ResolvedContext(packages)
+            sys.path.append(context.get_environ()['PYTHONPATH'])
+            import pyperclip
+            pyperclip.copy(path)
+            
     ##############################################################################################################
     # helper methods which can be subclassed in custom hooks to fine tune the behaviour of things
 
