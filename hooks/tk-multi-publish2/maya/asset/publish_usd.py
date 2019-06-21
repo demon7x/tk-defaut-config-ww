@@ -167,12 +167,12 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         item.properties["publish_template"] = publish_template
 
         if not mel.eval("exists \"usdExport\""):
-
-            self.logger.debug(
-                "Item not accepted because alembic export command 'usdExport' "
-                "is not available. Perhaps the plugin is not enabled?"
-            )
-            accepted = False
+            plugin_load = cmds.loadPlugin("pxrUsd.so")
+            #self.logger.debug(
+            #    "Item not accepted because alembic export command 'usdExport' "
+            #    "is not available. Perhaps the plugin is not enabled?"
+            #)
+            #accepted = False
 
         # because a publish template is configured, disable context change. This
         # is a temporary measure until the publisher handles context switching
@@ -331,9 +331,9 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
         model = Usd.ModelAPI(component_prim)
         model.SetKind(Kind.Tokens.assembly)
-
-        status = component_stage.GetRootLayer().Save()
-
+        
+        sub_component_parents = self._return_order_node_list(sub_component_parents)
+        sub_component_parents.reverse()
         for parent in sub_component_parents:
 
             child_prim = UsdGeom.Xform.Define(component_stage,parent.replace("|","/")).GetPrim()
@@ -341,6 +341,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             model.SetKind(Kind.Tokens.assembly)
             self._set_xform(parent,child_prim)
             
+        sub_components = self._return_order_node_list(sub_components)
+        #sub_components.reverse()
 
         for sub_component in sub_components:
             
@@ -383,7 +385,20 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         # Now that the path has been generated, hand it off to the
         super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+    
+    def _return_order_node_list(self,node_list):
+        
+        return_list = []
 
+        parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in node_list])) 
+        for parent in parents:
+            nodes = cmds.listRelatives(parent,c=1,f=1)
+            nodes.reverse()
+            return_list.extend(nodes)
+            #return_list.extend(cmds.listRelatives(parent,c=1,f=1))
+        
+        return return_list
+        
     
     def _get_sub_component_path(self,sub_component,item):
         path = os.path.splitext(item.properties["path"])[0]
