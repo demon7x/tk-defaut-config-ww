@@ -338,7 +338,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         model = Usd.ModelAPI(component_prim)
         model.SetKind(Kind.Tokens.assembly)
 
-        component_prim.GetReferences().AddReference(asset_usd_path)
+        component_prim.GetReferences().AddReference(self._get_relatives_path(publish_path,asset_usd_path).replace("\\","/"))
         
         sub_component_parents = self._return_order_node_list(sub_component_parents)
         sub_component_parents.reverse()
@@ -392,6 +392,11 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         # Now that the path has been generated, hand it off to the
         super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+    
+
+    def _get_relatives_path(self,publish_path,asset_usd_path):
+        common_prefix = os.path.commonprefix([os.path.dirname(publish_path),asset_usd_path])
+        return os.path.relpath(asset_usd_path, common_prefix)
     
     def _return_order_node_list(self,node_list):
         
