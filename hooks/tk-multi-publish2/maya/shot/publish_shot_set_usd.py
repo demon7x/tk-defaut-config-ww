@@ -281,6 +281,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-vis 0',
             '-mt 1',
             '-sl',
+            '-fs %f'%item.properties['sub_frame'],
+            '-ft %f'%item.properties['sub_frame']
             ]
 
 
@@ -310,6 +312,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
                 cmds.setAttr(obj+".USD_kind","component",type="string")
 
             cmds.select(select_list)
+            print usd_export_cmd
             mel.eval(usd_export_cmd)
         except Exception, e:
             import traceback

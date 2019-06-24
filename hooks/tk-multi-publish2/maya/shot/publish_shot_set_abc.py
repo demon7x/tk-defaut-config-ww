@@ -280,7 +280,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
             "-eulerFilter",
 
-            #"-step '0.25'"
+            "-step '%f'"%item.properties['sub_frame']
 
         ]
 
@@ -303,6 +303,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # ...and execute it:
         try:
             self.parent.log_debug("Executing command: %s" % abc_export_cmd)
+            print abc_export_cmd
             mel.eval(abc_export_cmd)
         except Exception, e:
             self.logger.error("Failed to export Geometry: %s" % e)

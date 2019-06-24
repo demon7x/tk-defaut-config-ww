@@ -322,6 +322,12 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
             return
 
+        asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
+        usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
+        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+        cmds.select(item.properties['name'])
+        mel.eval(usd_export_cmd)
+
         sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
 
         root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
@@ -331,6 +337,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
         model = Usd.ModelAPI(component_prim)
         model.SetKind(Kind.Tokens.assembly)
+
+        component_prim.GetReferences().AddReference(asset_usd_path)
         
         sub_component_parents = self._return_order_node_list(sub_component_parents)
         sub_component_parents.reverse()
@@ -342,25 +350,24 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             self._set_xform(parent,child_prim)
             
         sub_components = self._return_order_node_list(sub_components)
-        #sub_components.reverse()
 
         for sub_component in sub_components:
             
 
-            sub_component_path = self._get_sub_component_path(sub_component,item)
-            sub_usd_args = usd_args
-            sub_usd_args.append('-f "%s"' % sub_component_path.replace("\\", "/"))
-            usd_export_cmd = ("usdExport %s" % " ".join(sub_usd_args))
-            sub_usd_args.pop(-1)
-            cmds.select(sub_component)
-            mel.eval(usd_export_cmd)
+            #sub_component_path = self._get_sub_component_path(sub_component,item)
+            #sub_usd_args = usd_args
+            #sub_usd_args.append('-f "%s"' % sub_component_path.replace("\\", "/"))
+            #usd_export_cmd = ("usdExport %s" % " ".join(sub_usd_args))
+            #sub_usd_args.pop(-1)
+            #cmds.select(sub_component)
+            #mel.eval(usd_export_cmd)
 
             #child_prim = component_stage.OverridePrim(sub_component.replace("|","/"))
             child_prim = UsdGeom.Xform.Define(component_stage,sub_component.replace("|","/")).GetPrim()
             model = Usd.ModelAPI(child_prim)
-            #model.SetKind(Kind.Tokens.group)
+            model.SetKind(Kind.Tokens.component)
             child_prim.SetInstanceable(1)
-            component_prim.GetReferences().AddReference(sub_component_path)
+            #component_prim.GetReferences().AddReference(sub_component_path)
             self._set_xform(sub_component,child_prim)
 
         # ...and execute it:

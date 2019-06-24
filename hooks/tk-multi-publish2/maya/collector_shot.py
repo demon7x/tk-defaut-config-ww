@@ -121,6 +121,11 @@ class MayaSessionCollector(HookBaseClass):
 
         publisher = self.parent
 
+        
+        
+        
+
+
         # get the path to the current file
         path = cmds.file(query=True, sn=True)
 
@@ -394,6 +399,13 @@ class MayaSessionCollector(HookBaseClass):
         self.logger.debug("Collected shot : %s"%(shot_name))
 
     def collect_shot_set_assets(self,parent_item,cache_type):
+
+
+        publisher = self.parent
+        entity = publisher.context.entity
+        sg = self.tank.shotgun
+        sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
+            
         
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('setgrp') == -1 ] 
         
@@ -423,6 +435,7 @@ class MayaSessionCollector(HookBaseClass):
                 usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
                 usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                usd_item.properties['sub_frame'] = sub_frame
                 usd_item.set_icon_from_path(usd_icon_path)
             
             else:
@@ -446,13 +459,19 @@ class MayaSessionCollector(HookBaseClass):
                 abc_item.properties['translaate'] = cmds.xform(component_name,q=1,t=1)
                 abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                abc_item.properties['sub_frame'] = sub_frame
                 abc_item.set_icon_from_path(abc_icon_path)
     
             self.logger.debug("Collected shot asset : %s"%(component_name))
 
     def collect_shot_assets(self,parent_item,cache_type):
+
+        publisher = self.parent
+        entity = publisher.context.entity
+        sg = self.tank.shotgun
+        sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
         
-        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_GRP') == -1 and not cmds.listRelatives(x,p=1)] 
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 and not cmds.listRelatives(x,p=1)] 
         
         for asset in shot_asset_list:
 
@@ -480,6 +499,7 @@ class MayaSessionCollector(HookBaseClass):
                 usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
                 usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                usd_item.properties['sub_frame'] = sub_frame
                 usd_item.set_icon_from_path(usd_icon_path)
             
             elif cache_type == "abc" :
@@ -503,6 +523,7 @@ class MayaSessionCollector(HookBaseClass):
                 abc_item.properties['translaate'] = cmds.xform(component_name,q=1,t=1)
                 abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                abc_item.properties['sub_frame'] = sub_frame
                 abc_item.set_icon_from_path(abc_icon_path)
 
             

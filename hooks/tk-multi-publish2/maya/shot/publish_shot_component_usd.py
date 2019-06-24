@@ -9,9 +9,11 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import re
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
+from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
 
 HookBaseClass = sgtk.get_hook_baseclass()
@@ -280,7 +282,10 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-vis 0',
             '-mt 1',
             '-sl',
-            '-sn 1'
+            '-sn 1',
+            '-fs %f'%item.properties['sub_frame'],
+            '-ft %f'%item.properties['sub_frame']
+            
             ]
 
 
@@ -293,36 +298,111 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # Set the output path: 
         # Note: The AbcExport command expects forward slashes!
 
-        usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
+        sub_components = [ x for x in cmds.ls(allPaths=1,ca=0,transforms=1,l=1) 
+        if cmds.listRelatives(x,p=1) 
+        and cmds.attributeQuery("Meshtype",node=x,exists=1) 
+        and cmds.getAttr(x+".Meshtype", asString=True) == "component"]
+
+        if not sub_components:
+
+            usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
 
         # build the export command.  Note, use AbcExport -help in Maya for
         # more detailed USD export help
-        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+
+            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
 
         # ...and execute it:
-        try:
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            cmds.select(item.properties['name'])
-            mel.eval(usd_export_cmd)
-        except Exception, e:
-            import traceback
+            try:
+                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+                cmds.select(item.properties['name'])
+                print usd_export_cmd
+                mel.eval(usd_export_cmd)
+            except Exception, e:
+                import traceback
             
-            print usd_export_cmd
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            self.logger.error("Failed to export USD: %s"% e, 
-                extra = {
-                "action_show_more_info": {
-                    "label": "Error Details",
-                    "tooltip": "Show the full error stack trace",
-                    "text": "<pre>%s</pre>" % (traceback.format_exc(),)
+                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+                self.logger.error("Failed to export USD: %s"% e, 
+                    extra = {
+                    "action_show_more_info": {
+                        "label": "Error Details",
+                        "tooltip": "Show the full error stack trace",
+                        "text": "<pre>%s</pre>" % (traceback.format_exc(),)
+                    }
                 }
-            }
 
-            )
-            return
+                )   
+                return
+        else:
+
+            asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
+            usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
+            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+            cmds.select(item.properties['name'])
+            print usd_export_cmd
+            mel.eval(usd_export_cmd)
+            
+            sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
+
+            root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
+            component_stage = Usd.Stage.Open(root_layer)
+            component_prim = UsdGeom.Xform.Define(component_stage,"/%s"%self._remove_namespace(item.properties['name'])).GetPrim()
+            component_stage.SetDefaultPrim(component_prim)
+            UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
+            model = Usd.ModelAPI(component_prim)
+            model.SetKind(Kind.Tokens.assembly)
+
+            component_prim.GetReferences().AddReference(asset_usd_path)
+
+            for parent in sub_component_parents:
+
+                child_prim = UsdGeom.Xform.Define(component_stage,self._convert_prim_path(parent,item).replace("|","/")).GetPrim()
+                _set_assembly(child_prim)
+                model = Usd.ModelAPI(child_prim)
+                model.SetKind(Kind.Tokens.assembly)
+                self._set_xform(parent,child_prim)
+            
+
+            try:
+                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+                status = component_stage.GetRootLayer().Save()
+            except Exception, e:
+                import traceback
+                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
+
 
         # Now that the path has been generated, hand it off to the
-        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
+        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)   
+
+
+    
+    def _convert_prim_path(self,node_name,item):
+
+        temp = [ re.search("(?<=:)\D+",x).group() for x in node_name.split("|")[1:]]
+        temp[0]= self._remove_namespace(item.properties['name'])
+        return "|%s"%"|".join(temp)
+    
+    def _remove_namespace(self,node_name):
+        
+        return node_name.split(":")[0]
+
+
+    def _get_sub_component_path(self,sub_component,item):
+        path = os.path.splitext(item.properties["path"])[0]
+        path = os.path.join(path,sub_component.replace("|","_")+'.usd')
+        
+        return path
+
+    def _set_xform(self,node,prim):
+
+        translate = cmds.xform(node,q=1,t=1)
+        rotate = cmds.xform(node,q=1,ro=1)
+        scale = cmds.xform(node,q=1,s=1)
+
+        xformAPI = UsdGeom.XformCommonAPI(prim)
+        xformAPI.SetTranslate(translate)
+        xformAPI.SetRotate(rotate)
+        xformAPI.SetScale(scale)
 
 
 def _find_scene_animation_range():
@@ -382,3 +462,18 @@ def _get_save_as_action():
             "callback": callback
         }
     }
+
+
+
+def _set_assembly(prim_path):
+
+    model = Usd.ModelAPI(prim_path)
+    model.SetKind(Kind.Tokens.assembly)
+    parent = prim_path.GetParent()
+
+    if parent:
+        _set_assembly(parent)
+    
+    return
+        
+
