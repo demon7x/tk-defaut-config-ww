@@ -84,7 +84,6 @@ class AppLaunch(tank.Hook):
 
 
 def get_rez_packages(sg,app_name,version,system):
-    print system
     
     if system == "linux2":
         packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])[0]['sg_rez']

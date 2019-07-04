@@ -279,7 +279,7 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
             '-uvs 1',
             '-cls 0',
             '-vis 0',
-            '-mt 1',
+            '-mt 0',
             '-sl',
             '-sn 1'
             ]

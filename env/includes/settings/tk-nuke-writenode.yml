@@ -67,4 +67,15 @@ settings.tk-nuke-writenode.shot:
     settings: {}
     tank_type: Rendered Image
     tile_color: []
+  - file_type: exr
+    name: Mono Exr, 16 bit
+    proxy_publish_template:
+    proxy_render_template:
+    publish_template: nuke_shot_render_pub_exr
+    render_template: nuke_shot_render_pub_exr
+    settings:
+      datatype: 16 bit half
+    tank_type: Rendered Image
+    tile_color: []
+    promote_write_knobs: []
   location: "@apps.tk-nuke-writenode.location"

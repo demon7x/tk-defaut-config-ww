@@ -406,6 +406,8 @@ paths:
         definition: '@shot_root/dev/images/{name}/v{version}/{width}x{height}/{Shot}_{name}_{nuke.output}_{eye}_v{version}.{SEQ}.exr'
     nuke_shot_render_pub_stereo:
         definition: '@shot_root/pub/elements/{name}/v{version}/{width}x{height}/{Shot}_{name}_{nuke.output}_{eye}_v{version}.{SEQ}.exr'
+    nuke_shot_render_pub_exr:
+        definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.exr'
     # review output
     shot_quicktime_quick:
         definition: '@shot_root/review/quickdaily/{Shot}_{name}_{iteration}.mov'
@@ -448,6 +450,8 @@ paths:
         definition: '@shot_root/pub/caches/abc/{asset_namespace}_{Step}_v{version}.abc'
     shot_cmpt_asmb_usd:
         definition: '@shot_root/pub/caches/usd/{asset_namespace}_{Step}_v{version}.usd'
+    shot_component_xml:
+        definition: '@shot_root/pub/caches/xml/{asset_namespace}_{Step}_v{version}.xml'
     shot_usd:
         definition: '@shot_root/pub/caches/usd/{Shot}_{Step}_v{version}.usd'
     shot_scenegraphXML:

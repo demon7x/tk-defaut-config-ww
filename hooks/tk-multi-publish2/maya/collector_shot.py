@@ -405,6 +405,9 @@ class MayaSessionCollector(HookBaseClass):
         entity = publisher.context.entity
         sg = self.tank.shotgun
         sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
+
+        if not sub_frame :
+            sub_frame = 1.0
             
         
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('setgrp') == -1 ] 
@@ -471,6 +474,9 @@ class MayaSessionCollector(HookBaseClass):
         sg = self.tank.shotgun
         sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
         
+        if not sub_frame :
+            sub_frame = 1.0
+
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 and not cmds.listRelatives(x,p=1)] 
         
         for asset in shot_asset_list:

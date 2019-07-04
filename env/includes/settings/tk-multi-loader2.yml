@@ -154,6 +154,8 @@ settings.tk-multi-loader2.nuke:
     Nuke Script: [script_import]
     Photoshop Image: [read_node]
     Rendered Image: [read_node]
+    Plate: [read_node]
+    Source: [read_node]
     Texture: [read_node]
   entities:
   - caption: Assets

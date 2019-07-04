@@ -44,7 +44,7 @@ settings.tk-desktop.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-demo: "@settings.tk-multi-demo.standalone"
     tk-iomanager: "@settings.tk-iomanager.standalone"
-    tk-iomanager: "@settings.tk-desktop-timecard.standalone"
+    tk-timecard: "@settings.tk-desktop-timecard.standalone"
   groups:
   - matches:
     - "Katana*"
@@ -56,6 +56,7 @@ settings.tk-desktop.project:
     - "*Motion*"
     - "*Nuke*"
     - "*Photoshop*"
+    - "*3DE*"
     name: Creative Tools
   - matches:
     - "*Hiero*"
