@@ -72,7 +72,7 @@ settings.tk-nuke-writenode.shot:
     proxy_publish_template:
     proxy_render_template:
     publish_template: nuke_shot_render_pub_exr
-    render_template: nuke_shot_render_pub_exr
+    render_template: nuke_shot_render_dev_exr
     settings:
       datatype: 16 bit half
     tank_type: Rendered Image

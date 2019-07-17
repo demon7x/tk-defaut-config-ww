@@ -51,6 +51,9 @@ keys:
        type: int
        format_spec: "04"
        alias: version
+    version_two:
+       type: int
+       format_spec: "02"
     timestamp:
         type: str
     width:
@@ -139,7 +142,8 @@ keys:
             usd: USD
             abc: Alembic
             ma: Maya Ascii
-
+    number:
+        type: int
 #
 # The paths section contains all the the key locations where files are to be stored
 # by Sgtk Apps. Each path is made up of several keys (like {version} or {shot}) and
@@ -406,13 +410,32 @@ paths:
         definition: '@shot_root/dev/images/{name}/v{version}/{width}x{height}/{Shot}_{name}_{nuke.output}_{eye}_v{version}.{SEQ}.exr'
     nuke_shot_render_pub_stereo:
         definition: '@shot_root/pub/elements/{name}/v{version}/{width}x{height}/{Shot}_{name}_{nuke.output}_{eye}_v{version}.{SEQ}.exr'
+    nuke_shot_render_dev_exr:
+        definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.exr'
     nuke_shot_render_pub_exr:
         definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.exr'
     # review output
     shot_quicktime_quick:
         definition: '@shot_root/review/quickdaily/{Shot}_{name}_{iteration}.mov'
     nuke_shot_render_movie:
-        definition: '@shot_root/review/{Shot}_{name}_{nuke.output}_v{version}.mov'
+        definition: '@shot_root/review/{Shot}_{nuke.output}_v{version}.mov'
+    plate_exr:
+        definition: 'seq/{Sequence}/{Shot}/plate/org/v{version}/{Shot}_org_v{version_two}.{SEQ}.exr'
+    source_exr:
+        definition: 'seq/{Sequence}/{Shot}/plate/src{number}/v{version}/{Shot}_org_v{version_two}.{SEQ}.exr'
+    plate_dpx:
+        definition: 'seq/{Sequence}/{Shot}/plate/org/v{version}/{Shot}_org_v{version_two}.{SEQ}.dpx'
+    source_dpx:
+        definition: 'seq/{Sequence}/{Shot}/plate/src{number}/v{version}/{Shot}_org_v{version_two}.{SEQ}.dpx'
+
+    plate_exr3:
+        definition: 'seq/{Sequence}/{Shot}/plate/org/v{version}/{Shot}_org_v{version}.{SEQ}.exr'
+    source_exr3:
+        definition: 'seq/{Sequence}/{Shot}/plate/src{number}/v{version}/{Shot}_org_v{version}.{SEQ}.exr'
+    plate_dpx3:
+        definition: 'seq/{Sequence}/{Shot}/plate/org/v{version}/{Shot}_org_v{version}.{SEQ}.dpx'
+    source_dpx3:
+        definition: 'seq/{Sequence}/{Shot}/plate/src{number}/v{version}/{Shot}_org_v{version}.{SEQ}.dpx'
 
     #
     # Hiero

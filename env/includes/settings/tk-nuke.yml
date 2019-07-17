@@ -128,6 +128,8 @@ settings.tk-nuke.project:
       location: "@apps.tk-nuke-quickreview.location"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
+  - {app_instance: tk-multi-workfiles2, name: File Save...}
+  automatic_context_switch: false
   location: "@engines.tk-nuke.location"
 
 # sequence
