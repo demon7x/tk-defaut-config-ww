@@ -142,6 +142,7 @@ keys:
             usd: USD
             abc: Alembic
             ma: Maya Ascii
+            mb: Maya Binary
     number:
         type: int
 #

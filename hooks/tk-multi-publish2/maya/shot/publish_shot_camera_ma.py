@@ -254,7 +254,7 @@ class MayaSessionShotCameraMayaAsciiPublishPlugin(HookBaseClass):
         # ...and execute it:
         try:
             cmds.select(item.properties['name'])
-            cmds.file(publish_path.replace("\\", "/"),f=1,es=1,op="v=0",typ="mayaAscii")
+            cmds.file(publish_path.replace("\\", "/"),f=1,es=1,op="v=0",typ="mayaBinary")
         except Exception, e:
             self.logger.error("Failed to export camera export: %s" % e)
             return

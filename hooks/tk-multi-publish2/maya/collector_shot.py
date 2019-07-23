@@ -615,7 +615,7 @@ class MayaSessionCollector(HookBaseClass):
                     )
 
                 camera_maya_item.properties['name'] = component_name
-                camera_maya_item.properties['file_extension'] = "ma"
+                camera_maya_item.properties['file_extension'] = "mb"
                 camera_maya_item.properties['namespace'] = component_name.split(":")[0]
                 camera_maya_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
                 camera_maya_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
