@@ -243,14 +243,19 @@ class KatanaActions(HookBaseClass):
         # Create node
 
             name = sg_publish_data.get("name")
-            node = NodegraphAPI.CreateNode("Geo_In", parent=root)
+
+            if not name.find('Cam') == -1:
+                node = NodegraphAPI.CreateNode("Cam_In", parent=root)
+                select = {"ABC":1,"USD":0}
+            else:
+                node = NodegraphAPI.CreateNode("Geo_In", parent=root)
+                name_param = node.getParameters().getChild("user").getChild("rename")
+                name_param.setValue(name,0)
             NodegraphAPI.SetNodePosition(node, (pos[0][0], pos[0][1]))
             file_type_param = node.getParameters().getChild("user").getChild("fileType")
             file_type_param.setValue(select[file_type],0)
             path_param = node.getParameters().getChild("user").getChild("asset")
             path_param.setValue(path,0)
-            name_param = node.getParameters().getChild("user").getChild("rename")
-            name_param.setValue(name,0)
 
         return node
 
