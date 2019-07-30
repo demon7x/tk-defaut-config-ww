@@ -21,6 +21,7 @@ includes:
 - ./tk-multi-snapshot.yml
 - ./tk-multi-workfiles2.yml
 - ./tk-maya-makemov.yml
+- ./tk-maya-output.yml
 
 ################################################################################
 
@@ -33,6 +34,7 @@ settings.tk-maya.asset:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-maya-makemov: "@settings.tk-maya-makemov"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   debug_logging: false
@@ -52,6 +54,7 @@ settings.tk-maya.asset_step:
     tk-multi-snapshot: "@settings.tk-multi-snapshot.maya.asset_step"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.maya.asset_step"
     tk-maya-makemov: "@settings.tk-maya-makemov"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
@@ -69,6 +72,7 @@ settings.tk-maya.project:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-multi-loader2: "@settings.tk-multi-loader2.maya"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
@@ -84,6 +88,7 @@ settings.tk-maya.sequence:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-maya-makemov: "@settings.tk-maya-makemov"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   location: "@engines.tk-maya.location"
@@ -97,6 +102,7 @@ settings.tk-maya.shot:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-maya-makemov: "@settings.tk-maya-makemov"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   location: "@engines.tk-maya.location"
@@ -117,6 +123,7 @@ settings.tk-maya.shot_step:
     tk-multi-snapshot: "@settings.tk-multi-snapshot.maya.shot_step"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.maya.shot_step"
     tk-maya-makemov: "@settings.tk-maya-makemov"
+    tk-maya-output: "@settings.tk-maya-output"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
