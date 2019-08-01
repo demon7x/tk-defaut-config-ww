@@ -340,6 +340,18 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         component_prim.GetReferences().AddReference(self._get_relatives_path(publish_path,asset_usd_path).replace("\\","/"))
         
+        print "---------"
+        print "---------"
+        print "---------"
+        print "---------"
+        print "---------"
+        print "---------"
+        print "---------"
+        print "---------"
+        print sub_component_parents
+
+
+
         sub_component_parents = self._return_order_node_list(sub_component_parents)
         sub_component_parents.reverse()
         for parent in sub_component_parents:
@@ -348,8 +360,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             model = Usd.ModelAPI(child_prim)
             model.SetKind(Kind.Tokens.assembly)
             self._set_xform(parent,child_prim)
-            
         sub_components = self._return_order_node_list(sub_components)
+        
 
         for sub_component in sub_components:
             
@@ -402,7 +414,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         
         return_list = []
 
-        parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in node_list])) 
+        parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in node_list if cmds.listRelatives(x,p=1)])) 
         for parent in parents:
             nodes = cmds.listRelatives(parent,c=1,f=1)
             nodes.reverse()
