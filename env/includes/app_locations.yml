@@ -196,7 +196,7 @@ apps.tk-mari-projectmanager.location:
 apps.tk-iomanager.location:
   name: tk-iomanager
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-iomanager
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-iomanager
   windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-maya-makemov
 
 apps.tk-maya-makemov.location:
