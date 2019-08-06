@@ -339,7 +339,6 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
             usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
             cmds.select(item.properties['name'])
-            print usd_export_cmd
             mel.eval(usd_export_cmd)
             
             sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
@@ -355,7 +354,6 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             component_prim.GetReferences().AddReference(asset_usd_path)
 
             for parent in sub_component_parents:
-
                 child_prim = UsdGeom.Xform.Define(component_stage,self._convert_prim_path(parent,item).replace("|","/")).GetPrim()
                 _set_assembly(child_prim)
                 model = Usd.ModelAPI(child_prim)
@@ -377,9 +375,11 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
 
     
     def _convert_prim_path(self,node_name,item):
+        
 
-        temp = [ re.search("(?<=:)\D+",x).group() for x in node_name.split("|")[1:]]
-        temp[0]= self._remove_namespace(item.properties['name'])
+        temp = [ re.search("(?<=:)\D+",x).group() for x in node_name.split("|")[1:] if re.search("(?<=:)\D+",x) ]
+        if temp:
+            temp[0]= self._remove_namespace(item.properties['name'])
         return "|%s"%"|".join(temp)
     
     def _remove_namespace(self,node_name):

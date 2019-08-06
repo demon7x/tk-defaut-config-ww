@@ -248,17 +248,35 @@ class KatanaActions(HookBaseClass):
                 node = NodegraphAPI.CreateNode("Cam_In", parent=root)
                 select = {"ABC":1,"USD":0}
             else:
-                node = NodegraphAPI.CreateNode("Geo_In", parent=root)
+                node = NodegraphAPI.CreateNode("Geo_In_dev", parent=root)
                 name_param = node.getParameters().getChild("user").getChild("rename")
                 name_param.setValue(name,0)
+                if file_type == "USD" :
+                    rename_param = node.getParameters().getChild("user").getChild("rename")
+                    rename_param.setValue("_cache_grp",0)
+                    usd_path_param = node.getParameters().getChild("user").getChild("usd_prim_path")
+                    self._set_usd_root_path(usd_path_param,path,node)
+
             NodegraphAPI.SetNodePosition(node, (pos[0][0], pos[0][1]))
             file_type_param = node.getParameters().getChild("user").getChild("fileType")
             file_type_param.setValue(select[file_type],0)
             path_param = node.getParameters().getChild("user").getChild("asset")
             path_param.setValue(path,0)
+            
 
         return node
+    
+    def _set_usd_root_path(self, param,usd_file,node):
+        from pxr import Kind, Sdf, Usd, UsdGeom
+        stage = Usd.Stage.Open(usd_file)
+        prim = stage.Load()
+        prim_path = prim.GetChildren()[0].GetPrimPath().pathString
+        node_name = prim.GetChildren()[0].GetPrimPath().name
+        param.setValue(prim_path,0)
+        node.setName(node_name+"_")
 
+
+        
 
     def _get_rez_module(self):
         
