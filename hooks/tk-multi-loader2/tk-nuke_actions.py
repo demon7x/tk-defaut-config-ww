@@ -164,10 +164,85 @@ class NukeAddActions(HookBaseClass):
         for channel in channels:
             if panel.value(channel):
                 select_channels.append(channel)
-        
-        for channel in select_channels:
-            self._create_read_node(path.replace("primary",channel),sg_publish_data)
 
+        xpos , ypos = self._find_position()
+        ex_x = xpos
+        ex_y = ypos -150
+        
+        if "DeepID" in select_channels :
+            select_channels.remove("DeepID")
+            select_channels.append("DeepID")
+
+        for channel in select_channels:
+            if channel == "Extra":
+                extra_path = os.path.dirname(path.replace("primary",channel))
+                for extra in os.listdir(extra_path):
+                    default_path = os.path.join(extra_path,
+                    extra,os.path.basename(path))
+                    self._create_channel_read_node(default_path,extra,ex_x,ex_y,sg_publish_data)
+                    ex_x = ex_x + 100
+            else:
+                self._create_channel_read_node(path,channel,xpos,ypos,sg_publish_data)
+                xpos = xpos + 100
+
+
+
+    
+    def _create_channel_read_node(self,default_path,channel,x,y,sg_publihs_data):
+
+        import nuke
+
+        path = default_path.replace("primary",channel)
+        
+        
+        
+        if channel == "DeepID":
+            temp = os.path.dirname(path)
+            deep_path = nuke.getFileNameList(temp)[0]
+            deep_path = os.path.join(temp,deep_path)
+            
+            DeepRead = nuke.createNode("DeepRead")
+            DeepRead.knob('file').fromUserText(deep_path)
+            DeepRead['xpos'].setValue(x)
+            DeepRead['ypos'].setValue(y+100)
+            DRC = nuke.nodes.DeepRecolor()
+            DRC['xpos'].setValue(x)
+            DRC['ypos'].setValue(y+150)
+            DRC.setInput(0,DeepRead)
+            constant = nuke.nodes.Constant()
+            constant['xpos'].setValue(DRC.xpos()+100)
+            constant['ypos'].setValue(DRC.ypos()-23)
+            DRC.setInput(1,constant)
+            DP = nuke.nodes.DeepPicker()
+            DP['xpos'].setValue(x)
+            DP['ypos'].setValue(y+200)
+            DP.setInput(0,DRC)
+
+        else:
+
+            read_node = nuke.createNode("Read")
+            read_node["file"].fromUserText(path)
+            seq_range = self._find_sequence_range(path)
+            read_node['xpos'].setValue(x)
+            read_node['ypos'].setValue(y+100)
+
+            if seq_range:
+                read_node["first"].setValue(seq_range[0])
+                read_node["last"].setValue(seq_range[1])
+
+
+
+    def _find_position(self):
+        import nuke
+        all_nodes = nuke.allNodes()
+        xpos_t , ypos_t = 0,0
+
+        for node in all_nodes:
+            if node.xpos() < xpos_t:
+                xpos_t = node.xpos()
+            if node.ypos() > ypos_t:
+                y_pos_t = node.ypos()
+        return xpos_t - 300 , ypos_t + 300
 
 
     def _rv(self,path,sg_publish_data):
