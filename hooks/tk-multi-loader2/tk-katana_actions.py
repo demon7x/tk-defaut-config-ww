@@ -243,17 +243,29 @@ class KatanaActions(HookBaseClass):
         # Create node
 
             name = sg_publish_data.get("name")
+            publish_type = sg_publish_data.get("published_file_type")['name']
+            asset_name = sg_publish_data.get("description")
+            print asset_name 
 
             if not name.find('Cam') == -1:
                 node = NodegraphAPI.CreateNode("Cam_In", parent=root)
                 select = {"ABC":1,"USD":0}
             else:
-                node = NodegraphAPI.CreateNode("Geo_In_dev", parent=root)
+                
+                if publish_type in ['Set USD','Set ABC']:
+                    node = NodegraphAPI.CreateNode("Geo_In_set", parent=root)
+                    rename_set_param1 = node.getParameters().getChild("user").getChild("rename_set1")
+                    rename_set_param1.setValue("_"+asset_name+"_grp",0)
+                    rename_set_param2 = node.getParameters().getChild("user").getChild("rename_set2")
+                    rename_set_param2.setValue(asset_name+"\d+",0)
+
+                else:
+                    node = NodegraphAPI.CreateNode("Geo_In_dev", parent=root)
                 name_param = node.getParameters().getChild("user").getChild("rename")
                 name_param.setValue(name,0)
+                rename_param = node.getParameters().getChild("user").getChild("rename")
+                rename_param.setValue("_cache_grp",0)
                 if file_type == "USD" :
-                    rename_param = node.getParameters().getChild("user").getChild("rename")
-                    rename_param.setValue("_cache_grp",0)
                     usd_path_param = node.getParameters().getChild("user").getChild("usd_prim_path")
                     self._set_usd_root_path(usd_path_param,path,node)
 

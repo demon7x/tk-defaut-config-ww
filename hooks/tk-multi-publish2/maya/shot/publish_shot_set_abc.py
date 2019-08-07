@@ -289,7 +289,11 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         if start_frame and end_frame:
             alembic_args.append("-fr %d %d" % (start_frame, end_frame))
 
-        select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1) if not x.find("cache_grp") == -1 ]
+        #select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1) if not x.find("cache_grp") == -1 ]
+
+
+        select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1,ad=1) 
+        if not x.find("cache_grp") == -1 and x.find("cache_grp|") == -1 ]
         alembic_args.append(("-root %s" % " -root ".join(select_list)))
 
         # Set the output path: 
@@ -310,6 +314,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
+
+        item.description = cmds.listRelatives(item.properties['name'],c=1)[0].split(":")[1].replace("_grp","")
         super(MayaSessionComponentAlembicPublishPlugin, self).publish(settings, item)
 
 

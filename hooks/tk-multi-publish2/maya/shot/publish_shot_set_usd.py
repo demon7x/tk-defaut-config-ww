@@ -99,6 +99,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
 
         base_settings.update(file_type)
         
+
         return base_settings
 
     @property
@@ -264,6 +265,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # get the path to create and publish
         publish_path = item.properties["path"]
 
+
         # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
@@ -278,7 +280,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-dms "none"',
             '-uvs 1',
             '-cls 0',
-            '-vis 0',
+            '-vis 1',
             '-mt 0',
             '-sl',
             '-fs %f'%item.properties['sub_frame'],
@@ -333,8 +335,9 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
+        
 
-        print usd_export_cmd
+        item.description = cmds.listRelatives(item.properties['name'],c=1)[0].split(":")[1].replace("_grp","")
         super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
 
 
