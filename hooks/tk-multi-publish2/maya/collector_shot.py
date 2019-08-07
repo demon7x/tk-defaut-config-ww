@@ -481,7 +481,7 @@ class MayaSessionCollector(HookBaseClass):
         
         for asset in shot_asset_list:
 
-            component_name = cmds.listRelatives(asset,c=1)[0]
+            component_name = asset
         
             if cache_type == "usd":
 

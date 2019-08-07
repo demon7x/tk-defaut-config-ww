@@ -342,7 +342,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             mel.eval(usd_export_cmd)
             
             sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
-
+            sub_component_parents  = [ x for x in sub_component_parents if not x.find(item.properties['name']) == -1 ]
             root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
             component_stage = Usd.Stage.Open(root_layer)
             component_prim = UsdGeom.Xform.Define(component_stage,"/%s"%self._remove_namespace(item.properties['name'])).GetPrim()
