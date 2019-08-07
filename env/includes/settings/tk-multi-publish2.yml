@@ -185,14 +185,14 @@ settings.tk-multi-publish2.maya.asset_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_usd.py"
     settings:
         Publish Template: asset_cmpt_asmb_usd
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_scenegraphXML.py"
-    settings:
-        Publish Template: asset_scenegraphXML
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_component_scenegraphXML.py"
-    settings:
-        Publish Template: asset_scenegraphXML
+  #- name: Publish to Shotgun
+  #  hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_scenegraphXML.py"
+  #  settings:
+  #      Publish Template: asset_scenegraphXML
+  #- name: Publish to Shotgun
+  #  hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_component_scenegraphXML.py"
+  #  settings:
+  #      Publish Template: asset_scenegraphXML
   - name: Publish to Shotgu
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_assembly_usd.py"
     settings:
@@ -231,10 +231,10 @@ settings.tk-multi-publish2.maya.shot_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_abc.py"
     settings:
         Publish Template: shot_component_alembic
-  - name: Create sceneGraphXML
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_xml.py"
-    settings:
-        Publish Template: shot_component_xml
+ # - name: Create sceneGraphXML
+ #   hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_xml.py"
+ #   settings:
+ #       Publish Template: shot_component_xml
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_usd.py"
     settings:

@@ -392,16 +392,16 @@ class MayaSessionCollector(HookBaseClass):
         )
 
 
-        xml_icon_path = os.path.join(
-            self.disk_location,
-            "icons",
-            "xml.png"
-        )
+        #xml_icon_path = os.path.join(
+        #    self.disk_location,
+        #    "icons",
+        #    "xml.png"
+        #)
                 
 
 
-        xml_item.properties['name'] = component_name
-        xml_item.set_icon_from_path(xml_icon_path)
+        #xml_item.properties['name'] = component_name
+        #xml_item.set_icon_from_path(xml_icon_path)
 
         self.logger.debug("Collected component : %s"%(component_name))
     
@@ -439,16 +439,16 @@ class MayaSessionCollector(HookBaseClass):
         )
 
 
-        xml_icon_path = os.path.join(
-            self.disk_location,
-            "icons",
-            "xml.png"
-        )
+        #xml_icon_path = os.path.join(
+        #    self.disk_location,
+        #    "icons",
+        #    "xml.png"
+        #)
                 
 
 
-        xml_item.properties['name'] = assembly_name
-        xml_item.set_icon_from_path(xml_icon_path)
+        #xml_item.properties['name'] = assembly_name
+        #xml_item.set_icon_from_path(xml_icon_path)
 
         self.logger.debug("Collected assembly : %s"%(assembly_name))
 
