@@ -305,7 +305,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         try:
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             
-            select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1) if not x.find("cache_grp") == -1 ]
+            select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1,ad=1) 
+            if not x.find("cache_grp") == -1 and x.find("cache_grp|") == -1 ]
             for obj in select_list:
                 if not cmds.attributeQuery("USD_kind", node = obj, exists=True):
                     cmds.addAttr(obj, longName="USD_kind",dataType="string")
@@ -332,6 +333,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
+
+        print usd_export_cmd
         super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
 
 
