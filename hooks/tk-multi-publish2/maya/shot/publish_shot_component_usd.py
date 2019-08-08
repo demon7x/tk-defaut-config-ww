@@ -358,7 +358,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
                 _set_assembly(child_prim)
                 model = Usd.ModelAPI(child_prim)
                 model.SetKind(Kind.Tokens.assembly)
-                self._set_xform(parent,child_prim)
+                #self._set_xform(parent,child_prim)
             
 
             try:
