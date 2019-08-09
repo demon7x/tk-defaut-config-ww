@@ -94,6 +94,7 @@ class MayaSessionCollector(HookBaseClass):
 
             self.collect_shot(item)
             self.collect_camera(item)
+            self.collect_dummy(item)
         else:
 
             self.logger.info(
@@ -410,7 +411,8 @@ class MayaSessionCollector(HookBaseClass):
             sub_frame = 0.25
             
         
-        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('setgrp') == -1 ] 
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('setgrp') == -1 
+        and not cmds.listRelatives(x,p=1)] 
         
         for asset in shot_asset_list:
 
@@ -440,6 +442,7 @@ class MayaSessionCollector(HookBaseClass):
                 usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
                 usd_item.properties['sub_frame'] = sub_frame
                 usd_item.set_icon_from_path(usd_icon_path)
+
             
             else:
                 abc_item = parent_item.create_item(
@@ -477,7 +480,9 @@ class MayaSessionCollector(HookBaseClass):
         if not sub_frame :
             sub_frame = 0.25
 
-        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
+        shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 
+        and cmds.referenceQuery( x, isNodeReferenced=True )
+        and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
         
         for asset in shot_asset_list:
 
@@ -624,3 +629,75 @@ class MayaSessionCollector(HookBaseClass):
         self.logger.debug("Collected shot camera : %s"%(shot_name))
 
                 
+    def collect_dummy(self,parent_item):
+
+        dummy_transform_name = ['mmGeom','aniGeom']
+        shot_name = parent_item.context.entity['name']
+        start_frame = cmds.playbackOptions(min=1,q=1)
+        end_frame = cmds.playbackOptions(max=1,q=1)
+
+
+        dummy_item = parent_item.create_item(
+            "maya.session.dummy",
+            "Dummy",
+            "Export Dummy"
+        )
+
+
+        dummy_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "dummy.png"
+        )
+                
+        dummy_item.properties['name'] = shot_name
+        dummy_item.properties['s_f'] = start_frame
+        dummy_item.properties['e_f'] = end_frame
+        dummy_item.set_icon_from_path(dummy_icon_path)
+
+        usd_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "usd.png"
+        )
+
+        abc_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "alembic.png"
+        )
+        
+        for transform in cmds.ls(type="transform"):
+            if transform in dummy_transform_name :
+                component_name = transform
+                dummy_usd_item = dummy_item.create_item(
+                        "maya.session.dummy.usd",
+                        "Usd",
+                        "Export %s USD"%component_name
+                    )
+
+                dummy_usd_item.properties['name'] = component_name
+                dummy_usd_item.properties['file_extension'] = "usd"
+                dummy_usd_item.properties['namespace'] = component_name.split(":")[0]
+                dummy_usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
+                dummy_usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
+                dummy_usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+
+                dummy_usd_item.set_icon_from_path(usd_icon_path)
+
+                dummy_abc_item = dummy_item.create_item(
+                        "maya.session.dummy.abc",
+                        "Alembic",
+                        "Export %s Alembic"%component_name
+                    )
+                
+                dummy_abc_item.properties['name'] = component_name
+                dummy_abc_item.properties['file_extension'] = "abc"
+                dummy_abc_item.properties['namespace'] = component_name.split(":")[0]
+                dummy_abc_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
+                dummy_abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
+                dummy_abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                dummy_abc_item.set_icon_from_path(abc_icon_path)
+
+
+        self.logger.debug("Collected shot dummy : %s"%(shot_name))

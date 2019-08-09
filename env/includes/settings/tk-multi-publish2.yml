@@ -227,6 +227,10 @@ settings.tk-multi-publish2.maya.shot_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_usd.py"
     settings:
         Publish Template: shot_cmpt_asmb_usd
+  #- name: To Tractor
+  #  hook: "{config}/tk-multi-publish2/maya/shot/publish_to_tractor.py"
+  #  settings:
+  #      Publish Template: shot_cmpt_asmb_usd
   - name: Export Alembic
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_abc.py"
     settings:
@@ -245,6 +249,14 @@ settings.tk-multi-publish2.maya.shot_step:
         Publish Template: shot_camera_dummy
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_ma.py"
+    settings:
+        Publish Template: shot_camera_dummy
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_dummy_usd.py"
+    settings:
+        Publish Template: shot_camera_dummy
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_dummy_abc.py"
     settings:
         Publish Template: shot_camera_dummy
   - name: Publish to Shotgun
