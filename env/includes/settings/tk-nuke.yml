@@ -23,8 +23,6 @@ includes:
 - ./tk-multi-shotgunpanel.yml
 - ./tk-multi-snapshot.yml
 - ./tk-multi-workfiles2.yml
-- ./tk-nuke-writenode.yml
-- ./tk-nuke-quickreview.yml
 - ./tk-multi-output.yml
 
 ################################################################################
