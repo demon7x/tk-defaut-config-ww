@@ -194,7 +194,6 @@ settings.tk-nuke.nukestudio.asset_step:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.nukestudio"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.hiero"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.hiero"
-    tk-nuke-writenode: "@settings.tk-nuke-writenode.asset"
   bin_context_menu:
   - app_instance: tk-multi-workfiles2
     keep_in_menu: false
@@ -278,7 +277,6 @@ settings.tk-nuke.nukestudio.shot_step:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.nukestudio"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.hiero"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.hiero"
-    tk-nuke-writenode: "@settings.tk-nuke-writenode.shot"
   bin_context_menu:
   - app_instance: tk-multi-workfiles2
     keep_in_menu: false
