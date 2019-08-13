@@ -264,7 +264,7 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
 
             "-eulerFilter",
 
-            "-worldSpace",
+            "-step '%f'"%item.properties['sub_frame']
 
         ]
 
@@ -310,8 +310,8 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True))
-    end = int(cmds.playbackOptions(q=True, max=True))
+    start = int(cmds.playbackOptions(q=True, min=True)) -2 
+    end = int(cmds.playbackOptions(q=True, max=True)) +2
 
     return start, end
 

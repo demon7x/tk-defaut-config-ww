@@ -128,16 +128,18 @@ class BaseAdapter(object):
 
     @classmethod
     def execute(cls, context, args,command):
-
+        
         os.environ['USE_SHOTGUN'] = "OK"
-
         if args:
             command += ' {args}'.format(args=args)
+        if platform.system()  == "Linux":
+            command = "mate-terminal -x bash -c '{}'".format(command)
 
         proc = context.execute_shell(
-            command=command,
-            stdin=False,
-            block=False
+            command = command,
+            #command = "gnome-terminal -x bash -c 'python'",
+            stdin = False,
+            block = False
         )
         
         return_code = 0

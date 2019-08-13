@@ -278,10 +278,12 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
             '-dms "none"',
             '-uvs 1',
             '-cls 0',
-            '-vis 0',
+            '-vis 1',
             '-mt 0',
             '-sl',
             '-sn 1'
+            '-fs %f'%item.properties['sub_frame'],
+            '-ft %f'%item.properties['sub_frame']
             ]
 
 
@@ -322,6 +324,7 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
+        print usd_export_cmd
         super(MayaSessionShotCameraUSDPublishPlugin, self).publish(settings, item)
 
 
@@ -340,8 +343,8 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True))
-    end = int(cmds.playbackOptions(q=True, max=True))
+    start = int(cmds.playbackOptions(q=True, min=True)) -2
+    end = int(cmds.playbackOptions(q=True, max=True)) +2
 
     return start, end
 

@@ -636,6 +636,14 @@ class MayaSessionCollector(HookBaseClass):
         start_frame = cmds.playbackOptions(min=1,q=1)
         end_frame = cmds.playbackOptions(max=1,q=1)
 
+        publisher = self.parent
+        entity = publisher.context.entity
+        sg = self.tank.shotgun
+        sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
+
+        if not sub_frame :
+            sub_frame = 0.25
+
 
         dummy_item = parent_item.create_item(
             "maya.session.dummy",
@@ -682,6 +690,7 @@ class MayaSessionCollector(HookBaseClass):
                 dummy_usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
                 dummy_usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 dummy_usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+                dummy_usd_item.properties['sub_frame'] = sub_frame
 
                 dummy_usd_item.set_icon_from_path(usd_icon_path)
 
@@ -698,6 +707,7 @@ class MayaSessionCollector(HookBaseClass):
                 dummy_abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
                 dummy_abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
                 dummy_abc_item.set_icon_from_path(abc_icon_path)
+                dummy_abc_item.properties['sub_frame'] = sub_frame
 
 
         self.logger.debug("Collected shot dummy : %s"%(shot_name))
