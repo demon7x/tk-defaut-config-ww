@@ -323,6 +323,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             return
 
         asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
+        self.parent.ensure_folder_exists(os.path.dirname(asset_usd_path))
         usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
         usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
         cmds.select(item.properties['name'])
@@ -340,15 +341,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         component_prim.GetReferences().AddReference(self._get_relatives_path(publish_path,asset_usd_path).replace("\\","/"))
         
-        print "---------"
-        print "---------"
-        print "---------"
-        print "---------"
-        print "---------"
-        print "---------"
-        print "---------"
-        print "---------"
-        print sub_component_parents
 
 
 
@@ -359,7 +351,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             child_prim = UsdGeom.Xform.Define(component_stage,parent.replace("|","/")).GetPrim()
             model = Usd.ModelAPI(child_prim)
             model.SetKind(Kind.Tokens.assembly)
-            self._set_xform(parent,child_prim)
+            #self._set_xform(parent,child_prim)
         sub_components = self._return_order_node_list(sub_components)
         
 
@@ -380,7 +372,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             model.SetKind(Kind.Tokens.component)
             child_prim.SetInstanceable(1)
             #component_prim.GetReferences().AddReference(sub_component_path)
-            self._set_xform(sub_component,child_prim)
+            #self._set_xform(sub_component,child_prim)
 
         # ...and execute it:
         try:
