@@ -28,6 +28,7 @@ ENGINES = {
     'tk-houdini':'houdini',
     'tk-maya': 'maya' ,
     'tk-nuke': 'nuke',
+    'tk-nukestudio': 'nuke',
     'tk-katana': 'katana',
     'tk-mari' : 'mari',
     'tk-3de4' : '3de'
@@ -134,6 +135,7 @@ class BaseAdapter(object):
             command += ' {args}'.format(args=args)
         if platform.system()  == "Linux":
             command = "mate-terminal -x bash -c '{}'".format(command)
+        
 
         proc = context.execute_shell(
             command = command,
