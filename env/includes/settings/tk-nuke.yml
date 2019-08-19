@@ -119,7 +119,7 @@ settings.tk-nuke.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.nuke"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
@@ -134,7 +134,7 @@ settings.tk-nuke.sequence:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.nuke"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   location: "@engines.tk-nuke.location"
@@ -147,7 +147,7 @@ settings.tk-nuke.shot:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.nuke"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   location: "@engines.tk-nuke.location"
@@ -168,7 +168,7 @@ settings.tk-nuke.shot_step:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.nuke"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.nuke.shot_step"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.nuke.shot_step"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.nuke"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}

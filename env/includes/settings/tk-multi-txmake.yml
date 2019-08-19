@@ -13,7 +13,10 @@
 includes:
 - ../app_locations.yml
 
+
 ################################################################################
 
-settings.tk-maya-output:
-  location: "@apps.tk-maya-output.location"
+# ---- Stand alone publish
+
+settings.tk-multi-txmake.standalone:
+  location: "@apps.tk-multi-txmake.location"

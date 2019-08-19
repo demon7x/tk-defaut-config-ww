@@ -196,8 +196,8 @@ apps.tk-mari-projectmanager.location:
 apps.tk-iomanager.location:
   name: tk-iomanager
   type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-iomanager
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-maya-makemov
+  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-iomanager
+  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-maya-makemov
 
 apps.tk-maya-makemov.location:
   name: tk-maya-makemov
@@ -208,17 +208,6 @@ apps.tk-maya-makemov.location:
   #path: https://github.com/demon7x/tk-maya-makemov.git
   #version: v0.0.1
 
-apps.tk-katana-output.location:
-  name: tk-katana-output
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-katana-output
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-katna-output
-
-apps.tk-maya-output.location:
-  name: tk-maya-output
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-maya-output
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-maya-output
 
 apps.tk-multi-output.location:
   name: tk-multi-output
@@ -231,6 +220,15 @@ apps.tk-desktop-timecard.location:
   type: dev
   linux_path: /westworld/inhouse/pipeline/shotgun/tk-desktop-timecard
   windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\tk-desktop-timecard
+  #type: git
+  #path: https://github.com/demon7x/tk-maya-makemov.git
+  #version: v0.0.1
+
+apps.tk-multi-txmake.location:
+  name: tk-multi-txmake
+  type: dev
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-txmake
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\tk-multi-txmake
   #type: git
   #path: https://github.com/demon7x/tk-maya-makemov.git
   #version: v0.0.1

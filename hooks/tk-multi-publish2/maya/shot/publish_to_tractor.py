@@ -19,7 +19,7 @@ import sgtk
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
+class MayaSessionToTractorPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -67,40 +67,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionShotComponentUSDPublishPlugin, self).settings or {}
+        base_settings = {}
 
-        # settings specific to this class
-        maya_publish_settings = {
-            "Publish Template": {
-                "type": "template",
-                "default": None,
-                "description": "Template path for published work files. Should"
-                               "correspond to a template defined in "
-                               "templates.yml.",
-            }
-        }
-
-        # update the base settings
-        base_settings.update(maya_publish_settings)
-
-
-        file_type = {
-            "File Types": {
-                "type": "list",
-                "default": [
-                    ["Component USD", "usd"],
-                ],
-                "description": (
-                    "List of file types to include. Each entry in the list "
-                    "is a list in which the first entry is the Shotgun "
-                    "published file type and subsequent entries are file "
-                    "extensions that should be associated."
-                )
-            },
-        }
-
-        base_settings.update(file_type)
-        
         return base_settings
 
     @property
@@ -140,64 +108,12 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         :returns: dictionary with boolean keys accepted, required and enabled
         """
 
-        accepted = True
-        publisher = self.parent
-        template_name = settings["Publish Template"].value
-
-        # ensure a work file template is available on the parent item
-        work_template = item.parent.parent.properties.get("work_template")
-        if not work_template:
-            self.logger.debug(
-                "A work template is required for the session item in order to "
-                "publish session geometry. Not accepting session geom item."
-            )
-            accepted = False
-
-        # ensure the publish template is defined and valid and that we also have
-        publish_template = publisher.get_template_by_name(template_name)
-        if not publish_template:
-            self.logger.debug(
-                "The valid publish template could not be determined for the "
-                "session geometry item. Not accepting the item."
-            )
-            accepted = False
-
-        # we've validated the publish template. add it to the item properties
-        # for use in subsequent methods
-        item.properties["publish_template"] = publish_template
-
-        # because a publish template is configured, disable context change. This
-        # is a temporary measure until the publisher handles context switching
-        # natively.
-        if not mel.eval("exists \"usdExport\""):
-            plugin_load = cmds.loadPlugin("pxrUsd.so")
-            #self.logger.debug(
-            #    "Item not accepted because alembic export command 'usdExport' "
-            #    "is not available. Perhaps the plugin is not enabled?"
-            #)
-            #accepted = False
-
-        # because a publish template is configured, disable context change. This
-        # is a temporary measure until the publisher handles context switching
-        # natively.
-        item.context_change_allowed = False
-
         return {
-            "accepted": accepted,
+            "accepted": True,
             "checked": True
         }
 
     def validate(self, settings, item):
-        """
-        Validates the given item to check that it is ok to publish. Returns a
-        boolean to indicate validity.
-
-        :param settings: Dictionary of Settings. The keys are strings, matching
-            the keys returned in the settings property. The values are `Setting`
-            instances.
-        :param item: Item to process
-        :returns: True if item is valid, False otherwise.
-        """
 
         path = _session_path()
         
@@ -249,9 +165,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         if "version" in work_fields:
             item.properties["publish_version"] = work_fields["version"]
 
-        # run the base class validation
-        return super(MayaSessionShotComponentUSDPublishPlugin, self).validate(
-            settings, item)
+        return True
+
 
     def publish(self, settings, item):
         """
@@ -286,8 +201,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-mt 0',
             '-sl',
             '-sn 1',
-            '-fs -1.0',
-            '-fs 1.0',
+            '-fs %f'%item.properties['sub_frame'],
             '-ft %f'%item.properties['sub_frame']
             
             ]
@@ -306,90 +220,87 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         if cmds.listRelatives(x,p=1) 
         and cmds.attributeQuery("Meshtype",node=x,exists=1) 
         and cmds.getAttr(x+".Meshtype", asString=True) == "component"]
+        
+        
+
+
 
         if not sub_components:
 
             usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed USD export help
-
             usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
 
-        # ...and execute it:
-            try:
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                cmds.select(item.properties['name'])
-                print usd_export_cmd
-                #mel.eval(usd_export_cmd)
-            except Exception, e:
-                import traceback
-            
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                self.logger.error("Failed to export USD: %s"% e, 
-                    extra = {
-                    "action_show_more_info": {
-                        "label": "Error Details",
-                        "tooltip": "Show the full error stack trace",
-                        "text": "<pre>%s</pre>" % (traceback.format_exc(),)
-                    }
-                }
-
-                )   
-                return
         else:
 
             asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
             usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
             usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
-            cmds.select(item.properties['name'])
-            #mel.eval(usd_export_cmd)
-            
-            sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
-            sub_component_parents  = [ x for x in sub_component_parents if not x.find(item.properties['name']) == -1 ]
-            root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
-            component_stage = Usd.Stage.Open(root_layer)
-            component_prim = UsdGeom.Xform.Define(component_stage,"/%s"%self._remove_namespace(item.properties['name'])).GetPrim()
-            component_stage.SetDefaultPrim(component_prim)
-            UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
-            model = Usd.ModelAPI(component_prim)
-            model.SetKind(Kind.Tokens.assembly)
-
-            component_prim.GetReferences().AddReference(asset_usd_path)
-
-            for parent in sub_component_parents:
-                child_prim = UsdGeom.Xform.Define(component_stage,self._convert_prim_path(parent,item).replace("|","/")).GetPrim()
-                _set_assembly(child_prim)
-                model = Usd.ModelAPI(child_prim)
-                model.SetKind(Kind.Tokens.assembly)
-                #self._set_xform(parent,child_prim)
-            
-
-            try:
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                status = component_stage.GetRootLayer().Save()
-            except Exception, e:
-                import traceback
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-
-
-        # Now that the path has been generated, hand it off to the
-        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)   
-
-
-    
-    def _convert_prim_path(self,node_name,item):
         
+        script = ''
+        script += 'import maya.standalone\n'
+        script += 'maya.standalone.initialize()\n'
+        script += 'import maya.cmds as cmds\n'
+        script += 'import maya.mel as mel\n'
 
-        temp = [ re.search("(?<=:)\D+",x).group() for x in node_name.split("|")[1:] if re.search("(?<=:)\D+",x) ]
-        if temp:
-            temp[0]= self._remove_namespace(item.properties['name'])
-        return "|%s"%"|".join(temp)
-    
-    def _remove_namespace(self,node_name):
+        script += '\n'
+        script += '\n'
+
+        script += 'cmds.file("{}",open=1,force=1,iv=1)\n'.format(cmds.file(query=True, sn=True))
+        script += 'cmds.select("{}")\n'.format(item.properties['name'])
+        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+        script += 'mel.eval(\'{}\')\n'.format(usd_export_cmd)
         
-        return node_name.split(":")[0]
+        tmp_path = os.path.splitext(item.properties["path"])[0]+".py"
 
+        with open( tmp_path, 'w' ) as f:
+            f.write(script)
+        
+        import sys
+        sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python2.7/site-packages")
+
+        import tractor.api.author as author
+
+        job = author.Job()
+        job.service = "convert"
+        job.priority = 50
+        
+        file_title = cmds.file(query=True, sn=True).split(".")[0].split("/")[-1]
+        project_name =item.context.project['name']
+        user_name = item.context.user['name']
+        user_id = os.environ['USER']
+
+        temp = "] ["
+        title = []
+        title.append(user_name)
+        title.append(project_name)
+        title.append(file_title)
+        title.append(item.properties['name'])
+        title.append("%d - %d"%(start_frame,end_frame))
+        title = temp.join(title)
+        title = "["+title+"]"
+        job.title = str(title)
+
+        command = ['rez-env','maya-2019vfarm','usd-19.03','--','mayapy']
+        command.append(tmp_path)
+        command = author.Command(argv=command)
+
+        task = author.Task(title = str(item.properties['name']))
+        task.addCommand(command)
+
+        rm_command = ['/bin/rm','-f']
+        rm_command.append(tmp_path)
+        rm_command = author.Command(argv=rm_command)
+        rm_task = author.Task(title = "rm tmp")
+        rm_task.addCommand(rm_command)
+        
+        rm_task.addChild(task)
+
+
+        job.addChild(rm_task)
+
+        job.spool(hostname="10.0.20.82",owner=user_id)
+
+        return
 
     def _get_sub_component_path(self,sub_component,item):
         path = os.path.splitext(item.properties["path"])[0]
@@ -397,16 +308,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         
         return path
 
-    def _set_xform(self,node,prim):
-
-        translate = cmds.xform(node,q=1,t=1)
-        rotate = cmds.xform(node,q=1,ro=1)
-        scale = cmds.xform(node,q=1,s=1)
-
-        xformAPI = UsdGeom.XformCommonAPI(prim)
-        xformAPI.SetTranslate(translate)
-        xformAPI.SetRotate(rotate)
-        xformAPI.SetScale(scale)
+    def finalize(self, settings, item):
+        pass
 
 
 def _find_scene_animation_range():
@@ -443,41 +346,6 @@ def _session_path():
     return path
 
 
-def _get_save_as_action():
-    """
-    Simple helper for returning a log action dict for saving the session
-    """
 
-    engine = sgtk.platform.current_engine()
-
-    # default save callback
-    callback = cmds.SaveScene
-
-    # if workfiles2 is configured, use that for file save
-    if "tk-multi-workfiles2" in engine.apps:
-        app = engine.apps["tk-multi-workfiles2"]
-        if hasattr(app, "show_file_save_dlg"):
-            callback = app.show_file_save_dlg
-
-    return {
-        "action_button": {
-            "label": "Save As...",
-            "tooltip": "Save the current session",
-            "callback": callback
-        }
-    }
-
-
-
-def _set_assembly(prim_path):
-
-    model = Usd.ModelAPI(prim_path)
-    model.SetKind(Kind.Tokens.assembly)
-    parent = prim_path.GetParent()
-
-    if parent:
-        _set_assembly(parent)
-    
-    return
         
 

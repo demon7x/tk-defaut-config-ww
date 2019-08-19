@@ -481,7 +481,7 @@ class MayaSessionCollector(HookBaseClass):
             sub_frame = 0.25
 
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 
-        and cmds.referenceQuery( x, isNodeReferenced=True )
+        #and cmds.referenceQuery( x, isNodeReferenced=True )
         and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
         
         for asset in shot_asset_list:

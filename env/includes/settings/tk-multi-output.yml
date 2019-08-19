@@ -17,3 +17,7 @@ includes:
 
 settings.tk-multi-output:
   location: "@apps.tk-multi-output.location"
+
+settings.tk-multi-output.nuke:
+  tractor_profile: ["comp"]  
+  location: "@apps.tk-multi-output.location"

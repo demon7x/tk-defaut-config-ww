@@ -20,6 +20,7 @@ includes:
 - ./tk-multi-demo.yml
 - ./tk-iomanager.yml
 - ./tk-desktop-timecard.yml
+- ./tk-multi-txmake.yml
 
 ################################################################################
 
@@ -45,6 +46,7 @@ settings.tk-desktop.project:
     tk-multi-demo: "@settings.tk-multi-demo.standalone"
     tk-iomanager: "@settings.tk-iomanager.standalone"
     tk-timecard: "@settings.tk-desktop-timecard.standalone"
+    tk-multi-txmake: "@settings.tk-multi-txmake.standalone"
   groups:
   - matches:
     - "Katana*"
