@@ -33,7 +33,7 @@ settings.tk-katana.asset:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.katana"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   debug_logging: false
@@ -50,7 +50,7 @@ settings.tk-katana.asset_step:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.katana.asset_step"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.katana"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
@@ -69,7 +69,7 @@ settings.tk-katana.project:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.katana.project"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.katana"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
@@ -84,7 +84,7 @@ settings.tk-katana.shot:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.katana"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   location: "@engines.tk-katana.location"
@@ -100,7 +100,7 @@ settings.tk-katana.shot_step:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.katana.shot_step"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
-    tk-multi-output: "@settings.tk-multi-output"
+    tk-multi-output: "@settings.tk-multi-output.katana"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}

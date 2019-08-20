@@ -21,3 +21,7 @@ settings.tk-multi-output:
 settings.tk-multi-output.nuke:
   tractor_profile: ["comp"]  
   location: "@apps.tk-multi-output.location"
+
+settings.tk-multi-output.katana:
+  tractor_profile: ["group1","group2","group3","group4"]  
+  location: "@apps.tk-multi-output.location"
