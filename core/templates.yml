@@ -421,13 +421,13 @@ paths:
         definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.mov'
     #WESTWORLD START
     nuke_write_node_exr:
-        definition: '@shot_root/dev/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.exr'
     nuke_write_node_dpx:
-        definition: '@shot_root/dev/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.dpx'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.dpx'
     nuke_write_node_jpg:
-        definition: '@shot_root/dev/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.jpg'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.jpg'
     nuke_write_node_mov:
-        definition: '@shot_root/dev/write/{Shot}_{Step}_v{version}.mov'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}.mov'
     # review output
     shot_quicktime_quick:
         definition: '@shot_root/review/quickdaily/{Shot}_{name}_{iteration}.mov'
