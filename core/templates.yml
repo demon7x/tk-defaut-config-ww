@@ -253,6 +253,8 @@ paths:
     # The location of backups of WIP files
     maya_shot_snapshot:
         definition: '@shot_root/dev/maya/snapshots/{Shot}_{Step}_v{version}.{timestamp}.{maya_extension}'
+    maya_shot_ziva_cache:
+        definition: '@shot_root/dev/maya/ziva/{name}_v{version}.zCache'
     # The location of published maya files
     maya_shot_publish:
         definition: '@shot_root/pub/maya/{Shot}_{Step}_v{version}.{maya_extension}' 
