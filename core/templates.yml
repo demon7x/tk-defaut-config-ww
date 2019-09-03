@@ -224,17 +224,17 @@ paths:
 
     # The location of WIP files
     photoshop_shot_work:
-        definition: '@shot_root/dev/photoshop/{name}.v{version}.psd'
+        definition: '@shot_root/dev/photoshop/{Shot}_{Step}_v{version}[_{name}].psd'
     shot_work_area_photoshop:
         definition: '@shot_root/dev/photoshop'
     # The location of backups of WIP files
     photoshop_shot_snapshot:
-        definition: '@shot_root/dev/photoshop/snapshots/{name}.v{version}.{timestamp}.psd'
+        definition: '@shot_root/dev/photoshop/snapshots/{Shot}_{Step}_v{version}[_{name}].{timestamp}.psd'
     # The location of published files
     shot_publish_area_photoshop:
         definition: '@shot_root/pub/photoshop'
     photoshop_shot_publish:
-        definition: '@shot_root/pub/photoshop/{name}.v{version}.psd'
+        definition: '@shot_root/pub/photoshop/{Shot}_{Step}_v{version[_{name}].psd'
 
 
     #
@@ -249,15 +249,15 @@ paths:
         definition: '@shot_root/pub/maya'
     # The location of WIP files
     maya_shot_work:
-        definition: '@shot_root/dev/maya/{Shot}_{Step}_v{version}.{maya_extension}'
+        definition: '@shot_root/dev/maya/{Shot}_{Step}_v{version}[_{name}].{maya_extension}'
     # The location of backups of WIP files
     maya_shot_snapshot:
-        definition: '@shot_root/dev/maya/snapshots/{Shot}_{Step}_v{version}.{timestamp}.{maya_extension}'
+        definition: '@shot_root/dev/maya/snapshots/{Shot}_{Step}_v{version}[_{name}].{timestamp}.{maya_extension}'
     maya_shot_ziva_cache:
         definition: '@shot_root/dev/maya/ziva/{name}_v{version}/{name}_v{version}.{SEQ}.zCache'
     # The location of published maya files
     maya_shot_publish:
-        definition: '@shot_root/pub/maya/{Shot}_{Step}_v{version}.{maya_extension}' 
+        definition: '@shot_root/pub/maya/{Shot}_{Step}_v{version}[_{name}].{maya_extension}' 
     # The location of published shot alembic
     maya_shot_alembic:
         definition: '@shot_root/pub/almebic/{name}.abc'
@@ -276,13 +276,13 @@ paths:
         definition: '@shot_root/pub/katana'
     # The location of WIP files
     katana_shot_work:
-        definition: '@shot_root/dev/katana/{Shot}_{Step}_v{version}.katana'
+        definition: '@shot_root/dev/katana/{Shot}_{Step}_v{version}[_{name}].katana'
     # The location of backups of WIP files
     katana_shot_snapshot:
-        definition: '@shot_root/dev/katana/snapshots/{Shot}_{Step}_v{version}.{timestamp}.katana'
+        definition: '@shot_root/dev/katana/snapshots/{Shot}_{Step}_v{version}[_{name}].{timestamp}.katana'
     # The location of published maya files
     katana_shot_publish:
-        definition: '@shot_root/pub/katana/{Shot}_{Step}_v{version}.katana' 
+        definition: '@shot_root/pub/katana/{Shot}_{Step}_v{version}[_{name}].katana' 
 
     #
     # 3DE4
@@ -507,17 +507,17 @@ paths:
 
     # The location of WIP files
     photoshop_asset_work:
-        definition: '@asset_root/dev/photoshop/{name}.v{version}.psd'
+        definition: '@asset_root/dev/photoshop/{Asset}_{Step}_v{version}[_{name}].psd'
     asset_work_area_photoshop:
         definition: '@asset_root/dev/photoshop'
     # The location of backups of WIP files
     photoshop_asset_snapshot:
-        definition: '@asset_root/dev/photoshop/snapshots/{name}.v{version}.{timestamp}.psd'
+        definition: '@asset_root/dev/photoshop/snapshots/{Asset}_{Step}_v{version}[_{name}].{timestamp}.psd'
     # The location of published files
     asset_publish_area_photoshop:
         definition: '@asset_root/pub/photoshop'
     photoshop_asset_publish:
-        definition: '@asset_root/pub/photoshop/{name}.v{version}.psd'
+        definition: '@asset_root/pub/photoshop/{Asset}_{Step}_v{version}[_{name}].psd'
 
 
     #
@@ -538,15 +538,15 @@ paths:
         definition: '@asset_root/pub/maya'
     # The location of WIP files
     maya_asset_work:
-        definition: '@asset_root/dev/maya/{Asset}_{Step}_v{version}.{maya_extension}'
+        definition: '@asset_root/dev/maya/{Asset}_{Step}_v{version}[_{name}].{maya_extension}'
     # The location of backups of WIP files
     maya_asset_snapshot:
-        definition: '@asset_root/dev/maya/snapshots/{Asset}_{Step}_v{version}.{timestamp}.{maya_extension}'
+        definition: '@asset_root/dev/maya/snapshots/{Asset}_{Step}_v{version}[_{name}].{timestamp}.{maya_extension}'
     # The location of published maya files
     maya_asset_publish:
-        definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}.{maya_extension}'
+        definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}[_{name}].{maya_extension}'
     maya_asset_mov:
-        definition: '@asset_root/pub/preview/{Asset}_{Step}_v{version}.{timestamp}_{tail}.mov' 
+        definition: '@asset_root/pub/preview/{Asset}_{Step}_v{version}[_{name}].{timestamp}_{tail}.mov' 
 
     #
     # Katana
@@ -560,13 +560,13 @@ paths:
         definition: '@asset_root/pub/katana'
     # The location of WIP files
     katana_asset_work:
-        definition: '@asset_root/dev/katana/{Asset}_{Step}_v{version}.katana'
+        definition: '@asset_root/dev/katana/{Asset}_{Step}_v{version}[_{name}].katana'
     # The location of backups of WIP files
     katana_asset_snapshot:
-        definition: '@asset_root/dev/katana/snapshots/{Asset}_{Step}_v{version}.{timestamp}.katana'
+        definition: '@asset_root/dev/katana/snapshots/{Asset}_{Step}_v{version}[_{name}].{timestamp}.katana'
     # The location of published maya files
     katana_asset_publish:
-        definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}.katana'
+        definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}[_{name}].katana'
 
     #
     # Houdini

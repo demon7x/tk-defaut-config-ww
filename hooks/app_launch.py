@@ -54,6 +54,15 @@ class AppLaunch(tank.Hook):
 
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
+        if engine_name == "tk-photoshopcc":
+            cmd =  "start /B \"App\" \"%s\" %s" % (app_path, app_args)
+            exit_code = os.system(cmd)
+            return {"command": cmd,
+                    "return_code": exit_code
+
+                    }
+
+
         app_name = ENGINES[engine_name]
         sg = self.tank.shotgun
         system = sys.platform
