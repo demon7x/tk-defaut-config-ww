@@ -234,7 +234,7 @@ paths:
     shot_publish_area_photoshop:
         definition: '@shot_root/pub/photoshop'
     photoshop_shot_publish:
-        definition: '@shot_root/pub/photoshop/{Shot}_{Step}_v{version[_{name}].psd'
+        definition: '@shot_root/pub/photoshop/{Shot}_{Step}_v{version}[_{name}].psd'
 
 
     #
