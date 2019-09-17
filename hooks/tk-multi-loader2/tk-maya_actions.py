@@ -81,6 +81,12 @@ class MayaUSDActions(HookBaseClass):
                                       "caption": "Viewer File", 
                                       "description": "This will add the item to the scene as a usd reference."} )
 
+        if "merge" in actions:
+            action_instances.append( {"name": "merge", 
+                                      "params": None,
+                                      "caption": "Merge to select node", 
+                                      "description": "This will merge to select node."} )
+
         return action_instances
 
 
@@ -112,6 +118,9 @@ class MayaUSDActions(HookBaseClass):
 
         elif name == "import":
             self._do_import(path, sg_publish_data)
+
+        elif name == "merge":
+            self._do_merge(path, sg_publish_data)
         
         elif name == "viewer":
             
@@ -167,3 +176,13 @@ class MayaUSDActions(HookBaseClass):
                 
         cmds.file(path,i=1,rdn=1 ,rpr='clash',options="v=0",pr=1,lrd="all",iv=1)
 
+    def _do_merge(self, path, sg_publish_data):
+        if not os.path.exists(path):
+            raise Exception("File not found on disk - '%s'" % path)
+        
+        print path
+        select_node = cmds.ls(sl=1)
+        if not select_node and not len(select_node) == 1:
+            return
+        command = 'AbcImport -mode import -connect "%s" "%s"'%(select_node[0],path)
+        mel.eval(command)

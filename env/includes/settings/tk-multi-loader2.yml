@@ -114,7 +114,7 @@ settings.tk-multi-loader2.mari:
 settings.tk-multi-loader2.maya:
   actions_hook: '{self}/tk-maya_actions.py:{config}/tk-multi-loader2/tk-maya_actions.py'
   action_mappings:
-    Alembic Cache: [reference, import,viewer]
+    Alembic Cache: [reference, import,merge,viewer]
     Component USD: [usd_reference,viewer]
     Assembly USD: [usd_reference, viewer]
     Camera USD: [usd_reference, viewer]
