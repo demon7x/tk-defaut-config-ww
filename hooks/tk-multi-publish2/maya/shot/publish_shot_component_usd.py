@@ -16,7 +16,11 @@ import maya.mel as mel
 from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
 
+
+
+
 HookBaseClass = sgtk.get_hook_baseclass()
+
 
 
 class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
@@ -277,6 +281,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
         
+
         usd_args = [
             '-shd "none"',
             '-dms "none"',
@@ -286,8 +291,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-mt 0',
             '-sl',
             '-sn 1',
-            '-fs -1.0',
-            '-fs 1.0',
+            '-fs %f'%item.properties['sub_frame'],
             '-ft %f'%item.properties['sub_frame']
             
             ]
@@ -320,7 +324,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             try:
                 self.parent.log_debug("Executing command: %s" % usd_export_cmd)
                 cmds.select(item.properties['name'])
-                print usd_export_cmd
+                _to_tractor(self,item,usd_export_cmd)
                 #mel.eval(usd_export_cmd)
             except Exception, e:
                 import traceback
@@ -343,6 +347,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
             usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
             cmds.select(item.properties['name'])
+            _to_tractor(self,item,usd_export_cmd)
             #mel.eval(usd_export_cmd)
             
             sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
@@ -409,6 +414,18 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         xformAPI.SetScale(scale)
 
 
+def _to_tractor(instance,item,mel_command):
+    
+    file_type = instance.settings['File Types']['default'][0][0]
+    module_path = os.path.dirname(instance.disk_location)
+    import sys
+    sys.path.append(module_path)
+    import to_tractor;reload(to_tractor)
+    start_frame, end_frame = _find_scene_animation_range()
+    tractor = to_tractor.MayaToTractor(item)
+    tractor.create_script(mel_command)
+    tractor.to_tractor(start_frame,end_frame,file_type)
+
 def _find_scene_animation_range():
     """
     Find the animation range from the current scene.
@@ -424,8 +441,8 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True)) - 20
-    end = int(cmds.playbackOptions(q=True, max=True)) + 20
+    start = int(cmds.playbackOptions(q=True, min=True)) - 5
+    end = int(cmds.playbackOptions(q=True, max=True)) + 5
 
     return start, end
 

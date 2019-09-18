@@ -304,7 +304,8 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
         try:
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             cmds.select(item.properties['name'])
-            mel.eval(usd_export_cmd)
+            _to_tractor(self,item,usd_export_cmd)
+            #mel.eval(usd_export_cmd)
         except Exception, e:
             import traceback
             
@@ -324,6 +325,17 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
         # Now that the path has been generated, hand it off to the
         super(MayaSessionShotCameraUSDPublishPlugin, self).publish(settings, item)
 
+def _to_tractor(instance,item,mel_command):
+    
+    file_type = instance.settings['File Types']['default'][0][0]
+    module_path = os.path.dirname(instance.disk_location)
+    import sys
+    sys.path.append(module_path)
+    import to_tractor;reload(to_tractor)
+    start_frame, end_frame = _find_scene_animation_range()
+    tractor = to_tractor.MayaToTractor(item)
+    tractor.create_script(mel_command)
+    tractor.to_tractor(start_frame,end_frame,file_type)
 
 def _find_scene_animation_range():
     """

@@ -265,7 +265,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
             "-sn",
 
-            "-step '%f'"%item.properties['sub_frame']
+            "-step %f"%item.properties['sub_frame']
 
         ]
 
@@ -289,8 +289,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # ...and execute it:
         try:
             self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            print abc_export_cmd
-            mel.eval(abc_export_cmd)
+            _to_tractor(self,item,abc_export_cmd)
+            #mel.eval(abc_export_cmd)
         except Exception, e:
             self.logger.error("Failed to export Geometry: %s" % e)
             return
@@ -298,6 +298,18 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # Now that the path has been generated, hand it off to the
         super(MayaSessionComponentAlembicPublishPlugin, self).publish(settings, item)
 
+
+def _to_tractor(instance,item,mel_command):
+    
+    file_type = instance.settings['File Types']['default'][0][0]
+    module_path = os.path.dirname(instance.disk_location)
+    import sys
+    sys.path.append(module_path)
+    import to_tractor;reload(to_tractor)
+    start_frame, end_frame = _find_scene_animation_range()
+    tractor = to_tractor.MayaToTractor(item)
+    tractor.create_script(mel_command)
+    tractor.to_tractor(start_frame,end_frame,file_type)
 
 def _find_scene_animation_range():
     """
@@ -314,8 +326,8 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True)) - 20
-    end = int(cmds.playbackOptions(q=True, max=True)) + 20
+    start = int(cmds.playbackOptions(q=True, min=True)) - 5
+    end = int(cmds.playbackOptions(q=True, max=True)) + 5
 
     return start, end
 

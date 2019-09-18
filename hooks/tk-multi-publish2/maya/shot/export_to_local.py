@@ -9,15 +9,17 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import re
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
+from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
+class MayaSessionToTractorPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -65,40 +67,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionShotComponentUSDPublishPlugin, self).settings or {}
-
-        # settings specific to this class
-        maya_publish_settings = {
-            "Publish Template": {
-                "type": "template",
-                "default": None,
-                "description": "Template path for published work files. Should"
-                               "correspond to a template defined in "
-                               "templates.yml.",
-            }
-        }
-
-        # update the base settings
-        base_settings.update(maya_publish_settings)
-
-
-        file_type = {
-            "File Types": {
-                "type": "list",
-                "default": [
-                    ["Set USD", "usd"],
-                ],
-                "description": (
-                    "List of file types to include. Each entry in the list "
-                    "is a list in which the first entry is the Shotgun "
-                    "published file type and subsequent entries are file "
-                    "extensions that should be associated."
-                )
-            },
-        }
-
-        base_settings.update(file_type)
-        
+        base_settings = {}
 
         return base_settings
 
@@ -111,7 +80,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.shot.set.usd"]
+        return ["maya.session.shot.component.usd"]
 
     def accept(self, settings, item):
         """
@@ -139,61 +108,12 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         :returns: dictionary with boolean keys accepted, required and enabled
         """
 
-        accepted = True
-        publisher = self.parent
-        template_name = settings["Publish Template"].value
-
-        # ensure a work file template is available on the parent item
-        work_template = item.parent.parent.properties.get("work_template")
-        if not work_template:
-            self.logger.debug(
-                "A work template is required for the session item in order to "
-                "publish session geometry. Not accepting session geom item."
-            )
-            accepted = False
-
-        # ensure the publish template is defined and valid and that we also have
-        publish_template = publisher.get_template_by_name(template_name)
-        if not publish_template:
-            self.logger.debug(
-                "The valid publish template could not be determined for the "
-                "session geometry item. Not accepting the item."
-            )
-            accepted = False
-
-        # we've validated the publish template. add it to the item properties
-        # for use in subsequent methods
-        item.properties["publish_template"] = publish_template
-
-        if not mel.eval("exists \"usdExport\""):
-
-            self.logger.debug(
-                "Item not accepted because alembic export command 'usdExport' "
-                "is not available. Perhaps the plugin is not enabled?"
-            )
-            accepted = False
-
-        # because a publish template is configured, disable context change. This
-        # is a temporary measure until the publisher handles context switching
-        # natively.
-        item.context_change_allowed = False
-
         return {
-            "accepted": accepted,
+            "accepted": True,
             "checked": True
         }
 
     def validate(self, settings, item):
-        """
-        Validates the given item to check that it is ok to publish. Returns a
-        boolean to indicate validity.
-
-        :param settings: Dictionary of Settings. The keys are strings, matching
-            the keys returned in the settings property. The values are `Setting`
-            instances.
-        :param item: Item to process
-        :returns: True if item is valid, False otherwise.
-        """
 
         path = _session_path()
         
@@ -245,9 +165,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         if "version" in work_fields:
             item.properties["publish_version"] = work_fields["version"]
 
-        # run the base class validation
-        return super(MayaSessionShotComponentUSDPublishPlugin, self).validate(
-            settings, item)
+        return True
+
 
     def publish(self, settings, item):
         """
@@ -258,13 +177,11 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
-
         
         publisher = self.parent
 
         # get the path to create and publish
         publish_path = item.properties["path"]
-
 
         # ensure the publish folder exists:
         publish_folder = os.path.dirname(publish_path)
@@ -283,8 +200,10 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-vis 1',
             '-mt 0',
             '-sl',
+            '-sn 1',
             '-fs %f'%item.properties['sub_frame'],
             '-ft %f'%item.properties['sub_frame']
+            
             ]
 
 
@@ -297,59 +216,50 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # Set the output path: 
         # Note: The AbcExport command expects forward slashes!
 
-        usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
+        sub_components = [ x for x in cmds.ls(allPaths=1,ca=0,transforms=1,l=1) 
+        if cmds.listRelatives(x,p=1) 
+        and cmds.attributeQuery("Meshtype",node=x,exists=1) 
+        and cmds.getAttr(x+".Meshtype", asString=True) == "component"]
+        
+        
+
+
+
+        if not sub_components:
+
+            usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
 
         # build the export command.  Note, use AbcExport -help in Maya for
         # more detailed USD export help
-        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+
+            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
 
         # ...and execute it:
-        try:
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            
-            select_list = [x for x in cmds.listRelatives(item.properties['name'],c=1,f=1,ad=1) 
-            if not x.find("cache_grp") == -1 and x.find("cache_grp|") == -1 ]
-            for obj in select_list:
-                if not cmds.attributeQuery("USD_kind", node = obj, exists=True):
-                    cmds.addAttr(obj, longName="USD_kind",dataType="string")
-                cmds.setAttr(obj+".USD_kind","component",type="string")
-
-            cmds.select(select_list)
-            _to_tractor(self,item,usd_export_cmd)
-            #mel.eval(usd_export_cmd)
-        except Exception, e:
-            import traceback
-            
+            cmds.select(item.properties['name'])
             print usd_export_cmd
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            self.logger.error("Failed to export USD: %s"% e, 
-                extra = {
-                "action_show_more_info": {
-                    "label": "Error Details",
-                    "tooltip": "Show the full error stack trace",
-                    "text": "<pre>%s</pre>" % (traceback.format_exc(),)
-                }
-            }
+            mel.eval(usd_export_cmd)
+            return
+        else:
 
-            )
+            asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
+            usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
+            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+            cmds.select(item.properties['name'])
+            mel.eval(usd_export_cmd)
+            
             return
 
-        # Now that the path has been generated, hand it off to the
-        
-
-        item.description = cmds.listRelatives(item.properties['name'],c=1)[0].split(":")[1].replace("_grp","")
-        super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)
-def _to_tractor(instance,item,mel_command):
     
-    file_type = instance.settings['File Types']['default'][0][0]
-    module_path = os.path.dirname(instance.disk_location)
-    import sys
-    sys.path.append(module_path)
-    import to_tractor;reload(to_tractor)
-    start_frame, end_frame = _find_scene_animation_range()
-    tractor = to_tractor.MayaToTractor(item)
-    tractor.create_script(mel_command)
-    tractor.to_tractor(start_frame,end_frame,file_type)
+
+
+    def _get_sub_component_path(self,sub_component,item):
+        path = os.path.splitext(item.properties["path"])[0]
+        path = os.path.join(path,sub_component.replace("|","_")+'.usd')
+        
+        return path
+
+    def finalize(self, settings, item):
+        pass
 
 
 def _find_scene_animation_range():
@@ -367,7 +277,7 @@ def _find_scene_animation_range():
     # something in the scene is animated so return the
     # current timeline.  This could be extended if needed
     # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True)) -20 
+    start = int(cmds.playbackOptions(q=True, min=True)) - 20
     end = int(cmds.playbackOptions(q=True, max=True)) + 20
 
     return start, end
@@ -386,26 +296,6 @@ def _session_path():
     return path
 
 
-def _get_save_as_action():
-    """
-    Simple helper for returning a log action dict for saving the session
-    """
 
-    engine = sgtk.platform.current_engine()
+        
 
-    # default save callback
-    callback = cmds.SaveScene
-
-    # if workfiles2 is configured, use that for file save
-    if "tk-multi-workfiles2" in engine.apps:
-        app = engine.apps["tk-multi-workfiles2"]
-        if hasattr(app, "show_file_save_dlg"):
-            callback = app.show_file_save_dlg
-
-    return {
-        "action_button": {
-            "label": "Save As...",
-            "tooltip": "Save the current session",
-            "callback": callback
-        }
-    }

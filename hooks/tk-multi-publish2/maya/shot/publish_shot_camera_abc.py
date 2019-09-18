@@ -286,7 +286,8 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
         # ...and execute it:
         try:
             self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            mel.eval(abc_export_cmd)
+            _to_tractor(self,item,abc_export_cmd)
+            #mel.eval(abc_export_cmd)
         except Exception, e:
             self.logger.error("Failed to export Geometry: %s" % e)
             return
@@ -294,6 +295,17 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
         # Now that the path has been generated, hand it off to the
         super(MayaSessionShotCameraAlembicPublishPlugin, self).publish(settings, item)
 
+def _to_tractor(instance,item,mel_command):
+    
+    file_type = instance.settings['File Types']['default'][0][0]
+    module_path = os.path.dirname(instance.disk_location)
+    import sys
+    sys.path.append(module_path)
+    import to_tractor;reload(to_tractor)
+    start_frame, end_frame = _find_scene_animation_range()
+    tractor = to_tractor.MayaToTractor(item)
+    tractor.create_script(mel_command)
+    tractor.to_tractor(start_frame,end_frame,file_type)
 
 def _find_scene_animation_range():
     """
