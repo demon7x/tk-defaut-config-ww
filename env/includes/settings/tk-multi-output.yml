@@ -27,5 +27,5 @@ settings.tk-multi-output.katana:
   location: "@apps.tk-multi-output.location"
 
 settings.tk-multi-output.maya:
-  tractor_profile: ['redshift']  
+  tractor_profile: ['redshift','convert']  
   location: "@apps.tk-multi-output.location"
