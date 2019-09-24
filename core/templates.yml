@@ -41,7 +41,7 @@ keys:
         type: str
     name:
         type: str
-        filter_by: alphanumeric
+        #filter_by: alphanumeric
     iteration:
         type: int
     version:
@@ -483,7 +483,8 @@ paths:
         definition: '@asset_root/pub/caches/usd/{Asset}_{Step}_v{version}.usd'
     asset_scenegraphXML:
         definition: '@asset_root/pub/caches/xml/{Asset}_{Step}_v{version}.xml'
-
+    asset_yeticache:
+        definition: '@asset_root/pub/caches/yeti/{Asset}_{Step}_v{version}/{name}/{name}.fur'
 
     shot_component_alembic:
         definition: '@shot_root/pub/caches/abc/{asset_namespace}_{Step}_v{version}.abc'
@@ -499,7 +500,8 @@ paths:
         definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}.xml'
     shot_camera_dummy:
         definition: '@shot_root/pub/caches/{shot_file_extension}/{name}_{Step}_v{version}.{shot_file_extension}'
-    
+    shot_yeticache:
+        definition: '@shot_root/pub/caches/yeti/{Shot}_{Step}_v{version}/{asset_namespace}/{name}/{name}.{SEQ}.fur'
 
     #
     # Photoshop
