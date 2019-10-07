@@ -262,7 +262,7 @@ paths:
     maya_shot_alembic:
         definition: '@shot_root/pub/almebic/{name}.abc'
     maya_shot_mov:
-        definition: '@shot_root/pub/preview/{Shot}_{Step}_v{version}.{timestamp}_{tail}.mov'    
+        definition: '@shot_root/pub/preview/{Shot}_{Step}_v{version}[_{name}].mov'    
 
     #
     # Katana
@@ -548,7 +548,7 @@ paths:
     maya_asset_publish:
         definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}[_{name}].{maya_extension}'
     maya_asset_mov:
-        definition: '@asset_root/pub/preview/{Asset}_{Step}_v{version}[_{name}].{timestamp}_{tail}.mov' 
+        definition: '@asset_root/pub/preview/{Asset}_{Step}_v{version}[_{name}].mov' 
 
     #
     # Katana
