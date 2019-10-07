@@ -20,6 +20,7 @@ import sys
 import subprocess
 import platform
 import tank
+import sgtk
 
 #rez append 
 #sys.path.append("/westworld/inhouse/rez/lib/python2.7/site-packages/rez-2.23.1-py2.7.egg")
@@ -64,12 +65,14 @@ class AppLaunch(tank.Hook):
 
 
         app_name = ENGINES[engine_name]
+        context = self.tank.context_from_path(self.tank.project_path)
+        project = context.project
         sg = self.tank.shotgun
         system = sys.platform
         
         adapter = get_adapter(platform.system())
         
-        packages = get_rez_packages(sg,app_name,version,system)
+        packages = get_rez_packages(sg,app_name,version,system,project)
 
         try:
             import rez as _
@@ -93,10 +96,18 @@ class AppLaunch(tank.Hook):
         
 
 
-def get_rez_packages(sg,app_name,version,system):
+def get_rez_packages(sg,app_name,version,system,project):
     
     if system == "linux2":
-        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])[0]['sg_rez']
+        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_rez'])
+        if len(packages) > 1:
+            filter_dict = [['code','is',app_name.title()+" "+version],
+                           ['projects','in',project]
+                           ]
+            packages = sg.find("Software",filter_dict,['sg_rez'])[0]['sg_rez']
+
+        else:
+            packages = packages[0]
     else:
         packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_win_rez'])[0]['sg_win_rez']
     if packages:
