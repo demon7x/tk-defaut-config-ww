@@ -240,6 +240,16 @@ apps.tk-multi-workfiles2.location:
   linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-workfiles2
   windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-workfiles2
 
+#tk-multi-version
+apps.tk-multi-version.location:
+  name: tk-multi-version
+  type: dev
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-version
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-version
+  #type: git
+  #path: https://github.com/demon7x/tk-maya-makemov.git
+  #version: v0.0.1
+
 
 ################################################################################
 # reference all of the common frameworks
