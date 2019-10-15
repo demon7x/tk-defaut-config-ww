@@ -156,7 +156,7 @@ class BaseAdapter(object):
         os.environ['USE_SHOTGUN'] = "OK"
         if args:
             command += ' {args}'.format(args=args)
-        if platform.system()  == "Linux":
+        if platform.system()  == "Linux" and not  command == "houdini":
             command = "mate-terminal -x bash -c '{}'".format(command)
         
 
