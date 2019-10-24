@@ -330,17 +330,17 @@ paths:
 
     # Rendered images
     houdini_shot_render:
-        definition: '@shot_root/dev/images/{name}/{houdini.node}/v{version}/{width}x{height}/{Shot}_{name}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/dev/images/{Shot}_{Step}_v{version}[_{name}]/{houdini.node}/v{version}/{Shot}_{Step}_v{version}[_{name}].{SEQ}.exr'
 
     # Additional mantra outputs
     houdini_shot_ifd:
-        definition: '@shot_root/dev/ifds/{name}/{houdini.node}/v{version}/{width}x{height}/{Shot}_{name}_v{version}.{SEQ}.ifd'
+        definition: '@shot_root/dev/ifds/{Shot}_{Step}_v{version}[_{name}]/{houdini.node}/v{version}/{Shot}_{Step}_v{version}[_{name}].{SEQ}.ifd'
 
     houdini_shot_dcm:
-        definition: '@shot_root/dev/dcms/{name}/{houdini.node}/v{version}/{width}x{height}/{Shot}_{name}_v{version}.{SEQ}.dcm'
+        definition: '@shot_root/dev/dcms/{Shot}_{Step}_v{version}[_{name}]/{houdini.node}/v{version}/{Shot}_{Step}_v{version}[_{name}].dcm'
 
     houdini_shot_extra_plane:
-        definition: '@shot_root/dev/images/{name}/{houdini.node}/{aov_name}/v{version}/{width}x{height}/{Shot}_{name}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/dev/images/{Shot}_{Step}_v{version}[_{name}]/{houdini.node}/{aov_name}/v{version}/{Shot}_{Step}_v{version}[_{name}].{SEQ}.exr'
 
 
     #

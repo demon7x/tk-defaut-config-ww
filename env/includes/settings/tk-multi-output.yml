@@ -29,3 +29,7 @@ settings.tk-multi-output.katana:
 settings.tk-multi-output.maya:
   tractor_profile: ['redshift','convert']  
   location: "@apps.tk-multi-output.location"
+
+settings.tk-multi-output.houdini:
+  tractor_profile: ["group1","group2","group3","group4"]  
+  location: "@apps.tk-multi-output.location"
