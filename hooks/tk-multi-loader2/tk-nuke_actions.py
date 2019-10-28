@@ -225,11 +225,27 @@ class NukeAddActions(HookBaseClass):
             seq_range = self._find_sequence_range(path)
             read_node['xpos'].setValue(x)
             read_node['ypos'].setValue(y+100)
+            if self._get_colorspace() == "ACES2065-1":
+                read_node['colorspace'].setValue("ACES - ACEScg")
 
             if seq_range:
                 read_node["first"].setValue(seq_range[0])
                 read_node["last"].setValue(seq_range[1])
 
+    
+    def _get_colorspace(self):
+
+        engine = sgtk.platform.current_engine()
+        context = engine.context
+        project = context.project
+        shot = context.entity
+
+        shotgun = engine.shotgun
+        output_info = shotgun.find_one("Project",[['id','is',project['id']]],
+                                ['sg_colorspace','sg_mov_codec',
+                                'sg_out_format','sg_fps','sg_mov_colorspace'])
+        
+        return output_info['sg_colorspace']
 
 
     def _find_position(self):
@@ -258,7 +274,8 @@ class NukeAddActions(HookBaseClass):
         import nuke
         
         (_, ext) = os.path.splitext(path)
-
+        
+        colorspace = self._get_colorspace()
 
         # If this is an Alembic cache, use a ReadGeo2 and we're done.
         if ext.lower() == ".abc":
@@ -291,6 +308,8 @@ class NukeAddActions(HookBaseClass):
         # also automatically extract the format and frame range for movie files.
         read_node = nuke.createNode("Read")
         read_node["file"].fromUserText(path)
+        if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "exr" :
+            read_node['colorspace'].setValue("ACES - ACEScg")
 
         # find the sequence range if it has one:
         seq_range = self._find_sequence_range(path)
