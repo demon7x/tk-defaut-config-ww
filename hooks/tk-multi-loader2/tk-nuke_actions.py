@@ -317,9 +317,11 @@ class NukeAddActions(HookBaseClass):
         # also automatically extract the format and frame range for movie files.
         read_node = nuke.createNode("Read")
         read_node["file"].fromUserText(path)
-        if sg_publish_data['published_file_type']['name'] == "Plate":
+        if sg_publish_data['published_file_type']['name'] in ["Plate",'Source']:
             if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "exr" :
                 read_node['colorspace'].setValue("ACES - ACES2065-1")
+            if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "dpx" :
+                read_node['colorspace'].setValue("Output - Rec.709")
 
         # find the sequence range if it has one:
         seq_range = self._find_sequence_range(path)
