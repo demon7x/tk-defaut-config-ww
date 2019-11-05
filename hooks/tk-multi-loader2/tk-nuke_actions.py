@@ -205,17 +205,26 @@ class NukeAddActions(HookBaseClass):
             DeepRead.knob('file').fromUserText(deep_path)
             DeepRead['xpos'].setValue(x)
             DeepRead['ypos'].setValue(y+100)
+            nuke.Layer( 'other', ['id'] )
+            deep_exp = nuke.nodes.DeepExpression()
+            deep_exp['xpos'].setValue(x)
+            deep_exp['ypos'].setValue(y+150)
+            deep_exp.setInput(0,DeepRead)
+            deep_exp['chans0'].setValue('other')
+            deep_exp['chans1'].setValue('none')
+            deep_exp['other.id'].setValue('exponent(id)')
+
             DRC = nuke.nodes.DeepRecolor()
             DRC['xpos'].setValue(x)
-            DRC['ypos'].setValue(y+150)
-            DRC.setInput(0,DeepRead)
+            DRC['ypos'].setValue(y+200)
+            DRC.setInput(0,deep_exp)
             constant = nuke.nodes.Constant()
-            constant['xpos'].setValue(DRC.xpos()+100)
+            constant['xpos'].setValue(DRC.xpos()+200)
             constant['ypos'].setValue(DRC.ypos()-23)
             DRC.setInput(1,constant)
             DP = nuke.nodes.DeepPicker()
             DP['xpos'].setValue(x)
-            DP['ypos'].setValue(y+200)
+            DP['ypos'].setValue(y+250)
             DP.setInput(0,DRC)
 
         else:
@@ -308,9 +317,9 @@ class NukeAddActions(HookBaseClass):
         # also automatically extract the format and frame range for movie files.
         read_node = nuke.createNode("Read")
         read_node["file"].fromUserText(path)
-        if sg_publish_data['published_file_type']['name'] == "Rendered Image":
+        if sg_publish_data['published_file_type']['name'] == "Plate":
             if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "exr" :
-                read_node['colorspace'].setValue("ACES - ACEScg")
+                read_node['colorspace'].setValue("ACES - ACES2065-1")
 
         # find the sequence range if it has one:
         seq_range = self._find_sequence_range(path)
