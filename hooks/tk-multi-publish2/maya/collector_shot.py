@@ -95,6 +95,7 @@ class MayaSessionCollector(HookBaseClass):
             self.collect_shot(item)
             self.collect_camera(item)
             self.collect_dummy(item)
+            self.collect_sim_dummy(item)
         else:
 
             self.logger.info(
@@ -711,3 +712,69 @@ class MayaSessionCollector(HookBaseClass):
 
 
         self.logger.debug("Collected shot dummy : %s"%(shot_name))
+
+    def collect_sim_dummy(self,parent_item):
+
+        dummy_transform_name = ['mmGeom','aniGeom']
+        shot_name = parent_item.context.entity['name']
+        start_frame = cmds.playbackOptions(min=1,q=1)
+        end_frame = cmds.playbackOptions(max=1,q=1)
+
+        publisher = self.parent
+        entity = publisher.context.entity
+        sg = self.tank.shotgun
+        sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
+
+        if not sub_frame :
+            sub_frame = 0.25
+
+
+        dummy_item = parent_item.create_item(
+            "maya.session.dummy",
+            "Sim Dummy",
+            "Export Sim Dummy"
+        )
+
+
+        dummy_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "dummy.png"
+        )
+                
+        dummy_item.properties['name'] = shot_name
+        dummy_item.properties['s_f'] = start_frame
+        dummy_item.properties['e_f'] = end_frame
+        dummy_item.set_icon_from_path(dummy_icon_path)
+
+
+        abc_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "alembic.png"
+        )
+        
+        shot_sim_dummy_list = [ x for x in cmds.ls(type="transform") if not x.find('bone_grp') == -1 
+        #and cmds.referenceQuery( x, isNodeReferenced=True )
+        and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
+
+        for dummy in shot_sim_dummy_list:
+            component_name = dummy
+
+            dummy_abc_item = dummy_item.create_item(
+                    "maya.session.dummy.abc",
+                    "Alembic",
+                    "Export %s Alembic"%component_name
+                )
+                
+            dummy_abc_item.properties['name'] = component_name
+            dummy_abc_item.properties['file_extension'] = "abc"
+            dummy_abc_item.properties['namespace'] = component_name.split(":")[0]
+            dummy_abc_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
+            dummy_abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
+            dummy_abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
+            dummy_abc_item.set_icon_from_path(abc_icon_path)
+            dummy_abc_item.properties['sub_frame'] = sub_frame
+
+
+        self.logger.debug("Collected shot sim dummy : %s"%(shot_name))
