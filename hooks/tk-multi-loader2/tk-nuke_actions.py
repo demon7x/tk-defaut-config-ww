@@ -188,7 +188,7 @@ class NukeAddActions(HookBaseClass):
 
 
     
-    def _create_channel_read_node(self,default_path,channel,x,y,sg_publihs_data):
+    def _create_channel_read_node(self,default_path,channel,x,y,sg_publish_data):
 
         import nuke
 
@@ -242,7 +242,7 @@ class NukeAddActions(HookBaseClass):
                 read_node["last"].setValue(seq_range[1])
 
     
-    def _get_colorspace(self):
+    def _get_colorspace(self,sg_publish_data):
 
         engine = sgtk.platform.current_engine()
         context = engine.context
@@ -250,11 +250,21 @@ class NukeAddActions(HookBaseClass):
         shot = context.entity
 
         shotgun = engine.shotgun
+        published_ent = shotgun.find_one("PublishedFile",
+                                         [['id','is',sg_publish_data['id']]],['sg_colorspace'])
+        
+        if published_ent['sg_colorspace']:
+            return published_ent['sg_colorspace']
+        
         output_info = shotgun.find_one("Project",[['id','is',project['id']]],
                                 ['sg_colorspace','sg_mov_codec',
                                 'sg_out_format','sg_fps','sg_mov_colorspace'])
         
-        return output_info['sg_colorspace']
+        colorspace = output_info['sg_colorspace']
+        if not colorspace.find("ACES") == -1:
+            colorspace = "ACES - " + colorspace
+
+        return colorspace
 
 
     def _find_position(self):
@@ -284,8 +294,8 @@ class NukeAddActions(HookBaseClass):
         
         (_, ext) = os.path.splitext(path)
         
-        colorspace = self._get_colorspace()
-
+        colorspace = self._get_colorspace(sg_publish_data)
+        
         # If this is an Alembic cache, use a ReadGeo2 and we're done.
         if ext.lower() == ".abc":
             nuke.createNode("ReadGeo2", "file {%s}" % path)
@@ -318,9 +328,8 @@ class NukeAddActions(HookBaseClass):
         read_node = nuke.createNode("Read")
         read_node["file"].fromUserText(path)
         if sg_publish_data['published_file_type']['name'] in ["Plate",'Source']:
-            if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "exr" :
-                read_node['colorspace'].setValue("ACES - ACES2065-1")
-            if self._get_colorspace() == "ACES2065-1" and path.split(".")[-1] == "dpx" :
+            read_node['colorspace'].setValue(colorspace)
+            if colorspace == "ACES - ACES2065-1" and path.split(".")[-1] == "dpx" :
                 read_node['colorspace'].setValue("Output - Rec.709")
 
         # find the sequence range if it has one:
@@ -330,6 +339,8 @@ class NukeAddActions(HookBaseClass):
             # override the detected frame range.
             read_node["first"].setValue(seq_range[0])
             read_node["last"].setValue(seq_range[1])
+    
+
 
     def _sequence_range_from_path(self, path):
         """
