@@ -397,13 +397,13 @@ paths:
         definition: '@shot_root/pub/nuke'
     # The location of WIP script files
     nuke_shot_work:
-        definition: '@shot_root/dev/nuke/{Shot}_{Step}_v{version}.nk'
+        definition: '@shot_root/dev/nuke/{Shot}_{Step}_v{version}[_{name}].nk'
     # The location of backups of WIP files
     nuke_shot_snapshot:
-        definition: '@shot_root/dev/nuke/snapshots/{Shot}_{Step}_v{version}.{timestamp}.nk'
+        definition: '@shot_root/dev/nuke/snapshots/{Shot}_{Step}_v{version}[_{name}].{timestamp}.nk'
     # The location of published nuke script files
     nuke_shot_publish:
-        definition: '@shot_root/pub/nuke/{Shot}_{Step}_v{version}.nk'
+        definition: '@shot_root/pub/nuke/{Shot}_{Step}_v{version}[_{name}].nk'
     # write node outputs
     nuke_shot_render_mono_dpx:
         definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.dpx'
@@ -414,22 +414,22 @@ paths:
     nuke_shot_render_pub_stereo:
         definition: '@shot_root/pub/elements/{name}/v{version}/{width}x{height}/{Shot}_{name}_{nuke.output}_{eye}_v{version}.{SEQ}.exr'
     nuke_shot_render_dev_exr:
-        definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}[_{name}].{SEQ}.exr'
     nuke_shot_render_pub_exr:
-        definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}[_{name}].{SEQ}.exr'
     nuke_shot_render_dev_mov:
-        definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.mov'
+        definition: '@shot_root/dev/images/v{version}/{Shot}_{nuke.output}_v{version}[_{name}].{SEQ}.mov'
     nuke_shot_render_pub_mov:
-        definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}.{SEQ}.mov'
+        definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}[_{name}].{SEQ}.mov'
     #WESTWORLD START
     nuke_write_node_exr:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.exr'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.exr'
     nuke_write_node_dpx:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.dpx'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.dpx'
     nuke_write_node_jpg:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}/{Shot}_{Step}_v{version}.{SEQ}.jpg'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.jpg'
     nuke_write_node_mov:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}.mov'
+        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}].mov'
     # review output
     shot_quicktime_quick:
         definition: '@shot_root/review/quickdaily/{Shot}_{name}_{iteration}.mov'
