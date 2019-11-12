@@ -112,7 +112,18 @@ def get_rez_packages(sg,app_name,version,system,project):
             packages =  packages[0]['sg_rez']
 
     else:
-        packages = sg.find("Software",[['code','is',app_name.title()+" "+version]],['sg_win_rez'])[0]['sg_win_rez']
+        filter_dict = [['code','is',app_name.title()+" "+version],
+                       ['projects','in',project]
+                      ]
+        packages = sg.find("Software",filter_dict,['sg_win_rez'])
+        if packages : 
+            packages =  packages[0]['sg_win_rez']
+        else:
+            filter_dict = [['code','is',app_name.title()+" "+version],
+                        ['projects','is',None] ]
+            packages = sg.find("Software",filter_dict,['sg_win_rez'])
+            packages =  packages[0]['sg_win_rez']
+
     if packages:
         packages = [ x for x in packages.split(",")] 
     else:
