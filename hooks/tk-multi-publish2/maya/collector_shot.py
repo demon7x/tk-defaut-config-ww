@@ -397,7 +397,8 @@ class MayaSessionCollector(HookBaseClass):
 
         self.collect_shot_assets(xml_item,"abc")
         self.collect_shot_set_assets(xml_item,"abc")
-
+        
+        self.link_assets()
         self.logger.debug("Collected shot : %s"%(shot_name))
 
     def collect_shot_set_assets(self,parent_item,cache_type):
@@ -542,7 +543,28 @@ class MayaSessionCollector(HookBaseClass):
     
             self.logger.debug("Collected shot asset : %s"%(component_name))
     
+    def link_assets(self):   
+
+        publisher = self.parent
+        entity = publisher.context.entity
+        project = publisher.context.project
+
+        sg = self.tank.shotgun
+        sub_frame = sg.find_one("Shot",[['id','is',entity['id']]],['sg_sub_frame'])['sg_sub_frame']
         
+
+        shot_asset_list = [ cmds.listRelatives(x,c=1)[0].split(":")[-1] for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 
+        and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
+        for asset in shot_asset_list:
+            search = [
+                ['project','is',project],
+                ['code','is',asset]
+            ]
+            asset_ent = sg.find_one("Asset",search)
+            if asset_ent:
+                sg.update("Shot",entity['id'],{"assets":[asset_ent]},
+                          multi_entity_update_modes={'tags':'add'})
+                
 
     def collect_camera(self,parent_item):
 
