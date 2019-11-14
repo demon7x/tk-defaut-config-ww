@@ -430,6 +430,10 @@ paths:
         definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.jpg'
     nuke_write_node_mov:
         definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}].mov'
+    nuke_write_precomp_exr:
+        definition: '@shot_root/dev/precomp/wip/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.exr'
+    nuke_write_precomp_dpx:
+        definition: '@shot_root/dev/precomp/wip/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.dpx'
     # review output
     shot_quicktime_quick:
         definition: '@shot_root/review/quickdaily/{Shot}_{name}_{iteration}.mov'
