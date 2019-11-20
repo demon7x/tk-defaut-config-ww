@@ -234,7 +234,7 @@ class NukeAddActions(HookBaseClass):
             seq_range = self._find_sequence_range(path)
             read_node['xpos'].setValue(x)
             read_node['ypos'].setValue(y+100)
-            if self._get_colorspace() == "ACES2065-1":
+            if self._get_colorspace(sg_publish_data) == "ACES2065-1":
                 read_node['colorspace'].setValue("ACES - ACEScg")
 
             if seq_range:
