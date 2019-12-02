@@ -1,0 +1,24 @@
+# Copyright (c) 2017 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+################################################################################
+
+
+
+################################################################################
+
+# ---- Stand alone publish
+
+settings.tk-outsourcing.standalone:
+  location:
+    name: tk-outsourcing
+    type: dev
+    linux_path: /westworld/inhouse/tool/shotgun/application/tk-outsourcing/
+    windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\outsourcing
