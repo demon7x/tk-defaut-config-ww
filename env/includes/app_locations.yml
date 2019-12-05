@@ -218,8 +218,8 @@ apps.tk-multi-output.location:
 apps.tk-desktop-timecard.location:
   name: tk-desktop-timecard
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/tk-desktop-timecard
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\tk-desktop-timecard
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-desktop-timecard
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-desktop-timecard
   #type: git
   #path: https://github.com/demon7x/tk-maya-makemov.git
   #version: v0.0.1
