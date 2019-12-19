@@ -32,7 +32,8 @@ ENGINES = {
     'tk-nukestudio': 'nuke',
     'tk-katana': 'katana',
     'tk-mari' : 'mari',
-    'tk-3de4' : '3de'
+    'tk-3de4' : '3de',
+    'tk-clarisse' : 'clarisse'
 }
 
 
@@ -167,10 +168,9 @@ class BaseAdapter(object):
         os.environ['USE_SHOTGUN'] = "OK"
         if args:
             command += ' {args}'.format(args=args)
-        if platform.system()  == "Linux" and not  command == "houdini":
+        if platform.system()  == "Linux" and command  not in  ["houdini"]:
             command = "mate-terminal -x bash -c '{}'".format(command)
         
-
         proc = context.execute_shell(
             command = command,
             #command = "gnome-terminal -x bash -c 'python'",

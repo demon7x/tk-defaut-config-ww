@@ -79,6 +79,11 @@ engines.tk-katana.location:
   linux_path: /westworld/inhouse/tool/shotgun/engine/tk-katana
   windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-katana
 
+#clarisse
+engines.tk-clarisse.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-clarisse
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-clarisse
 
 #3de
 engines.tk-3de4.location:

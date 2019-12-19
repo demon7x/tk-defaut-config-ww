@@ -147,3 +147,29 @@ settings.tk-multi-snapshot.3de4.shot_step:
   location: "@apps.tk-multi-snapshot.location"
 
 ################################################################################
+
+# ---- Clarisse
+#
+# asset step
+settings.tk-multi-snapshot.clarisse.asset_step:
+  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  template_snapshot: clarisse_asset_snapshot
+  template_work: clarisse_asset_work
+  hook_thumbnail: "{engine}/thumbnail.py"
+  location: "@apps.tk-multi-snapshot.location"
+
+# sequence step
+settings.tk-multi-snapshot.clarisse.sequence_step:
+  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  template_snapshot: clarisse_sequence_snapshot
+  template_work: clarisse_sequence_work
+  hook_thumbnail: "{engine}/thumbnail.py"
+  location: "@apps.tk-multi-snapshot.location"
+
+# shot step
+settings.tk-multi-snapshot.clarisse.shot_step:
+  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  template_snapshot: clarisse_shot_snapshot
+  template_work: clarisse_shot_work
+  hook_thumbnail: "{engine}/thumbnail.py"
+  location: "@apps.tk-multi-snapshot.location"

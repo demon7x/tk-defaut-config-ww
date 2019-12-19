@@ -25,6 +25,7 @@ includes:
 - ./includes/settings/tk-shotgun.yml
 - ./includes/settings/tk-katana.yml
 - ./includes/settings/tk-3de4.yml
+- ./includes/settings/tk-clarisse.yml
 
 ################################################################################
 # configuration for all engines to load in a shot step context
@@ -42,6 +43,7 @@ engines:
   tk-shotgun: "@settings.tk-shotgun.shot_step"
   tk-katana: "@settings.tk-katana.shot_step"
   tk-3de4: "@settings.tk-3de4.shot_step"
+  tk-clarisse: "@settings.tk-clarisse.shot_step"
 
 ################################################################################
 # reference all of the common frameworks

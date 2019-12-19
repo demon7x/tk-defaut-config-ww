@@ -684,6 +684,78 @@ paths:
     nuke_asset_publish:
         definition: '@asset_root/pub/nuke/{name}.v{version}.nk'
 
+  
+    #
+    # Clarisse
+    #
+
+    # asset
+    # define the location of a work area
+    asset_work_area_clarisse:
+        definition: '@asset_root/dev/clarisse'
+        root_name: 'primary'
+    # define the location of a publish area
+    asset_publish_area_clarisse:
+        definition: '@asset_root/pub/clarisse'
+        root_name: 'primary'
+
+    # The location of WIP files
+    clarisse_asset_work:
+        definition: '@asset_root/dev/clarisse/{Asset}_{Step}_v{version}[_{name}].project'
+        root_name: 'primary'
+    # The location of backups of WIP files
+    clarisse_asset_snapshot:
+        definition: '@asset_root/dev/clarisse/snapshot/{Asset}_{Step}_v{version}[_{name}].{timestamp}.project'
+        root_name: 'primary'
+    # The location of published clarisse files
+    clarisse_asset_publish:
+        definition: '@asset_root/pub/clarisse/{Asset}_{Step}_v{version}[_{name}].project'
+        root_name: 'primary'
+ 
+    # shot 
+    # define the location of a work area
+    shot_work_area_clarisse:
+        definition: '@shot_root/dev/clarisse'
+        root_name: 'primary'
+    # define the location of a publish area
+    shot_publish_area_clarisse:
+        definition: '@shot_root/pub/clarisse'
+        root_name: 'primary'
+    # The location of WIP files
+    clarisse_shot_work:
+        definition: '@shot_root/dev/clarisse/{Shot}_{Step}_v{version}[_{name}].project'
+        root_name: 'primary'
+    # The location of backups of WIP files
+    clarisse_shot_snapshot:
+        definition: '@shot_root/dev/clarisse/snapshot/{Shot}_{Step}_v{version}[_{name}].{timestamp}.project'
+        root_name: 'primary'
+    # The location of published clarisse files
+    clarisse_shot_publish:
+        definition: '@shot_root/pub/clarisse/{Shot}_{Step}_v{version}[_{name}].project'
+        root_name: 'primary'
+
+    # sequence 
+    # define the location of a work area
+    sequence_work_area_clarisse:
+        definition: '@sequence_root/dev/clarisse'
+        root_name: 'primary'
+    # define the location of a publish area
+    sequence_publish_area_clarisse:
+        definition: '@sequence_root/pub/clarisse'
+        root_name: 'primary'
+    # The location of WIP files
+    clarisse_sequence_work:
+        definition: '@sequence_root/dev/clarisse/{name}.v{version}.project'
+        root_name: 'primary'
+    # The location of backups of WIP files
+    clarisse_sequence_snapshot:
+        definition: '@sequence_root/dev/clarisse/snapshots/{name}.v{version}.{timestamp}.project'
+        root_name: 'primary'
+    # The location of published clarisse files
+    clarisse_sequence_publish:
+        definition: '@sequence_root/pub/clarisse/{name}.v{version}.project'
+        root_name: 'primary'
+
 
 #
 # The strings section is similar to the paths section - but rather than defining paths
