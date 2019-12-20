@@ -1,0 +1,41 @@
+# Copyright (c) 2017 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+#
+
+# location descriptors for engines used in this configuration
+
+################################################################################
+
+
+#Katana
+engines.tk-katana.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-katana
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-katana
+
+#clarisse
+engines.tk-clarisse.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-clarisse
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-clarisse
+
+#3de
+engines.tk-3de4.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-3de4
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-3de4
+
+# Houdini
+engines.tk-houdini.location:
+  type: path
+  linux_path: /westworld/inhouse/tool/shotgun/engine/tk-houdini
+  windows_path: \\10.0.0.148\inhouse\tool\shotgun\engine\tk-houdini
+
+

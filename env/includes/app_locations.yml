@@ -13,6 +13,7 @@
 
 includes:
 - ./frameworks.yml
+- ./ww_app_locations.yml
 
 ################################################################################
 # location descriptors for apps used in this configuration
@@ -29,7 +30,7 @@ apps.tk-multi-about.location:
 apps.tk-multi-breakdown.location:
   type: app_store
   name: tk-multi-breakdown
-  version: v1.6.0
+  version: v1.6.1
 
 # demo
 apps.tk-multi-demo.location:
@@ -41,19 +42,19 @@ apps.tk-multi-demo.location:
 apps.tk-multi-launchapp.location:
   type: app_store
   name: tk-multi-launchapp
-  version: v0.10.2
+  version: v0.10.3
 
 # loader2
 apps.tk-multi-loader2.location:
   type: app_store
   name: tk-multi-loader2
-  version: v1.19.3
+  version: v1.19.4
 
 # publish2
 apps.tk-multi-publish2.location:
   type: app_store
   name: tk-multi-publish2
-  version: v2.3.3
+  version: v2.4.1
 
 # pythonconsole
 apps.tk-multi-pythonconsole.location:
@@ -71,19 +72,19 @@ apps.tk-multi-reviewsubmission.location:
 apps.tk-multi-screeningroom.location:
   type: app_store
   name: tk-multi-screeningroom
-  version: v0.3.3
+  version: v0.3.4
 
 # setframerange
 apps.tk-multi-setframerange.location:
   type: app_store
   name: tk-multi-setframerange
-  version: v0.3.0
+  version: v0.4.0
 
 # shotgun panel
 apps.tk-multi-shotgunpanel.location:
   type: app_store
   name: tk-multi-shotgunpanel
-  version: v1.6.3
+  version: v1.6.4
 
 # snapshot
 apps.tk-multi-snapshot.location:
@@ -127,7 +128,7 @@ apps.tk-shotgun-launchfolder.location:
 apps.tk-shotgun-launchpublish.location:
   type: app_store
   name: tk-shotgun-launchpublish
-  version: v0.3.0
+  version: v0.3.2
 
 # ---- Hiero apps
 
@@ -135,7 +136,7 @@ apps.tk-shotgun-launchpublish.location:
 apps.tk-hiero-export.location:
   type: app_store
   name: tk-hiero-export
-  version: v0.5.1
+  version: v0.5.3
 
 # hiero openinshotgun
 apps.tk-hiero-openinshotgun.location:
@@ -177,7 +178,7 @@ apps.tk-nuke-writenode.location:
 apps.tk-flame-export.location:
   name: tk-flame-export
   type: app_store
-  version: v1.9.2
+  version: v1.9.3
 
 # flame review
 apps.tk-flame-review.location:
@@ -192,64 +193,22 @@ apps.tk-mari-projectmanager.location:
   name: tk-mari-projectmanager
   type: app_store
   version: v1.2.1
-#iomanager
-apps.tk-iomanager.location:
-  name: tk-iomanager
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-iomanager
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-iomanager
-
-apps.tk-maya-makemov.location:
-  name: tk-maya-makemov
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-maya-makemov
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-maya-makemov
-  #type: git
-  #path: https://github.com/demon7x/tk-maya-makemov.git
-  #version: v0.0.1
 
 
-apps.tk-multi-output.location:
-  name: tk-multi-output
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-output
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-output
 
-apps.tk-desktop-timecard.location:
-  name: tk-desktop-timecard
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-desktop-timecard
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-desktop-timecard
-  #type: git
-  #path: https://github.com/demon7x/tk-maya-makemov.git
-  #version: v0.0.1
+apps.tk-iomanager.location: '@apps.tk-iomanager.location'
 
-apps.tk-multi-txmake.location:
-  name: tk-multi-txmake
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-txmake
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-txmake
-  #type: git
-  #path: https://github.com/demon7x/tk-maya-makemov.git
-  #version: v0.0.1
+apps.tk-maya-makemov.location: '@apps.tk-maya-makemov.location'
+  
+apps.tk-multi-output.location: '@apps.tk-multi-output.location'
 
-# workfiles2
-apps.tk-multi-workfiles2.location:
-  name: tk-multi-workfiles2
-  type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-workfiles2
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-workfiles2
+apps.tk-desktop-timecard.location: '@apps.tk-desktop-timecard.location'
 
-#tk-multi-version
-apps.tk-multi-version.location:
-  name: tk-multi-version
-  type: dev
-  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-version
-  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-version
-  #type: git
-  #path: https://github.com/demon7x/tk-maya-makemov.git
-  #version: v0.0.1
+apps.tk-multi-txmake.location: '@apps.tk-multi-txmake.location'
 
+apps.tk-multi-workfiles2.location: '@apps.tk-multi-workfiles2.location'
+
+apps.tk-multi-version.location: '@apps.tk-multi-version.location'
 
 ################################################################################
 # reference all of the common frameworks
