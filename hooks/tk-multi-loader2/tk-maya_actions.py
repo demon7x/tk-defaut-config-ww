@@ -173,8 +173,26 @@ class MayaUSDActions(HookBaseClass):
     def _do_import(self, path, sg_publish_data):
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
-                
-        cmds.file(path,i=1,rdn=1 ,rpr='clash',options="v=0",pr=1,lrd="all",iv=1)
+
+        task_name = sg_publish_data['task']['name'] 
+        published_file_type = sg_publish_data['published_file_type']['name'] 
+        asset_name = sg_publish_data.get("entity").get("name")
+
+        if task_name == "model" and published_file_type == "Maya Scene":
+            create_parent_tr = cmds.confirmDialog( 
+                title='Confirm', 
+                message='Do you want to create cache transform node ?', 
+                button=['Yes','No'], 
+                defaultButton='Yes', 
+                cancelButton='No', 
+                dismissString='No' )
+        node = cmds.file(path,rnn=1,i=1,rdn=1 ,rpr='clash',options="v=0",pr=1,lrd="all",iv=1)
+        node = cmds.ls(node, assemblies=True)
+        if create_parent_tr == "Yes":
+            cache_tr = cmds.createNode("transform",n="{0}_cache_grp".format(node[0]))
+            grp_tr = cmds.createNode("transform",n="{0}_grp".format(node[0]))
+            cmds.parent(node[0],cache_tr)
+            cmds.parent(cache_tr,grp_tr)
 
     def _do_merge(self, path, sg_publish_data):
         if not os.path.exists(path):
