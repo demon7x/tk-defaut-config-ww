@@ -30,7 +30,7 @@ apps.tk-multi-about.location:
 apps.tk-multi-breakdown.location:
   type: app_store
   name: tk-multi-breakdown
-  version: v1.6.1
+  version: v1.6.2
 
 # demo
 apps.tk-multi-demo.location:
@@ -66,7 +66,7 @@ apps.tk-multi-pythonconsole.location:
 apps.tk-multi-reviewsubmission.location:
   type: app_store
   name: tk-multi-reviewsubmission
-  version: v0.3.2
+  version: v1.0.2
 
 # screeningroom
 apps.tk-multi-screeningroom.location:
@@ -84,7 +84,7 @@ apps.tk-multi-setframerange.location:
 apps.tk-multi-shotgunpanel.location:
   type: app_store
   name: tk-multi-shotgunpanel
-  version: v1.6.4
+  version: v1.7.0
 
 # snapshot
 apps.tk-multi-snapshot.location:
@@ -197,19 +197,12 @@ apps.tk-mari-projectmanager.location:
 
 
 apps.tk-iomanager.location: '@apps.tk-iomanager.location'
-
 apps.tk-maya-makemov.location: '@apps.tk-maya-makemov.location'
-  
 apps.tk-multi-output.location: '@apps.tk-multi-output.location'
-
 apps.tk-desktop-timecard.location: '@apps.tk-desktop-timecard.location'
-
 apps.tk-multi-txmake.location: '@apps.tk-multi-txmake.location'
-
 apps.tk-multi-workfiles2.location: '@apps.tk-multi-workfiles2.location'
-
 apps.tk-multi-version.location: '@apps.tk-multi-version.location'
-
 ################################################################################
 # reference all of the common frameworks
 frameworks: '@frameworks'

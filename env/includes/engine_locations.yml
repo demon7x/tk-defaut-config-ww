@@ -26,7 +26,7 @@ engines.tk-3dsmaxplus.location:
 engines.tk-desktop.location:
   type: app_store
   name: tk-desktop
-  version: v2.4.12
+  version: v2.4.14
 
 # Flame
 engines.tk-flame.location:
@@ -44,7 +44,7 @@ engines.tk-mari.location:
 engines.tk-maya.location:
   type: app_store
   name: tk-maya
-  version: v0.9.9
+  version: v0.9.10
 
 # Motion Builder
 engines.tk-motionbuilder.location:
@@ -78,14 +78,9 @@ engines.tk-shotgun.location:
 
 #Katana
 engines.tk-katana.location: '@engines.tk-katana.location'
-
 #clarisse
 engines.tk-clarisse.location: '@engines.tk-clarisse.location'
-
 #3de
 engines.tk-3de4.location: '@engines.tk-3de4.location'
-
 # Houdini
 engines.tk-houdini.location: '@engines.tk-houdini.location'
-
-
