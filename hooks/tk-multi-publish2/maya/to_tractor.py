@@ -35,6 +35,56 @@ class MayaToTractor(object):
         with open( self._temp_file, 'w' ) as f:
             f.write(script)
 
+    def create_camera_usd_script(self,mel_command):
+
+        script = ''
+        script += 'import maya.standalone\n'
+        script += 'maya.standalone.initialize()\n'
+        script += 'import maya.cmds as cmds\n'
+        script += 'import maya.mel as mel\n'
+        
+        usd_attribute = ''
+        usd_attribute
+
+        script += '\n'
+        script += '\n'
+        
+        script += 'cmds.file("{}",open=1,force=1,iv=1)\n'.format(cmds.file(query=True, sn=True))
+        script += 'start = int(cmds.playbackOptions(q=True, min=True))\n'
+        script += 'end = int(cmds.playbackOptions(q=True, max=True))\n'
+        script += '''camera_shapes = [ x for x in cmds.listRelatives("{}",c=1,f=1,ad=1) 
+                                    if cmds.nodeType(x) == "camera"]\n'''.format(self.item.properties['name'])
+        script += 'for cam_shape in camera_shapes:\n'
+        script += '    cmds.addAttr(cam_shape,ln="frameRange",dt="double2")\n'
+        script += '    cmds.setAttr(cam_shape + ".frameRange",start ,end,type="double2")\n'
+        script += '    cmds.addAttr(cam_shape,ln="USD_UserExportedAttributesJson",dt="string")\n'
+        script += '''    cmds.setAttr(cam_shape+".USD_UserExportedAttributesJson",\
+'{"filmFit": {},\
+"filmFitOffset": {},\
+"horizontalFilmOffset": {}, \
+"focalLength": {},\
+"postScale": {},\
+"fStop": {},\
+"horizontalFilmAperture": {},\
+"overscan": {},\
+"verticalFilmOffset": {},\
+"lensSqueezeRatio": {},\
+"verticalFilmAperture": {},\
+"filmTranslate": {},\
+"preScale": {},\
+"focusDistance": {},\
+"frameRange": {},\
+"cameraScale": {}}',type="string")\n'''
+        script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
+        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+        script += 'cmds.loadPlugin("AbcExport.so")\n'
+        script += 'mel.eval(\'{}\')\n'.format(mel_command)
+        
+        
+
+        with open( self._temp_file, 'w' ) as f:
+            f.write(script)
+
     def to_tractor(self,start_frame,end_frame,file_type):
         
         sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python2.7/site-packages")
