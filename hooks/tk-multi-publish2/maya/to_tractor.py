@@ -28,6 +28,9 @@ class MayaToTractor(object):
         script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
         script += 'cmds.loadPlugin("pxrUsd.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
+        script += 'cmds.loadPlugin("cvJiggle.so")\n'
+        script += 'cmds.loadPlugin("cvwrap.so")\n'
+        script += 'cmds.loadPlugin("iDeform.so")\n'
         script += 'mel.eval(\'{}\')\n'.format(mel_command)
         
         
@@ -112,7 +115,7 @@ class MayaToTractor(object):
         title = "["+title+"]"
         job.title = str(title)
 
-        command = ['rez-env','maya-2019vfarm','usd-19.03','yeti','--','mayapy']
+        command = ['rez-env','maya-2019vfarm','usd-19.03','yeti','ideform','--','mayapy']
         command.append(self._temp_file)
         command = author.Command(argv=command)
 
