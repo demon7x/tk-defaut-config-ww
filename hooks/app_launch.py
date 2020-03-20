@@ -33,7 +33,8 @@ ENGINES = {
     'tk-katana': 'katana',
     'tk-mari' : 'mari',
     'tk-3de4' : '3de',
-    'tk-clarisse' : 'clarisse'
+    'tk-clarisse' : 'clarisse',
+    'tk-unreal' : 'unreal'
 }
 
 
@@ -165,10 +166,13 @@ class BaseAdapter(object):
     @classmethod
     def execute(cls, context, args,command):
         
+        if command == "unreal":
+            command = "UE4Editor"
+
         os.environ['USE_SHOTGUN'] = "OK"
         if args:
             command += ' {args}'.format(args=args)
-        if platform.system()  == "Linux" and command  not in  ["houdini"]:
+        if platform.system()  == "Linux" and command  not in  ["houdini",'UE4Editor']:
             command = "mate-terminal -x bash -c '{}'".format(command)
         
         proc = context.execute_shell(

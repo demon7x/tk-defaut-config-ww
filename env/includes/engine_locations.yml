@@ -84,3 +84,5 @@ engines.tk-clarisse.location: '@engines.tk-clarisse.location'
 engines.tk-3de4.location: '@engines.tk-3de4.location'
 # Houdini
 engines.tk-houdini.location: '@engines.tk-houdini.location'
+# Unreal
+engines.tk-unreal.location: '@engines.tk-unreal.location'

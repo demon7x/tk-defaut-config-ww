@@ -757,6 +757,11 @@ paths:
         root_name: 'primary'
 
 
+
+    unreal_asset_publish:
+        definition: 'assets/unrealdemo/exports/{YYYY}_{MM}_{DD}/{name}.fbx'
+
+
 #
 # The strings section is similar to the paths section - but rather than defining paths
 # on disk, it contains a list of strings. Strings are typically used when you want to be

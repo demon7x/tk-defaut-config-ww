@@ -571,3 +571,30 @@ settings.tk-multi-publish2.clarisse.shot_step:
         Publish Template: clarisse_shot_publish
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
+
+
+# ---- Unreal
+
+# project
+settings.tk-multi-publish2.unreal.project:
+  collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  publish_plugins:
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py"
+    settings: {}
+  - name: Upload for review
+    hook: "{self}/upload_version.py"
+    settings: {}
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_session.py"
+    settings: {}
+  - name: Export FBX and Publish to Shotgun
+    hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_asset.py"
+    settings:
+        Publish Template: unreal_asset_publish
+  - name: Render Movie and Submit for Review
+    hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_movie.py"
+    settings:
+        Publish Template: unreal_movie_publish
+  help_url: *help_url
+  location: "@apps.tk-multi-publish2.location"

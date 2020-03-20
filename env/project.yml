@@ -29,6 +29,7 @@ includes:
 - ./includes/settings/tk-katana.yml
 - ./includes/settings/tk-3de4.yml
 - ./includes/settings/tk-clarisse.yml
+- ./includes/settings/tk-unreal.yml
 
 ################################################################################
 # configuration for all engines to load in a project context
@@ -50,6 +51,7 @@ engines:
   tk-katana: "@settings.tk-katana.project"
   tk-3de4: "@settings.tk-3de4.project"
   tk-clarisse: "@settings.tk-clarisse.project"
+  tk-unreal: "@settings.tk-unreal.project"
 
 ################################################################################
 # reference all of the common frameworks
