@@ -260,7 +260,7 @@ class KatanaActions(HookBaseClass):
                     rename_set_param2.setValue(asset_name+"\d+",0)
 
                 else:
-                    node = NodegraphAPI.CreateNode("Geo_In_dev", parent=root)
+                    node = NodegraphAPI.CreateNode("Geo_In", parent=root)
                 name_param = node.getParameters().getChild("user").getChild("rename")
                 name_param.setValue(name,0)
                 rename_param = node.getParameters().getChild("user").getChild("rename")
