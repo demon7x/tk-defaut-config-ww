@@ -265,9 +265,9 @@ class KatanaActions(HookBaseClass):
                 name_param.setValue(name,0)
                 rename_param = node.getParameters().getChild("user").getChild("rename")
                 rename_param.setValue("_cache_grp",0)
-                if file_type == "USD" :
-                    usd_path_param = node.getParameters().getChild("user").getChild("usd_prim_path")
-                    self._set_usd_root_path(usd_path_param,path,node)
+                #if file_type == "USD" :
+                #    usd_path_param = node.getParameters().getChild("user").getChild("usd_prim_path")
+                #    self._set_usd_root_path(usd_path_param,path,node)
 
             NodegraphAPI.SetNodePosition(node, (pos[0][0], pos[0][1]))
             file_type_param = node.getParameters().getChild("user").getChild("fileType")
