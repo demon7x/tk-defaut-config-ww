@@ -291,7 +291,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-mt 0',
             '-sl',
             '-sn 1',
-            '-fs %f'%item.properties['sub_frame'],
+            #'-fs %f'%item.properties['sub_frame'],
             '-ft %f'%item.properties['sub_frame']
             
             ]
@@ -423,7 +423,11 @@ def _to_tractor(instance,item,mel_command):
     import to_tractor;reload(to_tractor)
     start_frame, end_frame = _find_scene_animation_range()
     tractor = to_tractor.MayaToTractor(item)
-    tractor.create_script(mel_command)
+    #if start_frame and end_frame:
+    if not item.properties['name'].find("mheli_cache_grp") == -1:
+        tractor.create_add_frame_script(mel_command,start_frame,end_frame)
+    else:
+        tractor.create_script(mel_command)
     tractor.to_tractor(start_frame,end_frame,file_type)
 
 def _find_scene_animation_range():

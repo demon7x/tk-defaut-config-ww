@@ -12,6 +12,56 @@ class MayaToTractor(object):
         self.item = item
         self._temp_file = os.path.splitext(item.properties["path"])[0]+".py"
 
+    def create_add_frame_script(self,mel_command,sf,ef):
+        
+        original = mel_command
+        mel_split  = original.split()
+        orignal_file = mel_split[-1]
+        original_path = os.path.dirname(orignal_file)
+        original_file_name =os.path.basename(orignal_file)
+        temp_path = os.path.join(original_path,"frames")
+
+        script = ''
+        script += 'import maya.standalone\n'
+        script += 'maya.standalone.initialize()\n'
+        script += 'import maya.cmds as cmds\n'
+        script += 'import maya.mel as mel\n'
+        script += 'import os\n'
+
+        script += '\n'
+        script += '\n'
+
+        script += 'cmds.file("{}",open=1,force=1,iv=1)\n'.format(cmds.file(query=True, sn=True))
+        script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
+        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+        script += 'cmds.loadPlugin("AbcExport.so")\n'
+        script += 'cmds.loadPlugin("cvJiggle.so")\n'
+        script += 'cmds.loadPlugin("cvwrap.so")\n'
+        script += 'cmds.loadPlugin("iDeform.so")\n'
+        
+        for frame in range(sf,ef+1):
+
+            mel_split  = original.split()
+            #if not frame == sf:
+            #    append_index = mel_split.index("usdExport") + 1
+            #    mel_split.insert(append_index,"-a")
+            #    mel_split.insert(append_index+1,"1")
+            frame_index = mel_split.index("-fr")+1
+            mel_split[frame_index] = "{}".format(frame)
+            mel_split[frame_index + 1] = "{}".format(frame)
+            file_name = mel_split[-1]
+            frame_file_name = original_file_name.split(".")[0] + '{}.usd"'.format(frame)
+            frame_file_name = os.path.join(temp_path,frame_file_name)
+            mel_split[-1] = frame_file_name
+            mel_command = " ".join(mel_split)
+            script += 'mel.eval(\'{}\')\n'.format(mel_command)
+        
+        
+        script += 'os.system("usdstitch {0}/*.usd -o {1}")\n'.format(temp_path[1:],orignal_file[1:-1])
+        
+
+        with open( self._temp_file, 'w' ) as f:
+            f.write(script)
 
     def create_script(self,mel_command):
 
