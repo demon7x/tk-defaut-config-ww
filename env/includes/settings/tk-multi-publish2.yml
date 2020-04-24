@@ -181,6 +181,10 @@ settings.tk-multi-publish2.maya.asset_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_alembic.py"
     settings:
         Publish Template: asset_component_alembic
+  - name: Publish to Shotgun For Mari
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_alembic_for_mari.py"
+    settings:
+        Publish Template: asset_component_alembic_for_mari
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_usd.py"
     settings:

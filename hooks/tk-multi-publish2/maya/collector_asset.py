@@ -385,11 +385,21 @@ class MayaSessionCollector(HookBaseClass):
         abc_item.properties['name'] = component_name
         abc_item.set_icon_from_path(abc_icon_path)
 
-        xml_item = parent_item.create_item(
-            "maya.session.component.scenegraphxml",
-            "XML",
-            "Export scenegraphXML"
+        abc_mari_item = parent_item.create_item(
+            "maya.session.component.abc_mari",
+            "Alembic",
+            "Export Alembic For Mari"
         )
+        
+
+        abc_mari_item.properties['name'] = component_name
+        abc_mari_item.set_icon_from_path(abc_icon_path)
+
+        #xml_item = parent_item.create_item(
+        #    "maya.session.component.scenegraphxml",
+        #    "XML",
+        #    "Export scenegraphXML"
+        #)
 
 
         #xml_icon_path = os.path.join(

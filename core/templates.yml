@@ -483,6 +483,8 @@ paths:
 
     asset_component_alembic:
         definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version}.abc'
+    asset_component_alembic_for_mari:
+        definition: '@asset_root/pub/caches/abc_mari/{Asset}_{Step}_v{version}.abc'
     asset_cmpt_asmb_usd:
         definition: '@asset_root/pub/caches/usd/{Asset}_{Step}_v{version}.usd'
     asset_scenegraphXML:

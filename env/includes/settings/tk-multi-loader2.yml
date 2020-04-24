@@ -93,6 +93,8 @@ settings.tk-multi-loader2.houdini:
 settings.tk-multi-loader2.mari:
   action_mappings:
     Alembic Cache: [geometry_import]
+    Component USD: [geometry_import]
+    ABCForMari: [geometry_import]
   entities:
   - caption: Assets
     entity_type: Asset
@@ -115,6 +117,7 @@ settings.tk-multi-loader2.maya:
   actions_hook: '{self}/tk-maya_actions.py:{config}/tk-multi-loader2/tk-maya_actions.py'
   action_mappings:
     Alembic Cache: [reference, import,merge,viewer]
+    ABCForMari: [reference, import,merge,viewer]
     Component USD: [usd_reference,viewer]
     Assembly USD: [usd_reference, viewer]
     Camera USD: [usd_reference, viewer]
