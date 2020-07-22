@@ -263,6 +263,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
             "-eulerFilter",
 
+            "-writeVisibility",
+
             "-sn",
 
             "-step %f"%item.properties['sub_frame']
