@@ -45,7 +45,7 @@ class FrameOperation(HookBaseClass):
         """
         read = nuke.selectedNodes()
 
-        if read:
+        if read and len(read) == 1 and read[0].Class() == "Read":
             read = read[0]
             height = read.metadata()['input/height']
             width = read.metadata()['input/width']
