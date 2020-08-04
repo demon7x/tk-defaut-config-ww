@@ -539,7 +539,16 @@ class MayaSessionCollector(HookBaseClass):
                 abc_item.properties['sub_frame'] = sub_frame
                 abc_item.set_icon_from_path(abc_icon_path)
 
-            
+                abc_mari_item = parent_item.create_item(
+                        "maya.session.shot.component.abc_mari",
+                        "Alembic",
+                        "Export Alembic For Mari"
+                    )
+                
+
+                abc_mari_item.properties['name'] = component_name.split("_")[0]
+                abc_mari_item.set_icon_from_path(abc_icon_path)
+
     
             self.logger.debug("Collected shot asset : %s"%(component_name))
     

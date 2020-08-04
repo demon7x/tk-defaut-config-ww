@@ -502,6 +502,8 @@ paths:
         definition: '@shot_root/pub/caches/usd/{asset_namespace}_{Step}_v{version}.usd'
     shot_component_xml:
         definition: '@shot_root/pub/caches/xml/{asset_namespace}_{Step}_v{version}.xml'
+    shot_component_alembic_for_mari:
+        definition: '@shot_root/pub/caches/abc_mari/{name}_{Step}_v{version}.abc'
     shot_usd:
         definition: '@shot_root/pub/caches/usd/{Shot}_{Step}_v{version}.usd'
     shot_scenegraphXML:
