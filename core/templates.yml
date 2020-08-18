@@ -486,32 +486,32 @@ paths:
     #westworld cache type
 
     asset_component_alembic:
-        definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version}.abc'
+        definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version[_{name}]}.abc'
     asset_component_alembic_for_mari:
-        definition: '@asset_root/pub/caches/abc_mari/{Asset}_{Step}_v{version}.abc'
+        definition: '@asset_root/pub/caches/abc_mari/{Asset}_{Step}_v{version}[_{name}].abc'
     asset_cmpt_asmb_usd:
-        definition: '@asset_root/pub/caches/usd/{Asset}_{Step}_v{version}.usd'
+        definition: '@asset_root/pub/caches/usd/{Asset}_{Step}_v{version}[_{name}].usd'
     asset_scenegraphXML:
         definition: '@asset_root/pub/caches/xml/{Asset}_{Step}_v{version}.xml'
     asset_yeticache:
         definition: '@asset_root/pub/caches/yeti/{Asset}_{Step}_v{version}/{name}/{name}.fur'
 
     shot_component_alembic:
-        definition: '@shot_root/pub/caches/abc/{asset_namespace}_{Step}_v{version}.abc'
+        definition: '@shot_root/pub/caches/abc/{asset_namespace}_{Step}_v{version}[_{name}].abc'
     shot_cmpt_asmb_usd:
-        definition: '@shot_root/pub/caches/usd/{asset_namespace}_{Step}_v{version}.usd'
+        definition: '@shot_root/pub/caches/usd/{asset_namespace}_{Step}_v{version}[_{name}].usd'
     shot_component_xml:
         definition: '@shot_root/pub/caches/xml/{asset_namespace}_{Step}_v{version}.xml'
     shot_component_alembic_for_mari:
-        definition: '@shot_root/pub/caches/abc_mari/{name}_{Step}_v{version}.abc'
+        definition: '@shot_root/pub/caches/abc_mari/{name}_{Step}_v{version}[_{name}].abc'
     shot_usd:
-        definition: '@shot_root/pub/caches/usd/{Shot}_{Step}_v{version}.usd'
+        definition: '@shot_root/pub/caches/usd/{Shot}_{Step}_v{version}[_{name}].usd'
     shot_scenegraphXML:
-        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}.xml'
+        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}[_{name}].xml'
     shot_scenegraphXML:
-        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}.xml'
+        definition: '@shot_root/pub/caches/xml/{Shot}_{Step}_v{version}[_{name}].xml'
     shot_camera_dummy:
-        definition: '@shot_root/pub/caches/{shot_file_extension}/{name}_{Step}_v{version}.{shot_file_extension}'
+        definition: '@shot_root/pub/caches/{shot_file_extension}/{name}_{Step}_v{version}[_{name}].{shot_file_extension}'
     shot_yeticache:
         definition: '@shot_root/pub/caches/yeti/{Shot}_{Step}_v{version}/{asset_namespace}/{name}/{name}.{SEQ}.fur'
 
