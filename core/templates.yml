@@ -486,7 +486,7 @@ paths:
     #westworld cache type
 
     asset_component_alembic:
-        definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version[_{name}]}.abc'
+        definition: '@asset_root/pub/caches/abc/{Asset}_{Step}_v{version}[_{name}].abc'
     asset_component_alembic_for_mari:
         definition: '@asset_root/pub/caches/abc_mari/{Asset}_{Step}_v{version}[_{name}].abc'
     asset_cmpt_asmb_usd:
