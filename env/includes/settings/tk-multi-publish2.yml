@@ -267,6 +267,10 @@ settings.tk-multi-publish2.maya.shot_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_set_abc.py"
     settings:
         Publish Template: shot_component_alembic
+  - name: Publish to Shotgun For Mari
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_abc_for_mari.py"
+    settings:
+        Publish Template: shot_component_alembic_for_mari
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
 

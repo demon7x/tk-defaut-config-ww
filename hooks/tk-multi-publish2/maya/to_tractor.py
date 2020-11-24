@@ -127,6 +127,9 @@ class MayaToTractor(object):
 "preScale": {},\
 "focusDistance": {},\
 "frameRange": {},\
+"panZoomEnabled": {},\
+"pan": {},\
+"zoom": {},\
 "cameraScale": {}}',type="string")\n'''
         script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
         script += 'cmds.loadPlugin("pxrUsd.so")\n'
