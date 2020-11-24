@@ -283,7 +283,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             '-vis 1',
             '-mt 0',
             '-sl',
-            '-fs %f'%item.properties['sub_frame'],
+            #'-fs %f'%item.properties['sub_frame'],
             '-ft %f'%item.properties['sub_frame']
             ]
 
