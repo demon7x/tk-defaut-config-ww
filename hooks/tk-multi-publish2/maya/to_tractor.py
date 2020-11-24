@@ -19,7 +19,7 @@ class MayaToTractor(object):
         orignal_file = mel_split[-1]
         original_path = os.path.dirname(orignal_file)
         original_file_name =os.path.basename(orignal_file)
-        temp_path = os.path.join(original_path,"frames")
+        temp_path = os.path.join(original_path,os.path.basename(orignal_file).split(".")[0]+"_fr")
 
         script = ''
         script += 'import maya.standalone\n'
@@ -32,7 +32,18 @@ class MayaToTractor(object):
         script += '\n'
 
         script += 'cmds.file("{}",open=1,force=1,iv=1)\n'.format(cmds.file(query=True, sn=True))
-        script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
+
+        if not self.item.properties['name'].find("setgrp") == -1:
+            cache_grp = [x for x in cmds.listRelatives(
+                self.item.properties['name'],ad=1) 
+                         if not x.find("cache_grp") == -1]
+            if cache_grp:
+                script += 'cache_grp = [x for x in cmds.listRelatives("{}",ad=1) if not x.find("cache_grp") == -1 ]\n'.format(self.item.properties['name'])
+                script += 'cmds.select(cache_grp)\n'
+            else:
+                script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
+        else:
+            script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
         script += 'cmds.loadPlugin("pxrUsd.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
         script += 'cmds.loadPlugin("cvJiggle.so")\n'
@@ -50,7 +61,7 @@ class MayaToTractor(object):
             mel_split[frame_index] = "{}".format(frame)
             mel_split[frame_index + 1] = "{}".format(frame)
             file_name = mel_split[-1]
-            frame_file_name = original_file_name.split(".")[0] + '{}.usd"'.format(frame)
+            frame_file_name = original_file_name.split(".")[0] + '_{}.usd"'.format(frame)
             frame_file_name = os.path.join(temp_path,frame_file_name)
             mel_split[-1] = frame_file_name
             mel_command = " ".join(mel_split)
