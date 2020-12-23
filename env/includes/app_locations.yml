@@ -24,13 +24,13 @@ includes:
 apps.tk-multi-about.location:
   type: app_store
   name: tk-multi-about
-  version: v0.3.0
+  version: v0.3.2
 
 # breakdown
 apps.tk-multi-breakdown.location:
   type: app_store
   name: tk-multi-breakdown
-  version: v1.7.1
+  version: v1.7.2
 
 # demo
 apps.tk-multi-demo.location:
@@ -54,7 +54,7 @@ apps.tk-multi-loader2.location:
 apps.tk-multi-publish2.location:
   type: app_store
   name: tk-multi-publish2
-  version: v2.4.1
+  version: v2.5.5
 
 # pythonconsole
 apps.tk-multi-pythonconsole.location:
@@ -203,6 +203,7 @@ apps.tk-desktop-timecard.location: '@apps.tk-desktop-timecard.location'
 apps.tk-multi-txmake.location: '@apps.tk-multi-txmake.location'
 apps.tk-multi-workfiles2.location: '@apps.tk-multi-workfiles2.location'
 apps.tk-multi-version.location: '@apps.tk-multi-version.location'
+apps.tk-multi-library.location: '@apps.tk-multi-library.location'
 ################################################################################
 # reference all of the common frameworks
 frameworks: '@frameworks'

@@ -42,7 +42,7 @@ engines.tk-houdini.location:
 engines.tk-unreal.location:
   type: path
   linux_path: /westworld/inhouse/pipeline/shotgun/engine/tk-unreal
-  windows_path: \\10.0.0.148\inhouse\pipeline\shotgun\engine\tk-unreal
+  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\engine\tk-unreal
 
 # Mari
 engines.tk-mari.location:

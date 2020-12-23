@@ -395,6 +395,25 @@ class MayaSessionCollector(HookBaseClass):
         abc_mari_item.properties['name'] = component_name
         abc_mari_item.set_icon_from_path(abc_icon_path)
 
+        fbx_item = parent_item.create_item(
+            "maya.fbx",
+            "FBX ",
+            "Export FBX"
+            
+        )
+        
+        # get the icon path to display for this item
+        fbx_icon_path = os.path.join(
+            self.disk_location,
+            os.pardir,
+            "icons",
+            "fbx.png"
+        )
+
+        fbx_item.properties['name'] = component_name
+        fbx_item.set_icon_from_path(fbx_icon_path)
+
+
         #xml_item = parent_item.create_item(
         #    "maya.session.component.scenegraphxml",
         #    "XML",

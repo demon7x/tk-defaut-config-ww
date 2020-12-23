@@ -57,4 +57,11 @@ apps.tk-multi-version.location:
   windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-version
 
 
+#tk-multi-library
+apps.tk-multi-library.location:
+  name: tk-multi-library
+  type: dev
+  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-library
+  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-library
+
 ################################################################################

@@ -243,3 +243,9 @@ settings.tk-multi-shotgunpanel.clarisse:
 
 
 
+# unreal
+settings.tk-multi-shotgunpanel.unreal:
+  actions_hook: '{self}/general_actions.py:{engine}/tk-multi-shotgunpanel/tk-unreal_actions.py'
+  action_mappings: {}
+  enable_context_switch: true
+  location: "@apps.tk-multi-shotgunpanel.location"

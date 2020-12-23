@@ -201,6 +201,11 @@ settings.tk-multi-publish2.maya.asset_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_assembly_usd.py"
     settings:
         Publish Template: asset_cmpt_asmb_usd
+  #for Unreal
+  - name: Publish to Shotgun
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/tk-maya/basic/publish_fbx.py"
+    settings:
+        Publish Template: maya_asset_fbx_publish
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
 
@@ -579,9 +584,6 @@ settings.tk-multi-publish2.clarisse.shot_step:
         Publish Template: clarisse_shot_publish
   help_url: *help_url
   location: "@apps.tk-multi-publish2.location"
-
-
-# ---- Unreal
 
 # project
 settings.tk-multi-publish2.unreal.project:
