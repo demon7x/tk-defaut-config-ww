@@ -20,13 +20,13 @@ includes:
 engines.tk-3dsmaxplus.location:
   type: app_store
   name: tk-3dsmaxplus
-  version: v0.5.10
+  version: v0.5.11
 
 # Desktop
 engines.tk-desktop.location:
   type: app_store
   name: tk-desktop
-  version: v2.4.14
+  version: v2.5.11
 
 # Flame
 engines.tk-flame.location:
@@ -38,25 +38,25 @@ engines.tk-flame.location:
 engines.tk-maya.location:
   type: app_store
   name: tk-maya
-  version: v0.10.1
+  version: v0.10.2
 
 # Motion Builder
 engines.tk-motionbuilder.location:
   type: app_store
   name: tk-motionbuilder
-  version: v0.5.1
+  version: v0.5.2
 
 # Nuke
 engines.tk-nuke.location:
   type: app_store
   name: tk-nuke
-  version: v0.12.5
+  version: v0.12.9
 
 # Photoshop
 engines.tk-photoshopcc.location:
   type: app_store
   name: tk-photoshopcc
-  version: v1.8.1
+  version: v1.8.2
 
 # Shell
 engines.tk-shell.location:
@@ -68,7 +68,7 @@ engines.tk-shell.location:
 engines.tk-shotgun.location:
   type: app_store
   name: tk-shotgun
-  version: v0.8.2
+  version: v0.9.0
 
 #Katana
 engines.tk-katana.location: '@engines.tk-katana.location'

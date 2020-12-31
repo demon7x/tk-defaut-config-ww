@@ -30,7 +30,7 @@ apps.tk-multi-about.location:
 apps.tk-multi-breakdown.location:
   type: app_store
   name: tk-multi-breakdown
-  version: v1.7.2
+  version: v1.7.3
 
 # demo
 apps.tk-multi-demo.location:
@@ -60,13 +60,13 @@ apps.tk-multi-publish2.location:
 apps.tk-multi-pythonconsole.location:
   type: app_store
   name: tk-multi-pythonconsole
-  version: v1.2.3
+  version: v1.2.5
 
 # reviewsubmission
 apps.tk-multi-reviewsubmission.location:
   type: app_store
   name: tk-multi-reviewsubmission
-  version: v1.0.2
+  version: v1.1.1
 
 # screeningroom
 apps.tk-multi-screeningroom.location:
@@ -108,7 +108,7 @@ apps.tk-multi-workfiles.location:
 apps.tk-multi-devutils.location:
   type: app_store
   name: tk-multi-devutils
-  version: v1.0.0
+  version: v1.1.0
 
 # ---- Shotgun apps
 
@@ -116,7 +116,7 @@ apps.tk-multi-devutils.location:
 apps.tk-shotgun-folders.location:
   type: app_store
   name: tk-shotgun-folders
-  version: v0.1.7
+  version: v0.2.0
 
 # shotgun launchfolder
 apps.tk-shotgun-launchfolder.location:
@@ -128,7 +128,7 @@ apps.tk-shotgun-launchfolder.location:
 apps.tk-shotgun-launchpublish.location:
   type: app_store
   name: tk-shotgun-launchpublish
-  version: v0.3.2
+  version: v0.4.1
 
 # ---- Hiero apps
 
@@ -192,7 +192,7 @@ apps.tk-flame-review.location:
 apps.tk-mari-projectmanager.location:
   name: tk-mari-projectmanager
   type: app_store
-  version: v1.2.1
+  version: v1.2.2
 
 
 
