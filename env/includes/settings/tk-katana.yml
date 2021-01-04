@@ -21,6 +21,7 @@ includes:
 - ./tk-multi-snapshot.yml
 - ./tk-multi-workfiles2.yml
 - ./tk-multi-output.yml
+- ./tk-multi-library.yml
 
 
 ################################################################################
@@ -45,6 +46,7 @@ settings.tk-katana.asset_step:
     tk-multi-about:
       location: "@apps.tk-multi-about.location"
     tk-multi-loader2: "@settings.tk-multi-loader2.katana"
+    tk-multi-library: "@settings.tk-multi-library.katana"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.katana.asset_step"
     tk-multi-publish2: "@settings.tk-multi-publish2.katana.asset_step"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
@@ -66,6 +68,7 @@ settings.tk-katana.project:
     tk-multi-about:
       location: "@apps.tk-multi-about.location"
     tk-multi-loader2: "@settings.tk-multi-loader2.katana"
+    tk-multi-library: "@settings.tk-multi-library.katana"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.katana.project"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
@@ -95,6 +98,7 @@ settings.tk-katana.shot_step:
     tk-multi-about:
       location: "@apps.tk-multi-about.location"
     tk-multi-loader2: "@settings.tk-multi-loader2.katana"
+    tk-multi-library: "@settings.tk-multi-library.katana"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.katana.shot_step"
     tk-multi-publish2: "@settings.tk-multi-publish2.katana.shot_step"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"

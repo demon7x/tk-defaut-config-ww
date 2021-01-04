@@ -23,6 +23,7 @@ includes:
 - ./tk-multi-snapshot.yml
 - ./tk-multi-workfiles2.yml
 - ./tk-multi-output.yml
+- ./tk-multi-library.yml
 
 ################################################################################
 
@@ -46,6 +47,7 @@ settings.tk-houdini.asset_step:
     tk-multi-breakdown:
       location: "@apps.tk-multi-breakdown.location"
     tk-multi-loader2: "@settings.tk-multi-loader2.houdini"
+    tk-multi-library: "@settings.tk-multi-library.houdini"
     tk-multi-publish2: "@settings.tk-multi-publish2.houdini.asset_step"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.houdini"
@@ -69,8 +71,11 @@ settings.tk-houdini.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2"
+    tk-multi-loader2: "@settings.tk-multi-loader2.houdini"
+    tk-multi-library: "@settings.tk-multi-library.houdini"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
+  automatic_context_switch: false
   location: "@engines.tk-houdini.location"
 
 # sequence
@@ -107,6 +112,7 @@ settings.tk-houdini.shot_step:
     tk-multi-setframerange:
       location: "@apps.tk-multi-setframerange.location"
     tk-multi-loader2: "@settings.tk-multi-loader2.houdini"
+    tk-multi-library: "@settings.tk-multi-library.houdini"
     tk-multi-publish2: "@settings.tk-multi-publish2.houdini.shot_step"
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.houdini"

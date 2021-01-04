@@ -23,6 +23,7 @@ includes:
 - ./tk-desktop-timecard.yml
 - ./tk-multi-txmake.yml
 - ./tk-multi-version.yml
+- ./tk-multi-library.yml
 
 ################################################################################
 
@@ -51,6 +52,7 @@ settings.tk-desktop.project:
     tk-timecard: "@settings.tk-desktop-timecard.standalone"
     tk-multi-txmake: "@settings.tk-multi-txmake.standalone"
     tk-multi-version: "@settings.tk-multi-version.standalone"
+    tk-multi-library: "@settings.tk-multi-library.standalone"
   groups:
   - matches:
     - "katana*"

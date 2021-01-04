@@ -15,4 +15,125 @@ includes:
 
 ################################################################################
 
+#standalone
+settings.tk-multi-library.standalone:
+  actions_hook: '{self}/tk-standalone_actions.py'
+  action_mappings:
+    Obj File: [open_dir,clipboard]
+    Image: [open_dir,clipboard,viewer]
+    Tif File: [open_dir,clipboard,viewer]
+    Exr File: [open_dir,clipboard,viewer]
+    Maya Scene: [open_dir,clipboard]
+    Ziva Cache: [open_dir,clipboard]
+    ZBrush Scene: [open_dir,clipboard]
+    Fur Cache: [open_dir,clipboard]
+    Houdini Scene: [open_dir,clipboard]
+    Nuke Script: [open_dir,clipboard]
+    Katana File: [open_dir,clipboard]
+    KLF Material: [open_dir,clipboard]
+  entities:
+  - caption: Assets
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
+  - caption: Project
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  publish_filters: [["sg_status_list", "is_not", null]]
+  location: "@apps.tk-multi-library.location"
 
+# maya
+settings.tk-multi-library.maya:
+  actions_hook: '{self}/tk-maya_actions.py'
+  action_mappings:
+    Obj File: [reference, import]
+    Image: [texture_node, image_plane]
+    Tif File: [texture_node, image_plane]
+    Exr File: [texture_node, image_plane]
+    Maya Scene: [reference, import]
+    Ziva Cache: [reference, import]
+    Fur Cache: [reference, import]
+  entities:
+  - caption: Assets
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
+  - caption: Project
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  publish_filters: [["sg_status_list", "is_not", null]]
+  location: "@apps.tk-multi-library.location"
+
+#katana  
+settings.tk-multi-library.katana:
+  actions_hook: '{self}/tk-katana_actions.py'
+  action_mappings:
+    Image: [clipboard]
+    Tif File: [clipboard]
+    Exr File: [clipboard]
+    Katana File: [import]
+    KLF Material: [clipboard]
+  entities:
+  - caption: Assets
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
+  - caption: Project
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  publish_filters: [["sg_status_list", "is_not", null]]
+  location: "@apps.tk-multi-library.location"
+
+#mari 
+settings.tk-multi-library.mari:
+  actions_hook: '{self}/tk-mari_actions.py'
+  action_mappings:
+    Obj File: [geometry_import]
+    Image: [clipboard]
+    Tif File: [clipboard]
+    Exr File: [clipboard]
+  entities:
+  - caption: Assets
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
+  - caption: Project
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  publish_filters: [["sg_status_list", "is_not", null]]
+  location: "@apps.tk-multi-library.location"
+
+
+#houdini 
+settings.tk-multi-library.houdini:
+  actions_hook: '{self}/tk-houdini_actions.py'
+  action_mappings:
+    Image: [file_cop]
+    Tif File: [file_cop]
+    Exr File: [file_cop]
+    Houdini Scene: [merge]
+  entities:
+  - caption: Assets
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
+  - caption: Project
+    entity_type: Task
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  publish_filters: [["sg_status_list", "is_not", null]]
+  location: "@apps.tk-multi-library.location"
