@@ -304,7 +304,7 @@ def _to_tractor(instance,item,mel_command):
     import to_tractor;reload(to_tractor)
     start_frame, end_frame = _find_scene_animation_range()
     tractor = to_tractor.MayaToTractor(item)
-    tractor.create_script(mel_command)
+    tractor.create_camera_abc_script(mel_command)
     tractor.to_tractor(start_frame,end_frame,file_type)
 
 def _find_scene_animation_range():

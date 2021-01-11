@@ -254,13 +254,36 @@ class MayaSessionShotCameraMayaAsciiPublishPlugin(HookBaseClass):
         # ...and execute it:
         try:
             cmds.select(item.properties['name'])
-            cmds.file(publish_path.replace("\\", "/"),f=1,es=1,op="v=0",typ="mayaBinary")
+            _fix_and_export(item,publish_path)
         except Exception, e:
             self.logger.error("Failed to export camera export: %s" % e)
             return
 
         # Now that the path has been generated, hand it off to the
         super(MayaSessionShotCameraMayaAsciiPublishPlugin, self).publish(settings, item)
+
+    
+def _fix_and_export(item,publish_path):
+
+    children = cmds.listRelatives(item.properties['name'],ad=1,c=True, f=True)
+    shapes = [node for node in children if cmds.nodeType(node) == "camera"]
+    if not cmds.undoInfo(q=1,state=1):
+        cmds.undoInfo(state=1)
+    cmds.undoInfo(openChunk=True,chunkName="fixcamattr",infinity=1)    
+    try:
+        for shape in shapes:
+            cmds.setAttr(shape + '.overscan', 1.0)
+            if cmds.getAttr(shape + '.panZoomEnabled') == True:
+                cmds.setAttr(shape + '.pan', 0.0, 0.0, typ='float2')
+                cmds.setAttr(shape + '.zoom', 1.0)
+                if cmds.getAttr(shape + '.renderPanZoom') == True:
+                    cmds.setAttr(shape + '.renderPanZoom', False)
+                cmds.setAttr(shape + '.panZoomEnabled', False)
+
+    finally:
+        cmds.undoInfo(closeChunk=True)    
+        cmds.file(publish_path.replace("\\", "/"),f=1,es=1,op="v=0",typ="mayaBinary")
+        cmds.undo()
 
 
 def _find_scene_animation_range():
