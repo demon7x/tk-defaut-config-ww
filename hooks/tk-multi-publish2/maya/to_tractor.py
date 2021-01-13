@@ -3,7 +3,7 @@
 import os 
 import sys
 import maya.cmds as cmds
-
+import sgtk
 
 class MayaToTractor(object):
 
