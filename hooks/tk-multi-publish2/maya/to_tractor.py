@@ -49,6 +49,7 @@ class MayaToTractor(object):
         script += 'cmds.loadPlugin("cvJiggle.so")\n'
         script += 'cmds.loadPlugin("cvwrap.so")\n'
         script += 'cmds.loadPlugin("iDeform.so")\n'
+        script += 'cmds.loadPlugin("weightDriver.so")\n'
         
         for frame in range(sf,ef+1):
 
@@ -92,6 +93,7 @@ class MayaToTractor(object):
         script += 'cmds.loadPlugin("cvJiggle.so")\n'
         script += 'cmds.loadPlugin("cvwrap.so")\n'
         script += 'cmds.loadPlugin("iDeform.so")\n'
+        script += 'cmds.loadPlugin("weightDriver.so")\n'
         script += 'mel.eval(\'{}\')\n'.format(mel_command)
         
         
@@ -199,6 +201,30 @@ class MayaToTractor(object):
         with open( self._temp_file, 'w' ) as f:
             f.write(script)
 
+    def _get_default_command(self): 
+        
+        engine = sgtk.platform.current_engine()
+        context = engine.context
+        project = context.project
+        sg = engine.shotgun
+        version = cmds.about(v=1)
+
+        filter_dict = [['code', 'is', 'Maya ' + version], ['projects', 'in', project]]
+        packages = sg.find("Software", filter_dict, ['sg_rez'])
+        if packages:
+            packages = packages[0]['sg_rez']
+            pkg_list = packages.split(',')
+        else:
+            filter_dict = [['code', 'is', "Maya " + version], ['projects', 'is', None]]
+            packages = sg.find("Software", filter_dict, ['sg_rez'])
+            packages = packages[0]['sg_rez']
+            pkg_list = packages.split(',')
+
+        maya_ver = [pkg[:-4] for pkg in pkg_list if 'maya-' in pkg][0]
+        packages = [pkg for pkg in pkg_list if 'maya-' not in pkg]
+        command = ['rez-env', '{}vfarm'.format(maya_ver)] + packages
+        return command
+
     def to_tractor(self,start_frame,end_frame,file_type):
         
         sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python2.7/site-packages")
@@ -226,7 +252,8 @@ class MayaToTractor(object):
         title = "["+title+"]"
         job.title = str(title)
 
-        command = ['rez-env','maya-2019vfarm','usd-19.03','yeti','ideform','--','mayapy']
+        master_command = _get_default_command()
+        command = master_command[:] + ['--', 'mayapy']
         command.append(self._temp_file)
         command = author.Command(argv=command)
 
