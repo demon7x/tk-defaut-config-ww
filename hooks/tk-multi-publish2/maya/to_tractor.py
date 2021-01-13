@@ -252,7 +252,7 @@ class MayaToTractor(object):
         title = "["+title+"]"
         job.title = str(title)
 
-        master_command = _get_default_command()
+        master_command = self._get_default_command()
         command = master_command[:] + ['--', 'mayapy']
         command.append(self._temp_file)
         command = author.Command(argv=command)
