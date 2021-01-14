@@ -220,9 +220,9 @@ class MayaToTractor(object):
             packages = packages[0]['sg_rez']
             pkg_list = packages.split(',')
 
-        maya_ver = [pkg[:-4] for pkg in pkg_list if 'maya-' in pkg][0]
-        packages = [pkg for pkg in pkg_list if 'maya-' not in pkg]
-        command = ['rez-env', '{}vfarm'.format(maya_ver)] + packages
+        #maya_ver = [pkg[:-4] for pkg in pkg_list if 'maya-' in pkg][0]
+        #packages = [pkg for pkg in pkg_list if 'maya-' not in pkg]
+        command = ['rez-env'] + pkg_list
         return command
 
     def to_tractor(self,start_frame,end_frame,file_type):
