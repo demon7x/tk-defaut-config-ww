@@ -485,6 +485,11 @@ class MayaSessionCollector(HookBaseClass):
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 
         #and cmds.referenceQuery( x, isNodeReferenced=True )
         and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
+
+        sim_dummy_list = [ x for x in cmds.ls(type="transform") if not x.find('simDummy_grp') == -1 ]
+
+        if sim_dummy_list and cache_type == "abc": 
+            shot_asset_list.extend(sim_dummy_list)
         
         for asset in shot_asset_list:
 

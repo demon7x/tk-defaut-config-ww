@@ -277,8 +277,11 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             alembic_args.append("-fr %d %d" % (start_frame, end_frame))
 
         #alembic_args.append("-root %s" % item.properties['name'])
-        child = cmds.listRelatives(item.properties['name'],c=1,f=1)[0]
-        alembic_args.append("-root %s" % child)
+        if not item.properties['name'].find("simDummy_grp") == -1:
+            alembic_args.append("-root %s" % item.properties['name'])
+        else:
+            child = cmds.listRelatives(item.properties['name'],c=1,f=1)[0]
+            alembic_args.append("-root %s" % child)
 
         # Set the output path: 
         # Note: The AbcExport command expects forward slashes!
