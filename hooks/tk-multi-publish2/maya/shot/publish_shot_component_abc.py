@@ -204,7 +204,11 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
 
         work_fields = work_template.get_fields(path)
-        work_fields["asset_namespace"]= item.properties['name'].split(":")[0]
+        if not item.properties['name'].find("simDummy_grp") == -1 :
+
+            work_fields["asset_namespace"]= item.properties['name'].split(":")[0]+"_simdummy"
+        else:
+            work_fields["asset_namespace"]= item.properties['name'].split(":")[0]
 
         # ensure the fields work for the publish template
         missing_keys = publish_template.missing_keys(work_fields)
