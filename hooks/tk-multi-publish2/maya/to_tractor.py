@@ -271,5 +271,5 @@ class MayaToTractor(object):
 
         job.addChild(rm_task)
 
-        job.spool(hostname="10.0.20.82",owner=user_id)
+        job.spool(hostname="10.0.20.83",owner=user_id)
 
