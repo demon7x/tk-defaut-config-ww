@@ -38,7 +38,7 @@ engines.tk-flame.location:
 engines.tk-maya.location:
   type: app_store
   name: tk-maya
-  version: v0.10.2
+  version: v0.10.3
 
 # Motion Builder
 engines.tk-motionbuilder.location:
@@ -50,7 +50,7 @@ engines.tk-motionbuilder.location:
 engines.tk-nuke.location:
   type: app_store
   name: tk-nuke
-  version: v0.12.9
+  version: v0.13.0
 
 # Photoshop
 engines.tk-photoshopcc.location:

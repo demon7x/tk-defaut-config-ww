@@ -24,7 +24,7 @@ includes:
 apps.tk-multi-about.location:
   type: app_store
   name: tk-multi-about
-  version: v0.3.2
+  version: v0.3.3
 
 # breakdown
 apps.tk-multi-breakdown.location:
@@ -48,13 +48,13 @@ apps.tk-multi-launchapp.location:
 apps.tk-multi-loader2.location:
   type: app_store
   name: tk-multi-loader2
-  version: v1.20.2
+  version: v1.20.3
 
 # publish2
 apps.tk-multi-publish2.location:
   type: app_store
   name: tk-multi-publish2
-  version: v2.5.5
+  version: v2.5.6
 
 # pythonconsole
 apps.tk-multi-pythonconsole.location:
