@@ -256,7 +256,7 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
         # face sets for use in Mari.
         alembic_args = [
             # only renderable objects (visible and not templated)
-            "-renderableOnly",
+            #"-renderableOnly",
             # write shading group set assignments (Maya 2015+)
             "-writeFaceSets",
             # write uv's (only the current uv set gets written)
