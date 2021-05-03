@@ -36,12 +36,20 @@ settings.tk-multi-library.standalone:
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
   - caption: Project
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  - caption: Texture
+    entity_type: AssetLibrary
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    - [sg_librarytype, is, "Texture"]
+    hierarchy: [sg_category,code]
   publish_filters: [["sg_status_list", "is_not", null]]
   location: "@apps.tk-multi-library.location"
 
@@ -61,12 +69,20 @@ settings.tk-multi-library.maya:
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
   - caption: Project
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  - caption: Texture
+    entity_type: AssetLibrary
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    - [sg_librarytype, is, "Texture"]
+    hierarchy: [sg_category,code]
   publish_filters: [["sg_status_list", "is_not", null]]
   location: "@apps.tk-multi-library.location"
 
@@ -84,12 +100,19 @@ settings.tk-multi-library.katana:
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_category, entity.AssetLibrary.code,content]
   - caption: Project
     entity_type: Task
     filters:
     - [project, is, {'type':'Project','id':884}]
+    - [entity.AssetLibrary.sg_librarytype, is, "FullAsset"]
     hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  - caption: Texture
+    entity_type: AssetLibrary
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    - [sg_librarytype, is, "Texture"]
   publish_filters: [["sg_status_list", "is_not", null]]
   location: "@apps.tk-multi-library.location"
 
@@ -112,6 +135,11 @@ settings.tk-multi-library.mari:
     filters:
     - [project, is, {'type':'Project','id':884}]
     hierarchy: [entity.AssetLibrary.sg_project_name, entity.AssetLibrary.code,content]
+  - caption: Texture
+    entity_type: AssetLibrary
+    filters:
+    - [project, is, {'type':'Project','id':884}]
+    - [sg_librarytype, is, "Texture"]
   publish_filters: [["sg_status_list", "is_not", null]]
   location: "@apps.tk-multi-library.location"
 
