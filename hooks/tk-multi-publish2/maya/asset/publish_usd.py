@@ -15,6 +15,7 @@ import maya.cmds as cmds
 import maya.mel as mel
 from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
+from tank_vendor import six
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -166,8 +167,12 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         # for use in subsequent methods
         item.properties["publish_template"] = publish_template
 
-        if not mel.eval("exists \"usdExport\""):
-            plugin_load = cmds.loadPlugin("pxrUsd.so")
+        if cmds.about(version=1) == "2022":
+            if not mel.eval("exists \"mayaUSDExport\""):
+                plugin_load = cmds.loadPlugin("mayaUsdPlugin.so")
+        else:
+            if not mel.eval("exists \"usdExport\""):
+                plugin_load = cmds.loadPlugin("pxrUsd.so")
             #self.logger.debug(
             #    "Item not accepted because alembic export command 'usdExport' "
             #    "is not available. Perhaps the plugin is not enabled?"
@@ -265,7 +270,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
-        
+
+        usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
         publisher = self.parent
 
         # get the path to create and publish
@@ -315,7 +321,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         if not sub_components:
             
             usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
-            usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+            usd_export_cmd = (usdexport_command + " ".join(usd_args))
             cmds.select(item.properties['name'])
             mel.eval(usd_export_cmd)
             
@@ -325,7 +331,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
         self.parent.ensure_folder_exists(os.path.dirname(asset_usd_path))
         usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
-        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+        usd_export_cmd = (usdexport_command + " ".join(usd_args))
         cmds.select(item.properties['name'])
         mel.eval(usd_export_cmd)
 
@@ -378,7 +384,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         try:
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             status = component_stage.GetRootLayer().Save()
-        except Exception, e:
+        except Exception as e:
             import traceback
             
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
@@ -461,9 +467,9 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
                         cmds.setAttr(mesh + ".USD_UserExportedAttributesJson", l=True)
         except Exception as e:
             _, _ , tb = sys.exc_info() 
-            print 'file name = ', __file__ 
-            print 'error line No = {}'.format(tb.tb_lineno)
-            print e
+            print ('file name = ', __file__ )
+            print ('error line No = {}'.format(tb.tb_lineno))
+            print (e)
             raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
 
 
@@ -495,8 +501,8 @@ def _session_path():
     """
     path = cmds.file(query=True, sn=True)
 
-    if isinstance(path, unicode):
-        path = path.encode("utf-8")
+    if path is not None:
+        path = six.ensure_str(path)
 
     return path
 

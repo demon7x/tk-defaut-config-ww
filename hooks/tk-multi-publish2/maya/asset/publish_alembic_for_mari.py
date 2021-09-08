@@ -13,6 +13,7 @@ import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
+from tank_vendor import six
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -316,7 +317,7 @@ class MayaSessionAlembicForMariPublishPlugin(HookBaseClass):
             for mesh in cmds.ls(typ="mesh"):
                 if cmds.attributeQuery("MtlTag",node=mesh,exists=1):
                     mat = cmds.getAttr(mesh + ".MtlTag")
-                    if not mtl_tag.has_key(mat):
+                    if not mat in mtl_tag:
                         mtl_tag[mat] = []
                         mtl_tag[mat].append(mesh)
                     else:
@@ -334,7 +335,7 @@ class MayaSessionAlembicForMariPublishPlugin(HookBaseClass):
             cmds.group(meshs,name=item.properties['name']+"_merged")
             mel.eval(abc_export_cmd)
 
-        except Exception, e:
+        except Exception as  e:
             self.logger.error("Failed to export Mari: %s" % e)
             return
         finally:
@@ -377,8 +378,8 @@ def _session_path():
     """
     path = cmds.file(query=True, sn=True)
 
-    if isinstance(path, unicode):
-        path = path.encode("utf-8")
+    if path is not None:
+        path = six.ensure_str(path)
 
     return path
 

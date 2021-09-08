@@ -13,6 +13,7 @@ import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
+from tank_vendor import six
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -165,13 +166,22 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # for use in subsequent methods
         item.properties["publish_template"] = publish_template
 
-        if not mel.eval("exists \"usdExport\""):
-
-            self.logger.debug(
+        if cmds.about(version=1) == "2022":
+            if not mel.eval("exists \"mayaUSDExport\""):
+                self.logger.debug(
                 "Item not accepted because alembic export command 'usdExport' "
                 "is not available. Perhaps the plugin is not enabled?"
-            )
-            accepted = False
+                )
+                accepted = False
+        else:
+            if not mel.eval("exists \"usdExport\""):
+
+                self.logger.debug(
+                "Item not accepted because alembic export command 'usdExport' "
+                "is not available. Perhaps the plugin is not enabled?"
+                )
+                accepted = False
+
 
         # because a publish template is configured, disable context change. This
         # is a temporary measure until the publisher handles context switching
@@ -274,6 +284,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # These flags will ensure the export of an USD file that contains
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
+
+        usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
         
         usd_args = [
             '-shd "none"',
@@ -301,7 +313,7 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
 
         # build the export command.  Note, use AbcExport -help in Maya for
         # more detailed USD export help
-        usd_export_cmd = ("usdExport %s" % " ".join(usd_args))
+        usd_export_cmd = (usdexport_command + " ".join(usd_args))
 
         # ...and execute it:
         try:
@@ -317,10 +329,9 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             cmds.select(select_list)
             _to_tractor(self,item,usd_export_cmd)
             #mel.eval(usd_export_cmd)
-        except Exception, e:
+        except Exception as  e:
             import traceback
             
-            print usd_export_cmd
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             self.logger.error("Failed to export USD: %s"% e, 
                 extra = {
@@ -345,6 +356,7 @@ def _to_tractor(instance,item,mel_command):
     module_path = os.path.dirname(instance.disk_location)
     import sys
     sys.path.append(module_path)
+    from imp import reload
     import to_tractor;reload(to_tractor)
     start_frame, end_frame = _find_scene_animation_range()
     tractor = to_tractor.MayaToTractor(item)
@@ -383,8 +395,8 @@ def _session_path():
     """
     path = cmds.file(query=True, sn=True)
 
-    if isinstance(path, unicode):
-        path = path.encode("utf-8")
+    if path is not None:
+        path = six.ensure_str(path)
 
     return path
 

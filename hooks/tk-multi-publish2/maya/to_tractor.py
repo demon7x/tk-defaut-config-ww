@@ -5,6 +5,7 @@ import sys
 import maya.cmds as cmds
 import sgtk
 
+
 class MayaToTractor(object):
 
     def __init__(self,item):
@@ -14,6 +15,8 @@ class MayaToTractor(object):
 
     def create_add_frame_script(self,mel_command,sf,ef):
         
+        version = cmds.about(version=1)
+
         original = mel_command
         mel_split  = original.split()
         orignal_file = mel_split[-1]
@@ -44,12 +47,16 @@ class MayaToTractor(object):
                 script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
         else:
             script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
-        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+
+        if version == "2022":
+            script += 'cmds.loadPlugin("mayaUsdPlugin.so")\n'
+        else:
+            script += 'cmds.loadPlugin("pxrUsd.so")\n'
+            script += 'cmds.loadPlugin("cvJiggle.so")\n'
+            script += 'cmds.loadPlugin("cvwrap.so")\n'
+            script += 'cmds.loadPlugin("iDeform.so")\n'
+            script += 'cmds.loadPlugin("weightDriver.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
-        script += 'cmds.loadPlugin("cvJiggle.so")\n'
-        script += 'cmds.loadPlugin("cvwrap.so")\n'
-        script += 'cmds.loadPlugin("iDeform.so")\n'
-        script += 'cmds.loadPlugin("weightDriver.so")\n'
         
         for frame in range(sf,ef+1):
 
@@ -77,6 +84,7 @@ class MayaToTractor(object):
 
     def create_script(self,mel_command):
 
+        version = cmds.about(version=1)
         script = ''
         script += 'import maya.standalone\n'
         script += 'maya.standalone.initialize()\n'
@@ -88,12 +96,15 @@ class MayaToTractor(object):
 
         script += 'cmds.file("{}",open=1,force=1,iv=1)\n'.format(cmds.file(query=True, sn=True))
         script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
-        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+        if version == "2022":
+            script += 'cmds.loadPlugin("mayaUsdPlugin.so")\n'
+        else:
+            script += 'cmds.loadPlugin("pxrUsd.so")\n'
+            script += 'cmds.loadPlugin("cvJiggle.so")\n'
+            script += 'cmds.loadPlugin("cvwrap.so")\n'
+            script += 'cmds.loadPlugin("iDeform.so")\n'
+            script += 'cmds.loadPlugin("weightDriver.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
-        script += 'cmds.loadPlugin("cvJiggle.so")\n'
-        script += 'cmds.loadPlugin("cvwrap.so")\n'
-        script += 'cmds.loadPlugin("iDeform.so")\n'
-        script += 'cmds.loadPlugin("weightDriver.so")\n'
         script += 'mel.eval(\'{}\')\n'.format(mel_command)
         
         
@@ -103,6 +114,8 @@ class MayaToTractor(object):
 
     def create_camera_usd_script(self,mel_command):
 
+
+        version = cmds.about(version=1)
         script = ''
         script += 'import maya.standalone\n'
         script += 'maya.standalone.initialize()\n'
@@ -145,7 +158,10 @@ class MayaToTractor(object):
 "zoom": {},\
 "cameraScale": {}}',type="string")\n'''
         script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
-        script += 'cmds.loadPlugin("pxrUsd.so")\n'
+        if version == "2022":
+            script += 'cmds.loadPlugin("mayaUsdPlugin.so")\n'
+        else:
+            script += 'cmds.loadPlugin("pxrUsd.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
 
         script += 'for shape in camera_shapes:\n'
@@ -183,7 +199,6 @@ class MayaToTractor(object):
         script += '''camera_shapes = [ x for x in cmds.listRelatives("{}",c=1,f=1,ad=1) 
                                     if cmds.nodeType(x) == "camera"]\n'''.format(self.item.properties['name'])
         script += 'cmds.select("{}")\n'.format(self.item.properties['name'])
-        script += 'cmds.loadPlugin("pxrUsd.so")\n'
         script += 'cmds.loadPlugin("AbcExport.so")\n'
 
         script += 'for shape in camera_shapes:\n'
@@ -203,11 +218,14 @@ class MayaToTractor(object):
 
     def _get_default_command(self): 
         
+        version = cmds.about(version=1)
         engine = sgtk.platform.current_engine()
         context = engine.context
         project = context.project
         sg = engine.shotgun
-        version = cmds.about(v=1)
+        if version == "2022":
+            version="2022.1"
+
 
         filter_dict = [['code', 'is', 'Maya ' + version], ['projects', 'in', project]]
         packages = sg.find("Software", filter_dict, ['sg_rez'])
@@ -227,7 +245,11 @@ class MayaToTractor(object):
 
     def to_tractor(self,start_frame,end_frame,file_type):
         
-        sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python2.7/site-packages")
+        version = cmds.about(version=1)
+        if version == "2022":
+            sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python3.6/site-packages")
+        else:
+            sys.path.append("/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python2.7/site-packages")
 
         import tractor.api.author as author
 
@@ -254,6 +276,7 @@ class MayaToTractor(object):
 
         master_command = self._get_default_command()
         command = master_command[:] + ['--', 'mayapy']
+
         command.append(self._temp_file)
         command = author.Command(argv=command)
 

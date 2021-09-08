@@ -15,6 +15,7 @@ import maya.cmds as cmds
 import maya.mel as mel
 from pxr import Kind, Sdf, Usd, UsdGeom
 import sgtk
+from tank_vendor import six
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -340,8 +341,8 @@ def _session_path():
     """
     path = cmds.file(query=True, sn=True)
 
-    if isinstance(path, unicode):
-        path = path.encode("utf-8")
+    if path is not None:
+        path = six.ensure_str(path)
 
     return path
 

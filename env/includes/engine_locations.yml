@@ -38,7 +38,7 @@ engines.tk-flame.location:
 engines.tk-maya.location:
   type: app_store
   name: tk-maya
-  version: v0.10.3
+  version: v0.11.1
 
 # Motion Builder
 engines.tk-motionbuilder.location:

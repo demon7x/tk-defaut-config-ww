@@ -309,7 +309,7 @@ class MayaSessionAssemblyUSDPublishPlugin(HookBaseClass):
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)
             cmds.select(item.properties['name'])
             mel.eval(usd_export_cmd)
-        except Exception, e:
+        except Exception as e:
             import traceback
             
             self.parent.log_debug("Executing command: %s" % usd_export_cmd)

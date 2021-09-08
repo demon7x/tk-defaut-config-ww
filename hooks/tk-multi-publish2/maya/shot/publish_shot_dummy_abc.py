@@ -13,6 +13,7 @@ import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
+from tank_vendor import six
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -288,7 +289,7 @@ class MayaSessionShotCameraAlembicPublishPlugin(HookBaseClass):
             self.parent.log_debug("Executing command: %s" % abc_export_cmd)
             #mel.eval(abc_export_cmd)
             _to_tractor(self,item,abc_export_cmd)
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Failed to export Geometry: %s" % e)
             return
 
@@ -301,6 +302,7 @@ def _to_tractor(instance,item,mel_command):
     module_path = os.path.dirname(instance.disk_location)
     import sys
     sys.path.append(module_path)
+    from imp import reload
     import to_tractor;reload(to_tractor)
     start_frame, end_frame = _find_scene_animation_range()
     tractor = to_tractor.MayaToTractor(item)
@@ -335,8 +337,8 @@ def _session_path():
     """
     path = cmds.file(query=True, sn=True)
 
-    if isinstance(path, unicode):
-        path = path.encode("utf-8")
+    if path is not None:
+        path = six.ensure_str(path)
 
     return path
 
