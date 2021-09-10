@@ -182,14 +182,18 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
                 "is not available. Perhaps the plugin is not enabled?"
                 )
                 accepted = False
-        else:
-            if not mel.eval("exists \"usdExport\""):
+        #else:
+            #
+            # This part of code was deleted.
+            # because it is not exported usd any more.
+            # 
+            # if not mel.eval("exists \"usdExport\""):
 
-                self.logger.debug(
-                "Item not accepted because alembic export command 'usdExport' "
-                "is not available. Perhaps the plugin is not enabled?"
-                )
-                accepted = False
+            #     self.logger.debug(
+            #     "Item not accepted because USD export command 'usdExport' "
+            #     "is not available. Perhaps the plugin is not enabled?"
+            #     )
+            #     accepted = False
             #self.logger.debug(
             #    "Item not accepted because alembic export command 'usdExport' "
             #    "is not available. Perhaps the plugin is not enabled?"
@@ -281,121 +285,18 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
-        
-        publisher = self.parent
 
-        # get the path to create and publish
-        publish_path = item.properties["path"]
-
-        # ensure the publish folder exists:
-        publish_folder = os.path.dirname(publish_path)
-        self.parent.ensure_folder_exists(publish_folder)
-
-        # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an USD file that contains
-        # all visible geometry from the current scene together with UV's and
-        # face sets for use in Mari.
-
-        usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
-
-        usd_args = [
-            '-shd "none"',
-            '-dms "none"',
-            '-uvs 1',
-            '-cls 0',
-            '-vis 1',
-            '-mt 0',
-            '-sl',
-            '-sn 1',
-            #'-fs %f'%item.properties['sub_frame'],
-            '-ft %f'%item.properties['sub_frame']
-            
-            ]
+        import sys
+        if os.path.dirname( __file__ ) not in sys.path:
+            sys.path.append( os.path.dirname( __file__ ))
+        import note2ver
+        note2ver.insert( item )
 
 
-
-        # find the animated frame range to use:
-        start_frame, end_frame = _find_scene_animation_range()
-        if start_frame and end_frame:
-            usd_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-
-        sub_components = [ x for x in cmds.ls(allPaths=1,ca=0,transforms=1,l=1) 
-        if cmds.listRelatives(x,p=1) 
-        and cmds.attributeQuery("Meshtype",node=x,exists=1) 
-        and cmds.getAttr(x+".Meshtype", asString=True) == "component"]
-
-        if not sub_components:
-
-            usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed USD export help
-
-            usd_export_cmd = (usdexport_command + " ".join(usd_args))
-
-        # ...and execute it:
-            try:
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                cmds.select(item.properties['name'])
-                _to_tractor(self,item,usd_export_cmd)
-                #mel.eval(usd_export_cmd)
-            except Exception as e:
-                import traceback
-            
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                self.logger.error("Failed to export USD: %s"% e, 
-                    extra = {
-                    "action_show_more_info": {
-                        "label": "Error Details",
-                        "tooltip": "Show the full error stack trace",
-                        "text": "<pre>%s</pre>" % (traceback.format_exc(),)
-                    }
-                }
-
-                )   
-                return
-        else:
-
-            asset_usd_path = self._get_sub_component_path(item.properties['name'],item)
-            usd_args.append('-f "%s"' % asset_usd_path.replace("\\", "/"))
-            usd_export_cmd = (usdexport_command + " ".join(usd_args))
-            cmds.select(item.properties['name'])
-            _to_tractor(self,item,usd_export_cmd)
-            #mel.eval(usd_export_cmd)
-            
-            sub_component_parents = list(set([cmds.listRelatives(x,p=1,f=1)[0] for x in sub_components])) 
-            sub_component_parents  = [ x for x in sub_component_parents if not x.find(item.properties['name']) == -1 ]
-            root_layer =  Sdf.Layer.CreateNew(publish_path, args = {'format':'usda'})
-            component_stage = Usd.Stage.Open(root_layer)
-            component_prim = UsdGeom.Xform.Define(component_stage,"/%s"%self._remove_namespace(item.properties['name'])).GetPrim()
-            component_stage.SetDefaultPrim(component_prim)
-            UsdGeom.SetStageUpAxis(component_stage, UsdGeom.Tokens.y)
-            model = Usd.ModelAPI(component_prim)
-            model.SetKind(Kind.Tokens.assembly)
-
-            component_prim.GetReferences().AddReference(asset_usd_path)
-
-            for parent in sub_component_parents:
-                child_prim = UsdGeom.Xform.Define(component_stage,self._convert_prim_path(parent,item).replace("|","/")).GetPrim()
-                _set_assembly(child_prim)
-                model = Usd.ModelAPI(child_prim)
-                model.SetKind(Kind.Tokens.assembly)
-                #self._set_xform(parent,child_prim)
-            
-
-            try:
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-                status = component_stage.GetRootLayer().Save()
-            except Exception as  e:
-                import traceback
-                self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-
-
-        # Now that the path has been generated, hand it off to the
         super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)   
+        return
+
+
 
 
     

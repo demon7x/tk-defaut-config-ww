@@ -244,69 +244,15 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         :param item: Item to process
         """
         
+        import sys
+        if os.path.dirname( __file__ ) not in sys.path:
+            sys.path.append( os.path.dirname( __file__ ))
+        import note2ver
+        note2ver.insert( item )
 
-        publisher = self.parent
 
-        # get the path to create and publish
-        publish_path = item.properties["path"]
-
-        # ensure the publish folder exists:
-        publish_folder = os.path.dirname(publish_path)
-        self.parent.ensure_folder_exists(publish_folder)
-
-        # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an Alembic file that contains
-        # all visible geometry from the current scene together with UV's and
-        # face sets for use in Mari.
-        alembic_args = [
-            # only renderable objects (visible and not templated)
-            "-renderableOnly",
-            # write shading group set assignments (Maya 2015+)
-            "-writeFaceSets",
-            # write uv's (only the current uv set gets written)
-            "-uvWrite",
-
-            "-eulerFilter",
-
-            "-writeVisibility",
-
-            "-sn",
-
-            "-step %f"%item.properties['sub_frame']
-
-        ]
-
-        # find the animated frame range to use:
-        start_frame, end_frame = _find_scene_animation_range()
-        if start_frame and end_frame:
-            alembic_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        #alembic_args.append("-root %s" % item.properties['name'])
-        if not item.properties['name'].find("simDummy_grp") == -1:
-            alembic_args.append("-root %s" % item.properties['name'])
-        else:
-            child = cmds.listRelatives(item.properties['name'],c=1,f=1)[0]
-            alembic_args.append("-root %s" % child)
-
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-        alembic_args.append("-file %s" % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed Alembic export help
-        abc_export_cmd = ("AbcExport -j \"%s\"" % " ".join(alembic_args))
-
-        # ...and execute it:
-        try:
-            self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            _to_tractor(self,item,abc_export_cmd)
-            #mel.eval(abc_export_cmd)
-        except Exception as e:
-            self.logger.error("Failed to export Geometry: %s" % e)
-            return
-
-        # Now that the path has been generated, hand it off to the
         super(MayaSessionComponentAlembicPublishPlugin, self).publish(settings, item)
+        return
 
 
 def _to_tractor(instance,item,mel_command):

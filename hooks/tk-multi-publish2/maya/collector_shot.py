@@ -91,7 +91,6 @@ class MayaSessionCollector(HookBaseClass):
                     }
                 }
             )
-
             self.collect_shot(item)
             self.collect_camera(item)
             self.collect_dummy(item)
@@ -356,12 +355,17 @@ class MayaSessionCollector(HookBaseClass):
 
 
 
+#        usd_item = parent_item.create_item(
+#            "maya.session.shot.usd",
+#            "USD",
+#            "Export Shot USD"
+#        )
         usd_item = parent_item.create_item(
             "maya.session.shot.usd",
             "USD",
-            "Export Shot USD"
+            "Publish Shot USD"
         )
-
+        
 
         usd_icon_path = os.path.join(
             self.disk_location,
@@ -375,12 +379,12 @@ class MayaSessionCollector(HookBaseClass):
         usd_item.set_icon_from_path(usd_icon_path)
         
         self.collect_shot_assets(usd_item,"usd")
-        self.collect_shot_set_assets(usd_item,"usd")
+        #self.collect_shot_set_assets(usd_item,"usd")
 
         xml_item = parent_item.create_item(
             "maya.session.shot.scenegraphxml",
             "Alembic",
-            "Export Shot Alembic"
+            "Publish Shot Alembic"
         )
 
 
@@ -396,7 +400,7 @@ class MayaSessionCollector(HookBaseClass):
         xml_item.set_icon_from_path(xml_icon_path)
 
         self.collect_shot_assets(xml_item,"abc")
-        self.collect_shot_set_assets(xml_item,"abc")
+#        self.collect_shot_set_assets(xml_item,"abc")
         
         self.link_assets()
         self.logger.debug("Collected shot : %s"%(shot_name))
@@ -485,74 +489,99 @@ class MayaSessionCollector(HookBaseClass):
         shot_asset_list = [ x for x in cmds.ls(type="transform") if not x.find('cache_grp') == -1 
         #and cmds.referenceQuery( x, isNodeReferenced=True )
         and cmds.ls(x,l=1)[0].split("|")[1].find("setgrp") == -1] 
-
-        sim_dummy_list = [ x for x in cmds.ls(type="transform") if not x.find('simDummy_grp') == -1 ]
-
-        if sim_dummy_list and cache_type == "abc": 
-            shot_asset_list.extend(sim_dummy_list)
-        
-        for asset in shot_asset_list:
-
-            component_name = asset
-        
-            if cache_type == "usd":
-
-                usd_item = parent_item.create_item(
-                    "maya.session.shot.component.usd",
-                    "USD",
-                    component_name
-                    )
         
 
-                usd_icon_path = os.path.join(
-                    self.disk_location,
-                    "icons",
-                    "usd.png"
-                    )
-                
-
-
-                usd_item.properties['name'] = component_name
-                usd_item.properties['namespace'] = component_name.split(":")[0]
-                usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
-                usd_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
-                usd_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
-                usd_item.properties['sub_frame'] = sub_frame
-                usd_item.set_icon_from_path(usd_icon_path)
+        ####################################################
+        ##  test
+        ####################################################
+        scenefile = cmds.file( q=1, sn = 1 )
             
-            elif cache_type == "abc" :
-                abc_item = parent_item.create_item(
-                    "maya.session.shot.component.abc",
+
+        basename = os.path.splitext( os.path.basename( scenefile ))[0]
+        component_name = basename
+        if 'dev' in scenefile.split( os.sep ):
+            prepath = scenefile.partition( 'dev' )[0]
+        elif 'pub' in scenefile.split( os.sep ):
+            prepath = scenefile.partition( 'pub' )[0]
+        else:
+            return
+
+        cache_path = os.path.join( 
+                prepath,
+                'pub',
+                'caches',
+                cache_type,
+                basename + '.' + cache_type
+        )
+        if not os.path.exists( cache_path ):
+            return
+
+
+        if cache_type == 'usd' :
+            usd_item = parent_item.create_item(
+                "maya.session.shot.component.usd",
+                "USD",
+                component_name
+                )
+    
+
+            usd_icon_path = os.path.join(
+                self.disk_location,
+                "icons",
+                "usd.png"
+                )
+            
+            usd_item.properties['name'     ] = component_name
+            usd_item.properties['namespace'] = component_name.split(":")[0]
+#            usd_item.properties['translate'] = cmds.xform(component_name,q=1,t=1)
+#            usd_item.properties['rotate'   ] = cmds.xform(component_name,q=1,ro=1)
+#            usd_item.properties['scale'    ] = cmds.xform(component_name,q=1,s=1)
+            usd_item.properties['sub_frame'] = sub_frame
+            usd_item.set_icon_from_path(usd_icon_path)
+
+        elif cache_type == "abc" :
+            
+            abc_item = parent_item.create_item(
+                "maya.session.shot.component.abc",
+                "Alembic",
+                component_name
+                )
+    
+
+            abc_icon_path = os.path.join(
+                self.disk_location,
+                "icons",
+                "alembic.png"
+                )
+            
+
+            abc_item.properties['name'      ] = component_name
+            abc_item.properties['namespace' ] = component_name.split(":")[0]
+#            abc_item.properties['matrix'    ] = cmds.xform(component_name,q=1,m=1)
+#            abc_item.properties['translaate'] = cmds.xform(component_name,q=1,t=1)
+#            abc_item.properties['rotate'    ] = cmds.xform(component_name,q=1,ro=1)
+#            abc_item.properties['scale'     ] = cmds.xform(component_name,q=1,s=1)
+            abc_item.properties['sub_frame' ] = sub_frame
+            abc_item.set_icon_from_path(abc_icon_path)
+
+            abc_mari_item = parent_item.create_item(
+                    "maya.session.shot.component.abc_mari",
                     "Alembic",
-                    component_name
-                    )
-        
+                    "Export Alembic For Mari"
+                )
+            
 
-                abc_icon_path = os.path.join(
-                    self.disk_location,
-                    "icons",
-                    "alembic.png"
-                    )
-                
+            abc_mari_item.properties['name'] = component_name.split("_")[0]
+            abc_mari_item.set_icon_from_path(abc_icon_path)
 
-                abc_item.properties['name'] = component_name
-                abc_item.properties['namespace'] = component_name.split(":")[0]
-                abc_item.properties['matrix'] = cmds.xform(component_name,q=1,m=1)
-                abc_item.properties['translaate'] = cmds.xform(component_name,q=1,t=1)
-                abc_item.properties['rotate'] = cmds.xform(component_name,q=1,ro=1)
-                abc_item.properties['scale'] = cmds.xform(component_name,q=1,s=1)
-                abc_item.properties['sub_frame'] = sub_frame
-                abc_item.set_icon_from_path(abc_icon_path)
 
-                abc_mari_item = parent_item.create_item(
-                        "maya.session.shot.component.abc_mari",
-                        "Alembic",
-                        "Export Alembic For Mari"
-                    )
-                
-
-                abc_mari_item.properties['name'] = component_name.split("_")[0]
-                abc_mari_item.set_icon_from_path(abc_icon_path)
+#            ver_ent = sg.find_one( 
+#                            'Version',
+#                            [
+#                                [ 'code', 'is', component_name ],
+#                                ['project.Project.name', 'is',entity['id']['project.Project
+#                            ]
+#            )
 
     
             self.logger.debug("Collected shot asset : %s"%(component_name))
@@ -579,6 +608,15 @@ class MayaSessionCollector(HookBaseClass):
                 sg.update("Shot",entity['id'],{"assets":[asset_ent]},
                           multi_entity_update_modes={'tags':'add'})
                 
+    def note2ver( self ):
+        publisher = self.parent
+        entity = publisher.context.entity
+        project = publisher.context.project
+
+        sg = self.tank.shotgun
+        version_ent = sg.find(
+            version
+        )
 
     def collect_camera(self,parent_item):
 
