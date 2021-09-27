@@ -19,6 +19,7 @@ includes:
 - ./tk-multi-screeningroom.yml
 - ./tk-multi-demo.yml
 - ./tk-iomanager.yml
+- ./tk-desktop-stock.yml
 - ./tk-outsourcing.yml
 - ./tk-desktop-timecard.yml
 - ./tk-multi-txmake.yml
@@ -48,6 +49,7 @@ settings.tk-desktop.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-demo: "@settings.tk-multi-demo.standalone"
     tk-iomanager: "@settings.tk-iomanager.standalone"
+    tk-desktop-stock: "@settings.tk-desktop-stock.standalone"
     tk-outsourcing: "@settings.tk-outsourcing.standalone"
     tk-timecard: "@settings.tk-desktop-timecard.standalone"
     tk-multi-txmake: "@settings.tk-multi-txmake.standalone"
@@ -65,6 +67,7 @@ settings.tk-desktop.project:
     - "*Nuke*"
     - "*Photoshop*"
     - "*3DE*"
+    - "*clarisse*"
     name: Creative Tools
   - matches:
     - "*Hiero*"

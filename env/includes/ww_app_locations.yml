@@ -16,52 +16,52 @@
 apps.tk-iomanager.location:
   name: tk-iomanager
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-iomanager
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-iomanager
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-iomanager
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-iomanager
 
 apps.tk-desktop-stock.location:
   name: tk-desktop-stock
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-desktop-register_stock
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-desktop-register_stock
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-desktop-register_stock
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-desktop-register_stock
 
 apps.tk-maya-makemov.location:
   name: tk-maya-makemov
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-maya-makemov
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-maya-makemov
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-maya-makemov
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-maya-makemov
   
 apps.tk-multi-output.location:
   name: tk-multi-output
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-output
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-output
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-output
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-output
 
 apps.tk-desktop-timecard.location:
   name: tk-desktop-timecard
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-desktop-timecard
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-desktop-timecard
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-desktop-timecard
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-desktop-timecard
 
 apps.tk-multi-txmake.location:
   name: tk-multi-txmake
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-txmake
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-txmake
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-txmake
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-txmake
 
 # workfiles2
 apps.tk-multi-workfiles2.location:
   name: tk-multi-workfiles2
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-workfiles2
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-workfiles2
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-workfiles2
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-workfiles2
 
 #tk-multi-version
 apps.tk-multi-version.location:
   name: tk-multi-version
   type: dev
-  linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-version
-  windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-version
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-version
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-version
 
 
 #tk-multi-library
