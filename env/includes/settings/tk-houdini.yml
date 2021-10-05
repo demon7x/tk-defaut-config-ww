@@ -24,6 +24,7 @@ includes:
 - ./tk-multi-workfiles2.yml
 - ./tk-multi-output.yml
 - ./tk-multi-library.yml
+- ./tk-multi-timelog.yml
 
 ################################################################################
 
@@ -56,6 +57,7 @@ settings.tk-houdini.asset_step:
     tk-houdini-alembicnode: "@settings.tk-houdini-alembicnode.asset_step"
     tk-houdini-mantranode: "@settings.tk-houdini-mantranode.asset_step"
     tk-multi-output: "@settings.tk-multi-output.houdini"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
@@ -73,6 +75,7 @@ settings.tk-houdini.project:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2"
     tk-multi-loader2: "@settings.tk-multi-loader2.houdini"
     tk-multi-library: "@settings.tk-multi-library.houdini"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   automatic_context_switch: false
@@ -121,6 +124,7 @@ settings.tk-houdini.shot_step:
     tk-houdini-alembicnode: "@settings.tk-houdini-alembicnode.shot_step"
     tk-houdini-mantranode: "@settings.tk-houdini-mantranode.shot_step"
     tk-multi-output: "@settings.tk-multi-output.houdini"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}

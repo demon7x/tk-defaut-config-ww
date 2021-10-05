@@ -25,6 +25,7 @@ includes:
 - ./tk-multi-txmake.yml
 - ./tk-multi-version.yml
 - ./tk-multi-library.yml
+- ./tk-multi-timelog.yml
 
 ################################################################################
 
@@ -55,6 +56,7 @@ settings.tk-desktop.project:
     tk-multi-txmake: "@settings.tk-multi-txmake.standalone"
     tk-multi-version: "@settings.tk-multi-version.standalone"
     tk-multi-library: "@settings.tk-multi-library.standalone"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   groups:
   - matches:
     - "katana*"

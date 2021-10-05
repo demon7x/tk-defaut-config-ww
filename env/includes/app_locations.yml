@@ -199,6 +199,7 @@ apps.tk-mari-projectmanager.location:
 apps.tk-iomanager.location: '@apps.tk-iomanager.location'
 apps.tk-maya-makemov.location: '@apps.tk-maya-makemov.location'
 apps.tk-multi-output.location: '@apps.tk-multi-output.location'
+apps.tk-multi-timelog.location: '@apps.tk-multi-timelog.location'
 apps.tk-desktop-timecard.location: '@apps.tk-desktop-timecard.location'
 apps.tk-multi-txmake.location: '@apps.tk-multi-txmake.location'
 apps.tk-multi-workfiles2.location: '@apps.tk-multi-workfiles2.location'

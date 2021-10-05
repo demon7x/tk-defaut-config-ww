@@ -20,6 +20,7 @@ includes:
 - ./tk-multi-workfiles.yml
 - ./tk-mari-projectmanager.yml
 - ./tk-multi-library.yml
+- ./tk-multi-timelog.yml
 
 ################################################################################
 
@@ -45,6 +46,7 @@ settings.tk-mari.asset_step:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles: "@settings.tk-multi-workfiles.mari"
     tk-mari-projectmanager: "@settings.tk-mari-projectmanager"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   location: "@engines.tk-mari.location"
 
 # project
@@ -54,4 +56,5 @@ settings.tk-mari.project:
       location: "@apps.tk-multi-about.location"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-workfiles: "@settings.tk-multi-workfiles.mari"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   location: "@engines.tk-mari.location"

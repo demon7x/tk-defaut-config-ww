@@ -22,6 +22,7 @@ includes:
 - ./tk-multi-workfiles2.yml
 - ./tk-multi-output.yml
 - ./tk-multi-library.yml
+- ./tk-multi-timelog.yml
 
 
 ################################################################################
@@ -53,6 +54,7 @@ settings.tk-katana.asset_step:
     tk-multi-snapshot: "@settings.tk-multi-snapshot.katana.asset_step"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-output: "@settings.tk-multi-output.katana"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
@@ -73,6 +75,7 @@ settings.tk-katana.project:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-output: "@settings.tk-multi-output.katana"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
@@ -105,6 +108,7 @@ settings.tk-katana.shot_step:
     tk-multi-snapshot: "@settings.tk-multi-snapshot.katana.shot_step"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
     tk-multi-output: "@settings.tk-multi-output.katana"
+    tk-multi-timelog: "@settings.tk-multi-timelog"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
