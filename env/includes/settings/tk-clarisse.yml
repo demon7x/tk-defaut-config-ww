@@ -37,6 +37,7 @@ settings.tk-clarisse.asset:
     tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.clarisse"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.clarisse.project"
+    tk-multi-output: "@settings.tk-multi-output.clarisse"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   debug_logging: false
@@ -55,6 +56,7 @@ settings.tk-clarisse.asset_step:
     tk-multi-snapshot: "@settings.tk-multi-snapshot.clarisse.asset_step"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.clarisse.asset_step"
     tk-multi-timelog: "@settings.tk-multi-timelog"
+    tk-multi-output: "@settings.tk-multi-output.clarisse"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
@@ -73,6 +75,7 @@ settings.tk-clarisse.project:
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.clarisse.project"
     tk-multi-loader2: "@settings.tk-multi-loader2.clarisse"
     tk-multi-timelog: "@settings.tk-multi-timelog"
+    tk-multi-output: "@settings.tk-multi-output.clarisse"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-workfiles2, name: File Save...}
@@ -105,6 +108,7 @@ settings.tk-clarisse.sequence_step:
     tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel.clarisse"
     tk-multi-snapshot: "@settings.tk-multi-snapshot.clarisse.sequence_step"
     tk-multi-workfiles2: "@settings.tk-multi-workfiles2.clarisse.sequence_step"
+    tk-multi-output: "@settings.tk-multi-output.clarisse"
   menu_favourites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}
   - {app_instance: tk-multi-snapshot, name: Snapshot...}
