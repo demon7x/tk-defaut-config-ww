@@ -507,6 +507,18 @@ paths:
         definition: '@asset_root/pub/caches/{Asset}.v{version}.abc'
     
     
+
+    #2021 WESTWORLD USD PIPELINE
+    
+    usd_asset_root:
+        definition: '_3d/assets/{Asset}/{Asset}.usd'
+    usd_asset_step:
+        definition: '_3d/assets/{Asset}/{Step}/{Step}.usd'
+    usd_asset_step_version:
+        definition: '_3d/assets/{Asset}/{Step}/v{version}/{Asset}_{Step}.usd'
+    usd_asset_texture_path:
+        definition: "_3d/assets/{Asset}/binder/v{version}/{Asset}_collection.usd"
+
     #westworld cache type
 
     asset_component_alembic:

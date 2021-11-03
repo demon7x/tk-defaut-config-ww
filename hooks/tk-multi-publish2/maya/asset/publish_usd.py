@@ -401,7 +401,93 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             return
 
         # Now that the path has been generated, hand it off to the
+
+        self._export_wwusd()
+
         super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+    
+
+    def _export_wwusd(self):
+
+        from WWUSD_MAYA import  Model
+
+        current_engine = sgtk.platform.current_engine()
+        tk = current_engine.sgtk
+        sg = tk.shotgun
+        context = current_engine.context
+        template = tk.templates["usd_asset_root"]
+
+        path = cmds.file(query=True, sn=True)
+
+        if path is not None:
+            path = six.ensure_str(path)
+        else: 
+            return 
+        
+        work_template = tk.templates["maya_asset_work"]
+        work_fields = work_template.get_fields(path)
+        usd_asset_root_template = tk.templates["usd_asset_root"]
+        root_path = usd_asset_root_template.apply_fields(work_fields)
+        usd_asset_step_template = tk.templates['usd_asset_step']
+        asset_step_path = usd_asset_step_template.apply_fields(work_fields)
+
+
+        usd_asset_step_ver_template = tk.templates['usd_asset_step_version']
+        asset_step_ver_path = usd_asset_step_ver_template.apply_fields(work_fields)
+
+        key = [['code', 'is', 'Component USD']]
+        file_type = sg.find_one("PublishedFileType", key, ['id','code'])
+        
+        def _chcek_publish(publish_path,version):
+            
+            key = [
+                    ['project', 'is', context.project],
+                    ['entity', 'is', context.entity],
+                    ["published_file_type", "is", file_type],
+                    ['name', 'is', os.path.basename(publish_path)],
+                    ['version_number', 'is',version]
+                    ]
+            published_ent = sg.find_one("PublishedFile", key, ['version_number'])
+            return not published_ent 
+
+        def _publish_to_sg(publish_path,version):
+
+            publish_data = {
+                            "tk": tk,
+                            "context": context,
+                            "path": publish_path,
+                            "name": os.path.basename(publish_path),
+                            "created_by": context.user,
+                            "version_number": version,
+                            "published_file_type": file_type['code'],
+                        }
+
+            sgtk.util.register_publish(**publish_data)
+
+
+        if _chcek_publish(root_path,1):
+            _publish_to_sg(root_path,1)
+
+        if _chcek_publish(asset_step_path,1):
+            _publish_to_sg(asset_step_path,1)
+
+        if _chcek_publish(asset_step_ver_path,work_fields['version']):
+                _publish_to_sg(asset_step_ver_path,work_fields['version'])
+
+
+        export_args = {
+            "project" :  context.project['name'],
+            "asset_type" : work_fields['sg_asset_type'],
+            "asset" :  work_fields['Asset'],
+            "dept" :  work_fields["Step"],
+            "name" : work_fields['Asset'],
+            "ver" : work_fields['version']
+        }
+        if not os.path.exists(asset_step_ver_path):
+            Model.export(export_args,os.path.dirname(root_path))
+
+
+
     
 
     def _get_relatives_path(self,publish_path,asset_usd_path):
@@ -471,6 +557,9 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             print ('error line No = {}'.format(tb.tb_lineno))
             print (e)
             raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
+
+
+
 
 
 def _find_scene_animation_range():

@@ -139,15 +139,16 @@ settings.tk-multi-publish2.houdini.shot_step:
 
 # asset_step
 settings.tk-multi-publish2.mari.asset_step:
-  collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  #collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  collector: "{self}/collector.py:{config}/tk-multi-publish2/mari/collector.py"
   publish_plugins:
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py"
     settings: {}
   - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{engine}/tk-multi-publish2/basic/publish_mari_textures.py"
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/mari/publish_mari_textures.py"
     settings:
-      Publish Template: asset_mari_texture_tif
+      Publish Template: usd_asset_texture_path
   - name: Upload for review
     hook: "{self}/upload_version.py"
     settings: {}
@@ -471,10 +472,14 @@ settings.tk-multi-publish2.motion_builder.shot_step:
 
 # asset step
 settings.tk-multi-publish2.katana.asset_step:
-  collector: "{self}/collector.py:{engine}/tk-multi-publish2/basic/collector.py"
+  collector: "{self}/collector.py:{config}/tk-multi-publish2/katana/collector_asset.py"
   collector_settings:
       Work Template: katana_asset_work
   publish_plugins:
+  - name: Publish USD
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/katana/publish_lookdev_usd.py"
+    settings:
+      Publish Template: usd_asset_texture_path
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py"
     settings: {}
