@@ -345,8 +345,12 @@ class MayaSessionCollector(HookBaseClass):
         
         check_component = cmds.ls(parent_item.context.entity['name'])
         check_usd_ref =  cmds.ls(type='pxrUsdReferenceAssembly')
+        pipeline_step = parent_item.context.step['name']
 
-        if not check_component or check_usd_ref:
+        if not check_component or check_usd_ref :
+            return
+        
+        if not pipeline_step in ['model']:
             return
 
         usd_item = parent_item.create_item(

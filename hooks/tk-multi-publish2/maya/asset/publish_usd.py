@@ -463,6 +463,35 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
                         }
 
             sgtk.util.register_publish(**publish_data)
+        
+        def _create_usd_library(publish_path):
+            
+            project = {"type":"Project","id":884}
+            key = [
+                    ['project','is',project],
+                    ['code','is',os.path.basename(publish_path)],
+                    ['sg_project_name','is',context.project['name']]
+                ]
+            usd_lib_ent = sg.find_one("CustomEntity06",key)
+
+            if usd_lib_ent:
+                return
+
+            url = {
+                    'content_type': "string",
+                    'link_type': "local" ,
+                    'name': os.path.basename(publish_path),
+                    'local_path':os.path.dirname(publish_path),
+                    'url': "string"}
+
+            desc = {"project":project,
+                        'code':os.path.basename(publish_path),
+                        'sg_path':url,
+                        'sg_project_name':context.project['name']}
+    
+            sg.create("CustomEntity06",desc)
+                
+
 
 
         if _chcek_publish(root_path,1):
@@ -485,7 +514,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         }
         if not os.path.exists(asset_step_ver_path):
             Model.export(export_args,os.path.dirname(root_path))
-
+        _create_usd_library(root_path)
 
 
     
