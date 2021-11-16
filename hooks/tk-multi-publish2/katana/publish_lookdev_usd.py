@@ -240,6 +240,39 @@ class KatanaLookdevUsdPublishPlugin(HookBaseClass):
 
         publish_path = item.properties["path"]
 
+        def _create_usd_library(publish_path):
+
+            current_engine = sgtk.platform.current_engine()
+            tk = current_engine.sgtk
+            sg = tk.shotgun
+            
+            project = {"type":"Project","id":884}
+            key = [
+                    ['project','is',project],
+                    ['code','is',os.path.basename(publish_path)],
+                    ['sg_project_name','is',context.project['name']]
+                ]
+            usd_lib_ent = sg.find_one("CustomEntity06",key)
+
+            if usd_lib_ent:
+                return
+
+            url = {
+                    'content_type': "string",
+                    'link_type': "local" ,
+                    'name': os.path.basename(publish_path),
+                    'local_path':os.path.dirname(publish_path),
+                    'url': "string"}
+
+            desc = {"project":project,
+                        'code':os.path.basename(publish_path),
+                        'sg_path':url,
+                        'sg_project_name':context.project['name']}
+    
+            sg.create("CustomEntity06",desc)
+        
+        _create_usd_library(publish_path)
+
         super(KatanaLookdevUsdPublishPlugin, self).publish(settings, item)
 
 
