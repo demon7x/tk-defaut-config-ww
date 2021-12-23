@@ -155,7 +155,6 @@ class NukeAddActions(HookBaseClass):
 
     def _select_channel_view(self,path,sg_publish_data):
         channels = os.listdir(os.path.dirname(os.path.dirname(path)))
-        print channels
         panel = nuke.Panel("select channel")
         for channel in channels:
             panel.addBooleanCheckBox(channel,True)
