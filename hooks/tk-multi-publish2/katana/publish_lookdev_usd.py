@@ -221,6 +221,10 @@ class KatanaLookdevUsdPublishPlugin(HookBaseClass):
         current_engine = sgtk.platform.current_engine()
         context = current_engine.context
         from WWUSD_KATANA import Look
+        from WWUSD_KATANA.Exporter import LookExporter
+
+        LookExporter.update_usd_tags()
+        return super(KatanaLookdevUsdPublishPlugin, self).publish(settings, item)
 
         work_fields = item.properties['work_fields']
         export_args = {
