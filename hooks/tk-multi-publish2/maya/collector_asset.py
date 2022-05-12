@@ -350,7 +350,7 @@ class MayaSessionCollector(HookBaseClass):
         if not check_component or check_usd_ref :
             return
         
-        if not pipeline_step in ['model']:
+        if not pipeline_step in ['model', 'lookdev']:
             return
 
         usd_item = parent_item.create_item(
