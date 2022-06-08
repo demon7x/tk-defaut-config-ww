@@ -223,8 +223,12 @@ class KatanaLookdevUsdPublishPlugin(HookBaseClass):
         from WWUSD_KATANA import Look
         from WWUSD_KATANA.Exporter import LookExporter
 
+        import imp
+        imp.reload( Look )
+        imp.reload( LookExporter )
+
         LookExporter.update_usd_tags()
-        return super(KatanaLookdevUsdPublishPlugin, self).publish(settings, item)
+        #return super(KatanaLookdevUsdPublishPlugin, self).publish(settings, item)
 
         work_fields = item.properties['work_fields']
         export_args = {
