@@ -6,8 +6,8 @@ core/pipeline_configuration.yml
 core/roots.yml
 core/shotgun.yml
 
-install_location.yml
-interpreter_Linux.cfg
-pipeline_configuration.yml
-roots.yml
-shotgun.yml
+*/install_location.yml
+*/interpreter_Linux.cfg
+*/pipeline_configuration.yml
+*/roots.yml
+*/shotgun.yml
