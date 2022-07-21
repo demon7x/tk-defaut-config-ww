@@ -316,7 +316,7 @@ class MayaSessionComponentAembicForMariPublishPlugin(HookBaseClass):
             for mesh in cmds.ls(typ="mesh"):
                 if cmds.attributeQuery("MtlTag",node=mesh,exists=1):
                     mat = cmds.getAttr(mesh + ".MtlTag")
-                    if not mtl_tag.has_key(mat):
+                    if not mat in mtl_tag:
                         mtl_tag[mat] = []
                         mtl_tag[mat].append(mesh)
                     else:
