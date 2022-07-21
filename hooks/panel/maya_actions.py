@@ -2,7 +2,7 @@ import sgtk
 import os
 
 HookBaseClass = sgtk.get_hook_baseclass()
-print HookBaseClass
+print(HookBaseClass)
 
 class MyActions(HookBaseClass):
 
@@ -35,7 +35,7 @@ class MyActions(HookBaseClass):
     def execute_action(self, name, params, sg_data):
 
         if name == "play_in_rv":
-            print sg_data
+            print(sg_data)
             os.system("rv")
 
         else:

@@ -236,7 +236,7 @@ class MayaSessionToTractorPlugin(HookBaseClass):
 
         # ...and execute it:
             cmds.select(item.properties['name'])
-            print usd_export_cmd
+            print(usd_export_cmd)
             mel.eval(usd_export_cmd)
             return
         else:
