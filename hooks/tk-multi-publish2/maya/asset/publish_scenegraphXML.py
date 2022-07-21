@@ -286,7 +286,7 @@ class MayaSessionScenegraphXMLPublishPlugin(HookBaseClass):
                 maya2scenegraphXML.maya2ScenegraphXML([assembly],publish_path,1,1 )
             maya2scenegraphXML.deleteSgxmlAttrs([assembly])
 
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Failed to export Geometry: %s" % e)
             return
 
