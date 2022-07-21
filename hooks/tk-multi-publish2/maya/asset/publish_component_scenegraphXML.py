@@ -283,7 +283,7 @@ class MayaSessionComponentScenegraphXMLPublishPlugin(HookBaseClass):
                 maya2scenegraphXML.maya2ScenegraphXML([component],publish_path,1,1 )
             maya2scenegraphXML.deleteSgxmlAttrs([component])
 
-        except Exception, e:
+        except Exception as e:
             self.logger.error("Failed to export SceneGraph: %s" % e)
             return
 

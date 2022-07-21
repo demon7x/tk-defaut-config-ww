@@ -2,7 +2,7 @@ import sgtk
 import os
 
 HookBaseClass = sgtk.get_hook_baseclass()
-print HookBaseClass
+print(HookBaseClass)
 
 class MyActions(HookBaseClass):
 
@@ -15,7 +15,7 @@ class MyActions(HookBaseClass):
         try:
             # call base class first
             action_instances += HookBaseClass.generate_actions(self, sg_data, actions, ui_area)
-        except AttributeError, e:
+        except AttributeError as e:
             # base class doesn't have the method, so ignore and continue
             pass        
 
@@ -35,7 +35,7 @@ class MyActions(HookBaseClass):
     def execute_action(self, name, params, sg_data):
 
         if name == "play_in_rv":
-            print sg_data
+            print(sg_data)
             os.system("rv")
 
         else:

@@ -104,7 +104,10 @@ class MayaUSDActions(HookBaseClass):
         # resolve path
         # toolkit uses utf-8 encoded strings internally and Maya API expects unicode
         # so convert the path to ensure filenames containing complex characters are supported
-        path = self.get_publish_path(sg_publish_data).decode("utf-8")
+        if sys.version_info.major == 2:
+            path = self.get_publish_path(sg_publish_data).decode("utf-8")
+        else :
+            path = self.get_publish_path(sg_publish_data)
         
         if name == "usd_reference":
             usd_file = path
@@ -198,7 +201,7 @@ class MayaUSDActions(HookBaseClass):
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
         
-        print path
+        print(path)
         select_node = cmds.ls(sl=1)
         if not select_node and not len(select_node) == 1:
             return

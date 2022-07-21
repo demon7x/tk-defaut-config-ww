@@ -245,7 +245,7 @@ class KatanaActions(HookBaseClass):
             name = sg_publish_data.get("name")
             publish_type = sg_publish_data.get("published_file_type")['name']
             asset_name = sg_publish_data.get("description")
-            print asset_name 
+            print(asset_name)
 
             if not name.find('Cam') == -1:
                 node = NodegraphAPI.CreateNode("Cam_In", parent=root)
