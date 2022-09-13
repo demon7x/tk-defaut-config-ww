@@ -270,6 +270,10 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
+        self._export_wwusd()
+
+        return super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
+
 
         usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
         publisher = self.parent
@@ -409,7 +413,14 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
     def _export_wwusd(self):
 
-        from WWUSD_MAYA import  Model
+        #from WWUSD_MAYA import  Model
+
+#        import sys
+#        sys.path.append( '/home/w10137/work/ww_usd/WWUSD_MAYA' )
+        from WWUSD_MAYA import export_asset
+        import imp
+        imp.reload( export_asset )
+
 
         current_engine = sgtk.platform.current_engine()
         tk = current_engine.sgtk
@@ -497,11 +508,11 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         if _chcek_publish(root_path,1):
             _publish_to_sg(root_path,1)
 
-        if _chcek_publish(asset_step_path,1):
-            _publish_to_sg(asset_step_path,1)
+#        if _chcek_publish(asset_step_path,1):
+#            _publish_to_sg(asset_step_path,1)
 
-        if _chcek_publish(asset_step_ver_path,work_fields['version']):
-                _publish_to_sg(asset_step_ver_path,work_fields['version'])
+#        if _chcek_publish(asset_step_ver_path,work_fields['version']):
+#                _publish_to_sg(asset_step_ver_path,work_fields['version'])
 
 
         export_args = {
@@ -513,7 +524,8 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             "ver" : work_fields['version']
         }
         if not os.path.exists(asset_step_ver_path):
-            Model.export(export_args,os.path.dirname(root_path))
+            export_asset.export_asset( export_args['asset'] )
+            #Model.export(export_args,os.path.dirname(root_path))
         _create_usd_library(root_path)
 
 
