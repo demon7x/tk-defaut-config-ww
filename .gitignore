@@ -1,13 +1,8 @@
+__pycache__/
 *.pyc
 *.swp
 core/install_location.yml
-core/interpreter_Linux.cfg
 core/pipeline_configuration.yml
-core/roots.yml
-core/shotgun.yml
 
 */install_location.yml
-*/interpreter_Linux.cfg
 */pipeline_configuration.yml
-*/roots.yml
-*/shotgun.yml
