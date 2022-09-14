@@ -417,6 +417,10 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
 #        import sys
 #        sys.path.append( '/home/w10137/work/ww_usd/WWUSD_MAYA' )
+        import sys
+        if 'linux' not in sys.platform:
+            sys.path.append( '\\\\10.0.40.42\\inhouse\\tool\\rez-packages\\ww_usd\\1.0.0\\ww_usd\\WWUSD_MAYA'  )
+
         from WWUSD_MAYA import export_asset
         import imp
         imp.reload( export_asset )
