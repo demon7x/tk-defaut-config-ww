@@ -270,7 +270,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
-        self._export_wwusd()
+        #self._export_wwusd()
 
 
 
