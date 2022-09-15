@@ -272,7 +272,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         """
         self._export_wwusd()
 
-        return super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
 
 
         usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
