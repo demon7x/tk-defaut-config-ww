@@ -9,6 +9,7 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import sys
 import hou
 
 import tank
@@ -18,6 +19,9 @@ from tank import TankError
 
 import sgtk
 from sgtk.platform.qt import QtGui
+
+sys.path.append(os.path.dirname(__file__))
+import connect_databases
 
 class SceneOperation(Hook):
     """
@@ -57,31 +61,45 @@ class SceneOperation(Hook):
                                                 state, otherwise False
                                 all others     - None
         """
-        
+        DB = connect_databases.Databases()
+        user_name    = context.user['name']
+        project_name = context.project['name']
+        shot_name    = context.entity['name']
+        tool         = 'Houdini'
+        if file_path:
+            file_path = file_path.replace(os.path.sep, '/')
+            file_name = os.path.basename(file_path)
+        else :
+            file_name    = shot_name
+
         if operation == "current_path":
             return str(hou.hipFile.name())
+
         elif operation == "open":
             # give houdini forward slashes
-            res = QtGui.QMessageBox.question(None,
-                                                "Open",
-                                                "Your scene has unsaved changes. Save before proceeding?",
-                                                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
-            file_path = file_path.replace(os.path.sep, '/')
-            hou.hipFile.load(file_path.encode("utf-8"))
+            # file_path = file_path.replace(os.path.sep, '/')
+            # hou.hipFile.load(file_path.encode("utf-8"))
+            hou.hipFile.load(file_path)
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
+            DB.insertDB(sql)
+
         elif operation == "save":
-            res = QtGui.QMessageBox.question(None,
-                                                "Save",
-                                                "Your scene has unsaved changes. Save before proceeding?",
-                                                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
             hou.hipFile.save()
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            DB.insertDB(sql)
+
         elif operation == "save_as":
             # give houdini forward slashes
-            res = QtGui.QMessageBox.question(None,
-                                                "Save as",
-                                                "Your scene has unsaved changes. Save before proceeding?",
-                                                QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
-            file_path = file_path.replace(os.path.sep, '/')
-            hou.hipFile.save(str(file_path.encode("utf-8")))
+            # file_path = file_path.replace(os.path.sep, '/')
+            # hou.hipFile.save(str(file_path.encode("utf-8")))
+            hou.hipFile.save(file_path)
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE AS' )
+            DB.insertDB(sql)
+
+        elif operation == "prepare_new":
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'NEW FILE' )
+            DB.insertDB(sql)
+
         elif operation == "reset":
             hou.hipFile.clear()
             return True

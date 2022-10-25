@@ -16,6 +16,9 @@ from tank import Hook
 from tank import TankError
 from sgtk.platform.qt import QtGui
 
+sys.path.append(os.path.dirname(__file__))
+import connect_databases
+
 class SceneOperation(Hook):
     """
     Hook called to perform an operation with the
@@ -56,6 +59,17 @@ class SceneOperation(Hook):
                                                 state, otherwise False
                                 all others     - None
         """
+        
+        DB = connect_databases.Databases()
+        user_name    = context.user['name']
+        project_name = context.project['name']
+        shot_name    = context.entity['name']
+        tool         = 'Photoshop'
+        if file_path:
+            file_path = file_path.replace("/", os.path.sep)
+            file_name = os.path.basename(file_path)
+        else :
+            file_name    = shot_name
 
         if operation == "current_path":
             # return the current script path
@@ -76,7 +90,9 @@ class SceneOperation(Hook):
                                                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
             # open the specified script
             f = photoshop.RemoteObject('flash.filesystem::File', file_path)
-            photoshop.app.load(f)            
+            photoshop.app.load(f)        
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
+            DB.insertDB(sql)    
         
         elif operation == "save":
             res = QtGui.QMessageBox.question(None,
@@ -86,6 +102,8 @@ class SceneOperation(Hook):
             # save the current script:
             doc = self._get_active_document()
             doc.save()
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            DB.insertDB(sql)
         
         elif operation == "save_as":
             res = QtGui.QMessageBox.question(None,
@@ -94,6 +112,8 @@ class SceneOperation(Hook):
                                                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
             doc = self._get_active_document()
             photoshop.save_as(doc, file_path)
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE AS' )
+            DB.insertDB(sql)
 
         elif operation == "reset":
             # do nothing and indicate scene was reset to empty
@@ -103,6 +123,8 @@ class SceneOperation(Hook):
             # file->new. Not sure how to pop up the actual file->new UI,
             # this command will create a document with default properties
             photoshop.app.documents.add()
+            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'NEW FILE' )
+            DB.insertDB(sql)
         
     def _get_active_document(self):
         """
