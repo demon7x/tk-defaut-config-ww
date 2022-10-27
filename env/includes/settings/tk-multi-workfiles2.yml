@@ -344,6 +344,9 @@ settings.tk-multi-workfiles2.nuke.shot_step:
 ################################################################################
 
 # ---- photoshop
+settings.tk-multi-workfiles2.photoshop.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
+  location: "@apps.tk-multi-workfiles2.location"
 
 # asset_step
 settings.tk-multi-workfiles2.photoshop.asset_step:

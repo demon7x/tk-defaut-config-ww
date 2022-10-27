@@ -15,9 +15,9 @@ class Databases():
         elif platform.system() == 'Windows':
             if sys.version_info.major == 3 :
                 # if python3 is installed in window_inhouse then need to change
-                sys.path.append('/westworld/inhouse/window_inhouse/rez-packages/psycopg2/2.8.4/platform-windows/arch-AMD64/lib/python2.7/site-packages')
+                sys.path.append('\\\\10.0.40.42\\inhouse\\window_inhouse\\rez-packages\\psycopg2\\2.8.4\\platform-windows\\arch-AMD64\\lib')
             else:
-                sys.path.append('/westworld/inhouse/window_inhouse/rez-packages/psycopg2/2.8.4/platform-windows/arch-AMD64/lib/python2.7/site-packages')
+                sys.path.append('\\\\10.0.40.42\\inhouse\\window_inhouse\\rez-packages\\psycopg2\\2.8.4\\platform-windows\\arch-AMD64\\lib')
         import psycopg2
 
         self.db = psycopg2.connect( host = '10.0.20.7', dbname = 'WorkFilesLogs', user = 'postgres', password = 'postgres', port = 5432 )
@@ -45,10 +45,16 @@ class Databases():
             print( "insert DB error : ", e ) 
     
     def set_sql( self, user_name, tool, project_name, shot_name, file_name, operation ):
+        if operation == 'NEW FILE' or operation == 'OPEN':
+            operation_type = 'START'
+        elif operation == 'SAVE' or operation == 'SAVE_AS':
+            operation_type = 'END'
+        else:
+            operation_type = None
         sql =   '''
-                    INSERT INTO logs ( user_name, tool, project, shot_name, file_name, operation, log_time )
-                    VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', current_timestamp);
-                '''.format( user_name, tool, project_name, shot_name, file_name, operation)
+                    INSERT INTO logs ( user_name, tool, project, shot_name, file_name, operation, operation_type, log_time )
+                    VALUES (\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\', \'{6}\', current_timestamp);
+                '''.format( user_name, tool, project_name, shot_name, file_name, operation, operation_type )
         return sql
 
     def _get_rez_module(self):

@@ -34,8 +34,7 @@ apps.tk-maya-makemov.location:
 apps.tk-multi-output.location:
   name: tk-multi-output
   type: dev
-#  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-output
-  linux_path: /storenext/user/pipeline/kyoungmin/work/toolkit/tk-multi-output
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-output
   windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-output
 
 
@@ -55,16 +54,14 @@ apps.tk-multi-txmake.location:
 apps.tk-multi-workfiles2.location:
   name: tk-multi-workfiles2
   type: dev
-  linux_path: /storenext/user/pipeline/kyoungmin/work/toolkit/tk-multi-workfiles2
-#  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-workfiles2
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-workfiles2
   windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-workfiles2
 
 #tk-multi-version
 apps.tk-multi-version.location:
   name: tk-multi-version
   type: dev
-#  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-version
-  linux_path: /storenext/user/pipeline/kyoungmin/work/toolkit/tk-multi-version
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-version
   windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-version
 
 
