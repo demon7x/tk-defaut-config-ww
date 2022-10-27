@@ -153,7 +153,12 @@ settings.tk-multi-workfiles2.hiero:
 # ---- Houdini
 
 # asset_step
+settings.tk-multi-workfiles2.houdini.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-houdini.py"
+  location: "@apps.tk-multi-workfiles2.location"
+
 settings.tk-multi-workfiles2.houdini.asset_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-houdini.py"
   template_publish: houdini_asset_publish
   template_publish_area: asset_publish_area_houdini
   template_work: houdini_asset_work
@@ -181,6 +186,7 @@ settings.tk-multi-workfiles2.houdini.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.houdini.shot_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-houdini.py"
   template_publish: houdini_shot_publish
   template_publish_area: shot_publish_area_houdini
   template_work: houdini_shot_work
@@ -210,8 +216,13 @@ settings.tk-multi-workfiles2.houdini.shot_step:
 
 # ---- Maya
 
+settings.tk-multi-workfiles2.maya.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-maya.py"
+  location: "@apps.tk-multi-workfiles2.location"
+
 # asset_step
 settings.tk-multi-workfiles2.maya.asset_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-maya.py"
   template_publish: maya_asset_publish
   template_publish_area: asset_publish_area_maya
   template_work: maya_asset_work
@@ -239,6 +250,7 @@ settings.tk-multi-workfiles2.maya.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.maya.shot_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-maya.py"
   template_publish: maya_shot_publish
   template_publish_area: shot_publish_area_maya
   template_work: maya_shot_work
@@ -268,8 +280,14 @@ settings.tk-multi-workfiles2.maya.shot_step:
 
 # ---- nuke
 
+# project
+settings.tk-multi-workfiles2.nuke.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
+  location: "@apps.tk-multi-workfiles2.location"
+
 # asset_step
 settings.tk-multi-workfiles2.nuke.asset_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
   template_publish: nuke_asset_publish
   template_publish_area: asset_publish_area_nuke
   template_work: nuke_asset_work
@@ -297,6 +315,7 @@ settings.tk-multi-workfiles2.nuke.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.nuke.shot_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
   template_publish: nuke_shot_publish
   template_publish_area: shot_publish_area_nuke
   template_work: nuke_shot_work
@@ -325,9 +344,13 @@ settings.tk-multi-workfiles2.nuke.shot_step:
 ################################################################################
 
 # ---- photoshop
+settings.tk-multi-workfiles2.photoshop.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
+  location: "@apps.tk-multi-workfiles2.location"
 
 # asset_step
 settings.tk-multi-workfiles2.photoshop.asset_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshop.py"
   template_publish: photoshop_asset_publish
   template_publish_area: asset_publish_area_photoshop
   template_work: photoshop_asset_work
@@ -355,6 +378,7 @@ settings.tk-multi-workfiles2.photoshop.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.photoshop.shot_step:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshop.py"
   template_publish: photoshop_shot_publish
   template_publish_area: shot_publish_area_photoshop
   template_work: photoshop_shot_work
@@ -441,6 +465,7 @@ settings.tk-multi-workfiles2.motionbuilder.shot_step:
 # ---- Katana
 
 settings.tk-multi-workfiles2.katana.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-katana.py"
   allow_task_creation: true
   create_new_task_hook: "{self}/create_new_task.py"
   custom_actions_hook: "{self}/custom_actions.py"
@@ -459,7 +484,7 @@ settings.tk-multi-workfiles2.katana.project:
   hook_copy_file: "{self}/copy_file.py"
   hook_filter_publishes: default
   hook_filter_work_files: default
-  hook_scene_operation: "{engine}/scene_operation_tk-katana.py"
+  # hook_scene_operation: "{engine}/scene_operation_tk-katana.py"
   launch_at_startup: false
   my_tasks_extra_display_fields: []
   saveas_default_name: scene
@@ -474,7 +499,8 @@ settings.tk-multi-workfiles2.katana.project:
 
 # asset_step
 settings.tk-multi-workfiles2.katana.asset_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-katana.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-katana.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-katana.py"
   template_publish: katana_asset_publish
   template_publish_area: asset_publish_area_katana
   template_work: katana_asset_work
@@ -483,7 +509,8 @@ settings.tk-multi-workfiles2.katana.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.katana.shot_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-katana.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-katana.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-katana.py"
   template_publish: katana_shot_publish
   template_publish_area: shot_publish_area_katana
   template_work: katana_shot_work
@@ -495,6 +522,7 @@ settings.tk-multi-workfiles2.katana.shot_step:
 # ---- 3DE
 
 settings.tk-multi-workfiles2.3de4.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
   allow_task_creation: true
   create_new_task_hook: "{self}/create_new_task.py"
   custom_actions_hook: "{self}/custom_actions.py"
@@ -508,7 +536,7 @@ settings.tk-multi-workfiles2.3de4.project:
   hook_copy_file: "{self}/copy_file.py"
   hook_filter_publishes: default
   hook_filter_work_files: default
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
   launch_at_startup: false
   my_tasks_extra_display_fields: []
   saveas_default_name: scene
@@ -524,7 +552,8 @@ settings.tk-multi-workfiles2.3de4.project:
 
 # shot_step
 settings.tk-multi-workfiles2.3de4.shot_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-3de4.py"
   template_publish: 3de4_shot_publish
   template_publish_area: shot_publish_area_3de4
   template_work: 3de4_shot_work
@@ -537,6 +566,7 @@ settings.tk-multi-workfiles2.3de4.shot_step:
 # -- clarisse
 
 settings.tk-multi-workfiles2.clarisse.project:
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
   allow_task_creation: true
   create_new_task_hook: "{self}/create_new_task.py"
   custom_actions_hook: "{self}/custom_actions.py"
@@ -555,7 +585,7 @@ settings.tk-multi-workfiles2.clarisse.project:
   hook_copy_file: "{self}/copy_file.py"
   hook_filter_publishes: default
   hook_filter_work_files: default
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
   launch_at_startup: false
   my_tasks_extra_display_fields: []
   saveas_default_name: scene
@@ -570,7 +600,8 @@ settings.tk-multi-workfiles2.clarisse.project:
 
 # asset_step
 settings.tk-multi-workfiles2.clarisse.asset_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
   template_publish: clarisse_asset_publish
   template_publish_area: asset_publish_area_clarisse
   template_work: clarisse_asset_work
@@ -580,7 +611,8 @@ settings.tk-multi-workfiles2.clarisse.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.clarisse.shot_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
   template_publish: clarisse_shot_publish
   template_publish_area: shot_publish_area_clarisse
   template_work: clarisse_shot_work
@@ -589,7 +621,8 @@ settings.tk-multi-workfiles2.clarisse.shot_step:
 
 # sequence_step
 settings.tk-multi-workfiles2.clarisse.sequence_step:
-  hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-clarisse.py"
   template_publish: clarisse_sequence_publish
   template_publish_area: sequence_publish_area_clarisse
   template_work: clarisse_sequence_work
