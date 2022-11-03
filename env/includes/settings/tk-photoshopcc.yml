@@ -66,7 +66,7 @@ settings.tk-photoshopcc.project:
       location: '@apps.tk-multi-pythonconsole.location'
     tk-multi-screeningroom: '@settings.tk-multi-screeningroom.rv'
     tk-multi-shotgunpanel: '@settings.tk-multi-shotgunpanel'
-    tk-multi-workfiles2: '@settings.tk-multi-workfiles2'
+    tk-multi-workfiles2: '@settings.tk-multi-workfiles2.photoshop.project'
     tk-multi-timelog: "@settings.tk-multi-timelog"
   shelf_favorites:
   - {app_instance: tk-multi-workfiles2, name: File Open...}

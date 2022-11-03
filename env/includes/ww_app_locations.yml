@@ -78,4 +78,12 @@ apps.tk-multi-timelog.location:
   linux_path: /westworld/inhouse/pipeline/shotgun/application/tk-multi-timelog
   windows_path: \\10.0.40.42\inhouse\pipeline\shotgun\application\tk-multi-timelog
 
+
+# snapshot
+apps.tk-multi-snapshot.location:
+  name: tk-multi-snapshot
+  type: dev
+  linux_path: /westworld/inhouse/tool/shotgun/application/tk-multi-snapshot
+  windows_path: \\10.0.40.42\inhouse\tool\shotgun\application\tk-multi-snapshot
+
 ################################################################################

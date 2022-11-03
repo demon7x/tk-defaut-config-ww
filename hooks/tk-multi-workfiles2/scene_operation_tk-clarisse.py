@@ -18,8 +18,8 @@ from sgtk.platform.qt import QtGui
 
 HookClass = sgtk.get_hook_baseclass()
 
-sys.path.append(os.path.dirname(__file__))
-import connect_databases
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from execute_command import run_command
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -89,7 +89,6 @@ class SceneOperation(HookClass):
                                                 empty state, otherwise False
                                 all others     - None
         """
-        DB = connect_databases.Databases()
         user_name    = context.user['name']
         project_name = context.project['name']
         shot_name    = context.entity['name']
@@ -118,15 +117,13 @@ class SceneOperation(HookClass):
             ix.application.load_project(file_path)
             self.set_content_directory(file_path)
             ix.application.enable()
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             file_path = ix.application.get_current_project_filename()
             ix.application.save_project(file_path)
             self.set_content_directory(file_path)
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             res = QtGui.QMessageBox.question(None,
@@ -135,12 +132,10 @@ class SceneOperation(HookClass):
                                                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
             ix.application.save_project(file_path)
             self.set_content_directory(file_path)
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE AS' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "prepare_new":
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'NEW FILE' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
         elif operation == "reset":
             # Propose to save the project if it's modified

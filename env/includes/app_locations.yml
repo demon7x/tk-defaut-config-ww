@@ -87,10 +87,10 @@ apps.tk-multi-shotgunpanel.location:
   version: v1.8.0
 
 # snapshot
-apps.tk-multi-snapshot.location:
-  type: app_store
-  name: tk-multi-snapshot
-  version: v0.9.0
+# apps.tk-multi-snapshot.location:
+#   type: app_store
+#   name: tk-multi-snapshot
+#   version: v0.9.0
 
 # workfiles (required for Mari)
 apps.tk-multi-workfiles.location:
@@ -206,6 +206,7 @@ apps.tk-multi-workfiles2.location: '@apps.tk-multi-workfiles2.location'
 apps.tk-multi-version.location: '@apps.tk-multi-version.location'
 apps.tk-multi-library.location: '@apps.tk-multi-library.location'
 apps.tk-desktop-stock.location: '@apps.tk-desktop-stock.location'
+apps.tk-multi-snapshot.location: '@apps.tk-multi-snapshot.location'
 ################################################################################
 # reference all of the common frameworks
 frameworks: '@frameworks'
