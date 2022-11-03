@@ -44,7 +44,7 @@ settings.tk-3de4.shot:
   apps:
     tk-multi-about:
       location: "@apps.tk-multi-about.location"
-    tk-multi-workfiles2: "@settings.tk-multi-workfiles2.launch_at_startup"
+    tk-multi-workfiles2: "@settings.tk-multi-workfiles2.3de4.shot_step"
 #    tk-multi-screeningroom: "@settings.tk-multi-screeningroom.rv"
 #    tk-multi-shotgunpanel: "@settings.tk-multi-shotgunpanel"
   menu_favourites:

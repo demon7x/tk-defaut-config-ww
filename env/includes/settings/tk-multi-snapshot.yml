@@ -43,12 +43,14 @@ settings.tk-multi-snapshot.hiero:
 
 # asset step
 settings.tk-multi-snapshot.houdini.asset_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-houdini.py"
   template_snapshot: houdini_asset_snapshot
   template_work: houdini_asset_work
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.houdini.shot_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-houdini.py"
   template_snapshot: houdini_shot_snapshot
   template_work: houdini_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -59,12 +61,14 @@ settings.tk-multi-snapshot.houdini.shot_step:
 
 # asset step
 settings.tk-multi-snapshot.maya.asset_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-maya.py"
   template_snapshot: maya_asset_snapshot
   template_work: maya_asset_work
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.maya.shot_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-maya.py"
   template_snapshot: maya_shot_snapshot
   template_work: maya_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -75,12 +79,14 @@ settings.tk-multi-snapshot.maya.shot_step:
 
 # asset step
 settings.tk-multi-snapshot.nuke.asset_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-nuke.py"
   template_snapshot: nuke_asset_snapshot
   template_work: nuke_asset_work
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.nuke.shot_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-nuke.py"
   template_snapshot: nuke_shot_snapshot
   template_work: nuke_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -91,12 +97,14 @@ settings.tk-multi-snapshot.nuke.shot_step:
 
 # asset step
 settings.tk-multi-snapshot.photoshop.asset_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-photoshopcc.py"
   template_snapshot: photoshop_asset_snapshot
   template_work: photoshop_asset_work
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.photoshop.shot_step:
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-photoshopcc.py"
   template_snapshot: photoshop_shot_snapshot
   template_work: photoshop_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -122,14 +130,16 @@ settings.tk-multi-snapshot.motionbuilder.shot_step:
 
 # asset step
 settings.tk-multi-snapshot.katana.asset_step:
-  hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-katana.py'
+  hook_scene_operation: '{config}/tk-multi-snapshot/scene_operation_tk-katana.py'
+  # hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-katana.py'
   template_snapshot: katana_asset_snapshot
   template_work: katana_asset_work
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.katana.shot_step:
-  hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-katana.py'
+  hook_scene_operation: '{config}/tk-multi-snapshot/scene_operation_tk-katana.py'
+  # hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-katana.py'
   template_snapshot: katana_shot_snapshot
   template_work: katana_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -141,7 +151,8 @@ settings.tk-multi-snapshot.katana.shot_step:
 
 # shot step
 settings.tk-multi-snapshot.3de4.shot_step:
-  hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-3de4.py'
+  hook_scene_operation: '{config}/tk-multi-snapshot/scene_operation_tk-3de4.py'
+  # hook_scene_operation: '{engine}/tk-multi-snapshot/scene_operation_tk-3de4.py'
   template_snapshot: 3de4_shot_snapshot
   template_work: 3de4_shot_work
   location: "@apps.tk-multi-snapshot.location"
@@ -152,24 +163,27 @@ settings.tk-multi-snapshot.3de4.shot_step:
 #
 # asset step
 settings.tk-multi-snapshot.clarisse.asset_step:
-  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
   template_snapshot: clarisse_asset_snapshot
   template_work: clarisse_asset_work
-  hook_thumbnail: "{engine}/thumbnail.py"
+  hook_thumbnail: "{config}/tk-multi-snapshot/thumbnail.py"
   location: "@apps.tk-multi-snapshot.location"
 
 # sequence step
 settings.tk-multi-snapshot.clarisse.sequence_step:
-  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
   template_snapshot: clarisse_sequence_snapshot
   template_work: clarisse_sequence_work
-  hook_thumbnail: "{engine}/thumbnail.py"
+  hook_thumbnail: "{config}/tk-multi-snapshot/thumbnail.py"
   location: "@apps.tk-multi-snapshot.location"
 
 # shot step
 settings.tk-multi-snapshot.clarisse.shot_step:
-  hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  hook_scene_operation: "{config}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
+  # hook_scene_operation: "{engine}/tk-multi-snapshot/scene_operation_tk-clarisse.py"
   template_snapshot: clarisse_shot_snapshot
   template_work: clarisse_shot_work
-  hook_thumbnail: "{engine}/thumbnail.py"
+  hook_thumbnail: "{config}/tk-multi-snapshot/thumbnail.py"
   location: "@apps.tk-multi-snapshot.location"

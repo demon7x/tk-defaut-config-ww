@@ -10,8 +10,8 @@ import tde4
 
 HookClass = sgtk.get_hook_baseclass()
 
-sys.path.append(os.path.dirname(__file__))
-import connect_databases
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from execute_command import run_command
 
 class SceneOperation(HookClass):
     """
@@ -53,8 +53,6 @@ class SceneOperation(HookClass):
                                                 state, otherwise False
                                 all others     - None
         """
-        
-        DB = connect_databases.Databases()
         user_name    = context.user['name']
         project_name = context.project['name']
         shot_name    = context.entity['name']
@@ -71,26 +69,22 @@ class SceneOperation(HookClass):
 
         elif operation == "open":
             tde4.loadProject(file_path)
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'SAVE AS' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "prepare_new":
-            sql = DB.set_sql( user_name, tool, project_name, shot_name, file_name, 'NEW FILE' )
-            DB.insertDB(sql)
+            run_command( user_name, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
 
         elif operation == "reset":

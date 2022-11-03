@@ -345,12 +345,12 @@ settings.tk-multi-workfiles2.nuke.shot_step:
 
 # ---- photoshop
 settings.tk-multi-workfiles2.photoshop.project:
-  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-nuke.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshopcc.py"
   location: "@apps.tk-multi-workfiles2.location"
 
 # asset_step
 settings.tk-multi-workfiles2.photoshop.asset_step:
-  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshop.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshopcc.py"
   template_publish: photoshop_asset_publish
   template_publish_area: asset_publish_area_photoshop
   template_work: photoshop_asset_work
@@ -378,7 +378,7 @@ settings.tk-multi-workfiles2.photoshop.asset_step:
 
 # shot_step
 settings.tk-multi-workfiles2.photoshop.shot_step:
-  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshop.py"
+  hook_scene_operation: "{config}/tk-multi-workfiles2/scene_operation_tk-photoshopcc.py"
   template_publish: photoshop_shot_publish
   template_publish_area: shot_publish_area_photoshop
   template_work: photoshop_shot_work
