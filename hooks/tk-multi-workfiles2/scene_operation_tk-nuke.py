@@ -11,7 +11,7 @@
 import os, sys
 import nuke
 
-import tank
+import sgtk
 from tank import Hook
 from tank import TankError
 from tank.platform.qt import QtGui
@@ -127,7 +127,11 @@ class SceneOperation(Hook):
         """
         The Nuke specific scene operations.
         """
-        user_name    = context.user['name']
+        user_id      = sgtk.get_authenticated_user()
+        res = QtGui.QMessageBox.question(None,
+                                        "!! user !!",
+                                        "[{0}] [{1}] [{2}]".format(user_id, type(user_id), user_id.resolve_entity()),
+                                        QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
         project_name = context.project['name']
         shot_name    = context.entity['name']
         tool         = 'Nuke'
@@ -144,7 +148,7 @@ class SceneOperation(Hook):
         elif operation == "open":
             # open the specified script
             nuke.scriptOpen(file_path)
-            run_command( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'OPEN' )
 
             # reset any write node render paths:
             if self._reset_write_node_render_paths():
@@ -154,7 +158,7 @@ class SceneOperation(Hook):
         elif operation == "save":
             # save the current script:
             nuke.scriptSave()
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             old_path = nuke.root()["name"].value()
@@ -167,14 +171,14 @@ class SceneOperation(Hook):
                         
                 # save script:
                 nuke.scriptSaveAs(file_path, -1)
-                run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+                run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE_AS' )
             except Exception as e:
                 # something went wrong so reset to old path:
                 nuke.root()["name"].setValue(old_path)
                 raise TankError("Failed to save scene %s", e)
 
         elif operation == "prepare_new":
-            run_command( user_name, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
 
         elif operation == "reset":

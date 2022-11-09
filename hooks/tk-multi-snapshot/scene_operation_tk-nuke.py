@@ -12,6 +12,7 @@ import os
 import sys
 import nuke
 
+import sgtk
 import tank
 from tank import Hook
 from tank import TankError
@@ -97,7 +98,7 @@ class SceneOperation(Hook):
         #                                         "{}".format(context),
         #                                         QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
         if context:
-            user_name    = context.user['name']
+            user_id      = sgtk.get_authenticated_user()
             project_name = context.project['name']
             shot_name    = context.entity['name']
             tool         = 'Nuke'
@@ -120,7 +121,7 @@ class SceneOperation(Hook):
         elif operation == "save":
             # save the current script:
             nuke.scriptSave()
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
 
     def _get_current_project(self):
         """

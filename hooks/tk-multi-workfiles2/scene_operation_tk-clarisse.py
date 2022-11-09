@@ -89,7 +89,7 @@ class SceneOperation(HookClass):
                                                 empty state, otherwise False
                                 all others     - None
         """
-        user_name    = context.user['name']
+        user_id      = sgtk.get_authenticated_user()
         project_name = context.project['name']
         shot_name    = context.entity['name']
         tool         = 'Clarisse'
@@ -117,13 +117,13 @@ class SceneOperation(HookClass):
             ix.application.load_project(file_path)
             self.set_content_directory(file_path)
             ix.application.enable()
-            run_command( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             file_path = ix.application.get_current_project_filename()
             ix.application.save_project(file_path)
             self.set_content_directory(file_path)
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             res = QtGui.QMessageBox.question(None,
@@ -132,10 +132,10 @@ class SceneOperation(HookClass):
                                                 QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
             ix.application.save_project(file_path)
             self.set_content_directory(file_path)
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "prepare_new":
-            run_command( user_name, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
         elif operation == "reset":
             # Propose to save the project if it's modified
