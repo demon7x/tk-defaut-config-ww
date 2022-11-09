@@ -89,14 +89,6 @@ class SceneOperation(Hook):
         """
         The Nuke specific scene operations.
         """
-        # res = QtGui.QMessageBox.question(None,
-        #                                         "!! operation !!",
-        #                                         "{}".format(operation),
-        #                                         QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
-        # res = QtGui.QMessageBox.question(None,
-        #                                         "!! context !!",
-        #                                         "{}".format(context),
-        #                                         QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
         if context:
             user_id      = sgtk.get_authenticated_user()
             project_name = context.project['name']
