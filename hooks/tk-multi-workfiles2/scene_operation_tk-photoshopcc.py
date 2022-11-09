@@ -61,10 +61,10 @@ class SceneOperation(HookClass):
                                 all others     - None
         """
         adobe = self.parent.engine.adobe
-        user_name    = context.user['name']
+        user_id      = sgtk.get_authenticated_user()
         project_name = context.project['name']
         shot_name    = context.entity['name']
-        tool         = 'PhotoshopCC'
+        tool         = 'Photoshop'
         if file_path:
             file_path = file_path.replace("/", os.path.sep)
             file_name = os.path.basename(file_path)
@@ -78,18 +78,18 @@ class SceneOperation(HookClass):
         elif operation == "open":
             # open the specified script
             adobe.app.load(adobe.File(file_path))
-            run_command( user_name, tool, project_name, shot_name, file_name, 'OPEN' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             # save the current script:
             doc = self._get_active_document()
             doc.save()
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             doc = self._get_active_document()
             adobe.save_as(doc, file_path)
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "reset":
             # do nothing and indicate scene was reset to empty
@@ -99,7 +99,7 @@ class SceneOperation(HookClass):
             # file->new. Not sure how to pop up the actual file->new UI,
             # this command will create a document with default properties
             adobe.app.documents.add()
-            run_command( user_name, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
     def _get_active_document(self):
         """

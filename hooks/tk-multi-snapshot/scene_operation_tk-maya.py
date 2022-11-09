@@ -12,6 +12,7 @@ import os
 import sys
 import maya.cmds as cmds
 
+import sgtk
 import tank
 from tank import Hook
 from tank import TankError
@@ -42,7 +43,7 @@ class SceneOperation(Hook):
                     all others     - None
         """
         if context:
-            user_name    = context.user['name']
+            user_id      = sgtk.get_authenticated_user()
             project_name = context.project['name']
             shot_name    = context.entity['name']
             tool         = 'Maya'
@@ -64,4 +65,4 @@ class SceneOperation(Hook):
         elif operation == "save":
             # save the current scene:
             cmds.file(save=True)
-            run_command( user_name, tool, project_name, shot_name, file_name, 'SAVE' )
+            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
