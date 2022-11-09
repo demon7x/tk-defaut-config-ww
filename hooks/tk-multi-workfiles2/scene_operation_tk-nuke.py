@@ -128,10 +128,6 @@ class SceneOperation(Hook):
         The Nuke specific scene operations.
         """
         user_id      = sgtk.get_authenticated_user()
-        res = QtGui.QMessageBox.question(None,
-                                        "!! user !!",
-                                        "[{0}] [{1}] [{2}]".format(user_id, type(user_id), user_id.resolve_entity()),
-                                        QtGui.QMessageBox.Yes|QtGui.QMessageBox.No|QtGui.QMessageBox.Cancel)
         project_name = context.project['name']
         shot_name    = context.entity['name']
         tool         = 'Nuke'
