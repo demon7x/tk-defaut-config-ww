@@ -18,7 +18,7 @@ from tank import Hook
 from tank import TankError
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from execute_command import run_command
+from execute_command import TimeLogManager
 
 class SceneOperation(Hook):
     """
@@ -42,7 +42,7 @@ class SceneOperation(Hook):
                     all others     - None
         """
         if context:
-            user_id      = sgtk.get_authenticated_user()
+            user      = sgtk.get_authenticated_user()
             project_name = context.project['name']
             shot_name    = context.entity['name']
             tool         = 'Houdini'
@@ -61,4 +61,4 @@ class SceneOperation(Hook):
             hou.hipFile.load(str(file_path))
         elif operation == "save":
             hou.hipFile.save()
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )

@@ -11,7 +11,7 @@ import tde4
 HookClass = sgtk.get_hook_baseclass()
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from execute_command import run_command
+from execute_command import TimeLogManager
 
 class SceneOperation(HookClass):
     """
@@ -53,7 +53,7 @@ class SceneOperation(HookClass):
                                                 state, otherwise False
                                 all others     - None
         """
-        user_id      = sgtk.get_authenticated_user()
+        user      = sgtk.get_authenticated_user()
         project_name = context.project['name']
         shot_name    = context.entity['name']
         tool         = '3de4'
@@ -69,22 +69,22 @@ class SceneOperation(HookClass):
 
         elif operation == "open":
             tde4.loadProject(file_path)
-            run_command( user_id, tool, project_name, shot_name, file_name, 'OPEN' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "prepare_new":
-            run_command( user_id, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
 
         elif operation == "reset":

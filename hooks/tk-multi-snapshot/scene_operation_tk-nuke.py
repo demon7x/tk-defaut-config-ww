@@ -19,7 +19,7 @@ from tank import TankError
 from tank.platform.qt import QtGui
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from execute_command import run_command
+from execute_command import TimeLogManager
 
 class SceneOperation(Hook):
     """
@@ -90,7 +90,7 @@ class SceneOperation(Hook):
         The Nuke specific scene operations.
         """
         if context:
-            user_id      = sgtk.get_authenticated_user()
+            user      = sgtk.get_authenticated_user()
             project_name = context.project['name']
             shot_name    = context.entity['name']
             tool         = 'Nuke'
@@ -113,7 +113,7 @@ class SceneOperation(Hook):
         elif operation == "save":
             # save the current script:
             nuke.scriptSave()
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
     def _get_current_project(self):
         """

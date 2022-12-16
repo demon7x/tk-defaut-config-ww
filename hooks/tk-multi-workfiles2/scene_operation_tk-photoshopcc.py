@@ -18,7 +18,7 @@ from sgtk.platform.qt import QtGui
 HookClass = sgtk.get_hook_baseclass()
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from execute_command import run_command
+from execute_command import TimeLogManager
 
 class SceneOperation(HookClass):
     """
@@ -61,7 +61,7 @@ class SceneOperation(HookClass):
                                 all others     - None
         """
         adobe = self.parent.engine.adobe
-        user_id      = sgtk.get_authenticated_user()
+        user      = sgtk.get_authenticated_user()
         project_name = context.project['name']
         shot_name    = context.entity['name']
         tool         = 'Photoshop'
@@ -78,18 +78,18 @@ class SceneOperation(HookClass):
         elif operation == "open":
             # open the specified script
             adobe.app.load(adobe.File(file_path))
-            run_command( user_id, tool, project_name, shot_name, file_name, 'OPEN' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             # save the current script:
             doc = self._get_active_document()
             doc.save()
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             doc = self._get_active_document()
             adobe.save_as(doc, file_path)
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "reset":
             # do nothing and indicate scene was reset to empty
@@ -99,7 +99,7 @@ class SceneOperation(HookClass):
             # file->new. Not sure how to pop up the actual file->new UI,
             # this command will create a document with default properties
             adobe.app.documents.add()
-            run_command( user_id, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
     def _get_active_document(self):
         """
