@@ -19,7 +19,7 @@ from tank import Hook
 from tank import TankError
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from execute_command import run_command
+from execute_command import TimeLogManager
 
 __author__ = "Diego Garcia Huerta"
 __contact__ = "https://www.linkedin.com/in/diegogh/"
@@ -48,7 +48,7 @@ class SceneOperation(Hook):
                     all others     - None
         """
         if context:
-            user_id      = sgtk.get_authenticated_user()
+            user      = sgtk.get_authenticated_user()
             project_name = context.project['name']
             shot_name    = context.entity['name']
             tool         = 'Clarisse'
@@ -69,4 +69,4 @@ class SceneOperation(Hook):
         elif operation == "save":
             current_project = ix.application.get_current_project_filename()
             ix.application.save_project(current_project)
-            run_command( user_id, tool, project_name, shot_name, file_name, 'SAVE' )
+            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
