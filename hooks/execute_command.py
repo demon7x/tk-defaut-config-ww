@@ -35,18 +35,10 @@ class TimeLogManager():
         
         if lines :
             log_list = lines.split(" ")
-            QtGui.QMessageBox.information(None,
-                                                "타임로그",
-                                                "cmd = {0}\n log_list = {1}, err = {2}".format( cmd, log_list,stderr )
-                                            )
             user_status     = log_list[1]
             log_shot        = log_list[3]
             datetime_str    = "{0} {1}".format(log_list[4], log_list[5])
             datetime_object = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M:%S")
-            QtGui.QMessageBox.information(None,
-                                                "타임로그",
-                                                "user_status = {0}\n log_shot = {1}\n datetime_str = {2}\n datetime_object = {3}\n".format( user_status, log_shot,datetime_str,datetime_object)
-                                            )
         else :
             user_status     = "RESTING"
             log_shot        = ""
@@ -103,9 +95,10 @@ class TimeLogManager():
                                                 )
                 if res == QtGui.QMessageBox.Yes:
                     QtGui.QMessageBox.information(None,
-                                                    "타임로그 시작",
-                                                    "{0}의 타임로그 기록을 시작합니다.".format( shot_name )
-                                                    )
+                                                        "타임로그 시작 안내",
+                                                        "타임로그 기록 시작\n" + 
+                                                        "Time : {0} Shot/Asset Name : {1}".format( now_str, shot_name )
+                                                        )
                     user_status = "WORKING"
                     self.stack_data( user_status, tool, project_name, shot_name, file_name, operation )
                 elif res == QtGui.QMessageBox.No:
