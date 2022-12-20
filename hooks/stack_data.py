@@ -92,9 +92,9 @@ class Databases():
 
         work_time_data_sql ='''
                                 INSERT INTO 
-                                    timelog ( user_id, tool, project, shot_name, file_name, work_time )
+                                    timelogs ( date, user_id, tool, project, shot_name, file_name, work_time )
                                 VALUES 
-                                    (\'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\' );
+                                    (current_timestamp, \'{0}\', \'{1}\', \'{2}\', \'{3}\', \'{4}\', \'{5}\' );
                             '''.format( user_id, tool, project, shot_name, file_name, work_time )
         return work_time_data_sql
 
