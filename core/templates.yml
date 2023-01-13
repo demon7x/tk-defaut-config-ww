@@ -595,6 +595,9 @@ paths:
     # The location of published maya files
     maya_asset_publish:
         definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}[_{name}].{maya_extension}'
+    maya_asset_prescript:
+        definition: '@asset_root/pub/maya/{Asset}_{Step}_v{version}[_{name}].py'
+
     maya_asset_mov:
         definition: '@asset_root/pub/preview/{Asset}_{Step}_v{version}[_{name}].mp4' 
 

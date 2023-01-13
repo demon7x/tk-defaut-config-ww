@@ -190,6 +190,10 @@ settings.tk-multi-publish2.maya.asset_step:
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_usd.py"
     settings:
         Publish Template: asset_cmpt_asmb_usd
+  - name: Run Pre Script
+    hook: "{config}/tk-multi-publish2/maya/asset/pre_script.py"
+    settings:
+        Publish Template: maya_asset_prescript
   #- name: Publish to Shotgun
   #  hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/asset/publish_scenegraphXML.py"
   #  settings:
