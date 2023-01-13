@@ -273,20 +273,24 @@ class MayaSessionPreScriptPublishPlugin(HookBaseClass):
         :param item: Item to process
         """
 
-        path = _session_path()
+        if item.context.step['name'] == 'model' :
+            path = _session_path()
 
-        import re
-        ver = 'v' + re.search('(?<=_v)\d{2,3}' , path ).group() if re.search('(?<=_v)\d{2,3}' , path ) else ''
-        
-        sh_list = cmds.ls(type='mesh')
-        for sh in sh_list:
-            if not cmds.objExists('%s.version'%sh):
-                cmds.addAttr(sh, ln='version', dt='string')
-                
-            cmds.setAttr('%s.version'%sh, ver, type='string')
+            import re
+            ver = 'v' + re.search('(?<=_v)\d{2,3}' , path ).group() if re.search('(?<=_v)\d{2,3}' , path ) else ''
+            
+            sh_list = cmds.ls(type='mesh')
+            for sh in sh_list:
+                if not cmds.objExists('%s.version'%sh):
+                    cmds.addAttr(sh, ln='version', dt='string')
+                    
+                cmds.setAttr('%s.version'%sh, ver, type='string')
 
         print( '+' * 50 )
         print( '[ Shape Version ] ' , ver )
+        print( '--- item ----' )
+        print( item )
+        print( item.context.step['name'] ) 
         print( '+' * 50 )
 
         return True
