@@ -92,6 +92,7 @@ class MayaSessionCollector(HookBaseClass):
                 }
             )
 
+            self.collect_pre_script( item )
             self.collect_component(item)
             self.collect_assembly(item)
         else:
@@ -339,6 +340,28 @@ class MayaSessionCollector(HookBaseClass):
                 item.name = "%s (Render Layer: %s)" % (item.name, layer)
     
 
+    def collect_pre_script( self, parent_item ):
+        pipeline_step = parent_item.context.step['name']
+        if not pipeline_step in ['model', 'lookdev']:
+            return
+
+        component_name = parent_item.context.entity['name']
+
+        pre_script_item = parent_item.create_item( 
+                'maya.session.component.pre_script',
+                'pre_script',
+                'Apply Pre-Script'
+        )
+
+        pre_script_icon_path = os.path.join(
+            self.disk_location,
+            "icons",
+            "pre_script.png"
+        )
+
+        pre_script_item.properties['name'] = component_name
+        pre_script_item.set_icon_from_path( pre_script_icon_path )
+        self.logger.debug("Collected component : %s"%(component_name))
 
     def collect_component(self,parent_item):
         
@@ -366,12 +389,13 @@ class MayaSessionCollector(HookBaseClass):
             "icons",
             "usd.png"
         )
-                
-
+               
 
         usd_item.properties['name'] = component_name
         usd_item.set_icon_from_path(usd_icon_path)
 
+
+        
         abc_item = parent_item.create_item(
             "maya.session.component.abc",
             "Alembic",
