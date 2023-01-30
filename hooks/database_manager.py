@@ -4,6 +4,14 @@ import sys
 import psycopg2
 import argparse
 
+import shotgun_api3
+
+SG = shotgun_api3.Shotgun(
+    'https://west.shotgunstudio.com',
+    'eventTrigger',
+    '6h&ziahfuGbqdubxrxeyopinl'
+)
+
 # Using in log time data
 USERID          =    0
 TOOL            =    1
@@ -98,6 +106,35 @@ class Databases():
                             '''.format( user_id, tool, project, shot_name, file_name, work_time )
         return work_time_data_sql
 
+    def create_SG_timelog( self , data_list, timelog_data ):
+        user_id       = data_list[ USERID ]
+        tool          = data_list[ TOOL ]
+        project_name  = data_list[ PROJECT ]
+        task_name     = data_list[ SHOTNAME ]
+        file_name     = data_list[ FILENAME ]
+        work_time     = timelog_data[0]
+        link          = None
+
+        user    = SG.find_one( 'HumanUser', [[ 'login', 'is', user_id ]])
+        project = SG.find_one( 'Project', [[ 'name', 'is', project_name ]])
+        assets  = SG.find_one( 'Asset', [[ 'project', 'is', project ], [ 'code' , 'is', task_name ]] )
+        shots   = SG.find_one( 'Shot', [[ 'project', 'is', project ], [ 'code' , 'is', task_name ]] )
+        if assets:
+            link = assets
+        elif shots:
+            link = shots
+        
+        data = {
+            'sg_user': user,
+            'project': project,
+            'sg_tool': tool,
+            'description': file_name,
+            'sg_link': link,
+            'sg_duration': work_time
+        }
+
+        SG.create( 'CustomEntity09', data )
+
     def get_user_info( self, user_id ):
         sql =   '''
                     SELECT
@@ -107,28 +144,42 @@ class Databases():
                 '''.format( user_id )
         return sql
 
+    def get_time_now( self ):
+        sql =   '''
+                    SELECT now()
+                '''
+        return sql
+
 def main( ):
     parser = argparse.ArgumentParser( description = 'Stack Data' )
-    parser.add_argument('-id', '--user_id',   type = str, nargs = 1 )
-    parser.add_argument('-log', '--log_data',  type = str, nargs = 7 )
-    parser.add_argument('-user', '--user_data',  type = str, nargs = 4 )
-    parser.add_argument('-timelog', '--timelog_data', type = str, nargs = 1)
+    parser.add_argument( '-now', '--now', action = 'store_true' )
+    parser.add_argument( '-id', '--user_id',   type = str, nargs = 1 )
+    parser.add_argument( '-log', '--log_data',  type = str, nargs = 7 )
+    parser.add_argument( '-user', '--user_data',  type = str, nargs = 4 )
+    parser.add_argument( '-timelog', '--timelog_data', type = str, nargs = 1)
     
     args = parser.parse_args()
     DB = Databases( )
+    if args.now:
+        time_sql  = DB.get_time_now()
+        rows      = DB.check_DB( time_sql )
+        first_row = rows[0]
+        time_now  = first_row[0]
+        string_info = '{0}'.format(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+        print(string_info)
     if args.user_id:
         user_info_sql = DB.get_user_info( args.user_id[0] )
         rows = DB.check_DB( user_info_sql )
         if rows :
             row = rows[0]
-            string_info = ""
+            string_info = ''
             for col in row:
                 if row.index(col) != 4:
                     pass
                 else:
-                    col = col.strftime("%Y-%m-%d %H:%M:%S")
-                string_info += "{} ".format(col)
-            print( "{}".format( string_info ))
+                    col = col.strftime('%Y-%m-%d %H:%M:%S')
+                string_info += '{} '.format(col)
+            print( '{}'.format( string_info ))
     if args.log_data:
         log_data_sql = DB.set_log_data_sql( args.log_data )
         DB.insert_DB( log_data_sql )
@@ -138,6 +189,7 @@ def main( ):
     if args.timelog_data:
         timelog_sql = DB.set_work_time_data_sql( args.log_data, args.timelog_data )
         DB.insert_DB( timelog_sql )
+        DB.create_SG_timelog( args.log_data, args.timelog_data )
 
 if __name__ == '__main__':
     main( )
