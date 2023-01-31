@@ -6,3 +6,7 @@ core/pipeline_configuration.yml
 
 */install_location.yml
 */pipeline_configuration.yml
+
+# temp ignore list
+env/includes/
+
