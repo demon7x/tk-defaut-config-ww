@@ -165,7 +165,7 @@ def main( ):
         rows      = DB.check_DB( time_sql )
         first_row = rows[0]
         time_now  = first_row[0]
-        string_info = '{0}'.format(time_now.strftime('%Y-%m-%d %H:%M:%S'))
+        string_info = '{0} '.format(time_now.strftime('%Y-%m-%d %H:%M:%S'))
         print(string_info)
     if args.user_id:
         user_info_sql = DB.get_user_info( args.user_id[0] )

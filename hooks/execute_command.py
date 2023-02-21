@@ -30,16 +30,20 @@ class TimeLogManager():
             user_status     = "RESTING"
             log_shot        = ""
         # get time now
-        output          =  self.get_database_data( "now" )
-        lines = output.decode("utf-8")
+        output          =   self.get_database_data( "now" )
+        lines           =   output.decode("utf-8")
         if lines : 
-            log_list        =  lines.split("\n")
-            now_str         =  "{0}".format(log_list[0])
+            log_list        =  lines.split("\n")[0].split(" ")
+            # log_list        =  log_list.split(" ")
+            now_str         =  "{0} {1}".format(log_list[0], log_list[1])
             now_datetime    =  datetime.strptime(now_str, "%Y-%m-%d %H:%M:%S")
             # res = QtGui.QMessageBox.information(None,
             #                                             u"Time data",
             #                                             "{0} {1} {2}".format( now_str, now_datetime, type(now_datetime) )
             #                                             )
+        else : 
+            now_str         =  datetime.now().strftime( "%Y-%m-%d %H:%M:%S" )
+            now_datetime    =  datetime.strptime(now_str, "%Y-%m-%d %H:%M:%S")
 
 
         ### 1. OPEN 또는 NEW FILE을 선택했을 때 ###
@@ -232,7 +236,6 @@ class TimeLogManager():
 
         if self.sys_os == 'Windows' :
             try:
-                os.chdir(r'{}'.format( self.file_path ))
                 output, stderr =  sp.Popen( cmd, stdout = sp.PIPE, stderr = sp.PIPE, shell = False, cwd = self.file_path ).communicate()
             except Exception as err :
                 pass
@@ -254,6 +257,6 @@ class TimeLogManager():
                 os.chdir(r'{}'.format( self.file_path ))
                 os.system( cmd )
             except Exception as err :
-                QtGui.QMessageBox.information(None, "!! Windows os error !!", "{}".format( err ))
+                QtGui.QMessageBox.information(None, "!! Windows os error Ask to Pipeline TD !!", "{}".format( err ))
         else :
             os.system( cmd )
