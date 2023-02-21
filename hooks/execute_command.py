@@ -16,7 +16,9 @@ class TimeLogManager():
         self.user       =  user
         self.user_id    =  user.login
         self.file_path  =  os.path.dirname(os.path.realpath(__file__)) 
-        self.sys_os     =  platform.system()        
+        self.sys_os     =  platform.system()   
+        now_str         =  ""  
+        now_datetime    =  ""   
         # get user information
         output          =  self.get_database_data( "id" )
         lines = output.decode("utf-8")
@@ -33,17 +35,20 @@ class TimeLogManager():
         output          =   self.get_database_data( "now" )
         lines           =   output.decode("utf-8")
         if lines : 
-            log_list        =  lines.split("\n")[0].split(" ")
-            # log_list        =  log_list.split(" ")
-            now_str         =  "{0} {1}".format(log_list[0], log_list[1])
-            now_datetime    =  datetime.strptime(now_str, "%Y-%m-%d %H:%M:%S")
-            # res = QtGui.QMessageBox.information(None,
-            #                                             u"Time data",
-            #                                             "{0} {1} {2}".format( now_str, now_datetime, type(now_datetime) )
-            #                                             )
-        else : 
+            try :
+                log_list        =  lines.split("\n")[0].split(" ")
+                # log_list        =  log_list.split(" ")
+                now_str         =  "{0} {1}".format(log_list[0], log_list[1])
+                now_datetime    =  datetime.strptime(now_str, "%Y-%m-%d %H:%M:%S")
+                # res = QtGui.QMessageBox.information(None,
+                #                                             u"Time data",
+                #                                             "{0} {1} {2}".format( now_str, now_datetime, type(now_datetime) )
+                #                                             )
+            except :
+                pass
+        if not lines and not now_datetime : 
             now_str         =  datetime.now().strftime( "%Y-%m-%d %H:%M:%S" )
-            now_datetime    =  datetime.strptime(now_str, "%Y-%m-%d %H:%M:%S")
+            now_datetime    =  datetime.now()
 
 
         ### 1. OPEN 또는 NEW FILE을 선택했을 때 ###
@@ -195,15 +200,15 @@ class TimeLogManager():
                     if tool == '3de4' :
                         QtGui.QMessageBox.information(None,
                                                             "TimeLog",
-                                                            "The TimeLog now you being recorded is {0}.\n" +
-                                                            "TimeLog is not saved.\n\n".format( log_shot )+
+                                                            "The TimeLog now you being recorded is {0}.\n".format( log_shot ) +
+                                                            "TimeLog is not saved.\n\n"+
                                                             "File is saved completely.",
                                                             )
                     else:    
                         QtGui.QMessageBox.information(None,
                                                             "타임로그 안내",
-                                                            "현재 기록 중인 타임로그는 {0}입니다.\n" +
-                                                            "타임로그가 저장되지 않습니다.\n\n".format( log_shot )+
+                                                            "현재 기록 중인 타임로그는 {0}입니다.\n".format( log_shot ) +
+                                                            "타임로그가 저장되지 않습니다.\n\n"+
                                                             "파일은 정상적으로 저장됩니다.",
                                                             )
             else :
