@@ -447,9 +447,9 @@ paths:
         definition: '@shot_root/pub/images/v{version}/{Shot}_{nuke.output}_v{version}[_{name}].{SEQ}.mov'
     #WESTWORLD START
     nuke_write_node_exr:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{task_name}_v{version}[_{name}].{SEQ}.exr'
+        definition: '@shot_root/dev/nuke/write/{task_name}/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{task_name}_v{version}[_{name}].{SEQ}.exr'
     nuke_write_node_dpx:
-        definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{task_name}_v{version}[_{name}].{SEQ}.dpx'
+        definition: '@shot_root/dev/nuke/write/{task_name}/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{task_name}_v{version}[_{name}].{SEQ}.dpx'
     nuke_write_node_jpg:
         definition: '@shot_root/dev/nuke/write/{Shot}_{Step}_v{version}[_{name}]/{Shot}_{Step}_v{version}[_{name}].{SEQ}.jpg'
     nuke_write_node_mov:
