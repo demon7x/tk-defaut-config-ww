@@ -144,7 +144,7 @@ class SceneOperation(Hook):
         elif operation == "open":
             # open the specified script
             nuke.scriptOpen(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
             # reset any write node render paths:
             if self._reset_write_node_render_paths():
@@ -154,7 +154,7 @@ class SceneOperation(Hook):
         elif operation == "save":
             # save the current script:
             nuke.scriptSave()
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             old_path = nuke.root()["name"].value()
@@ -167,14 +167,14 @@ class SceneOperation(Hook):
                         
                 # save script:
                 nuke.scriptSaveAs(file_path, -1)
-                TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+                # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
             except Exception as e:
                 # something went wrong so reset to old path:
                 nuke.root()["name"].setValue(old_path)
                 raise TankError("Failed to save scene %s", e)
 
-        elif operation == "prepare_new":
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+        # elif operation == "prepare_new":
+        #     TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
 
         elif operation == "reset":
