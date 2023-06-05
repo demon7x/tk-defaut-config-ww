@@ -79,21 +79,21 @@ class SceneOperation(Hook):
             # file_path = file_path.replace(os.path.sep, '/')
             # hou.hipFile.load(file_path.encode("utf-8"))
             hou.hipFile.load(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             hou.hipFile.save()
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             # give houdini forward slashes
             # file_path = file_path.replace(os.path.sep, '/')
             # hou.hipFile.save(str(file_path.encode("utf-8")))
             hou.hipFile.save(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
-        elif operation == "prepare_new":
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+        # elif operation == "prepare_new":
+        #     TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
         elif operation == "reset":
             hou.hipFile.clear()

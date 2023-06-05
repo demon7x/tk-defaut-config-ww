@@ -78,18 +78,18 @@ class SceneOperation(HookClass):
         elif operation == "open":
             # open the specified script
             adobe.app.load(adobe.File(file_path))
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             # save the current script:
             doc = self._get_active_document()
             doc.save()
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             doc = self._get_active_document()
             adobe.save_as(doc, file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
         elif operation == "reset":
             # do nothing and indicate scene was reset to empty
@@ -99,7 +99,7 @@ class SceneOperation(HookClass):
             # file->new. Not sure how to pop up the actual file->new UI,
             # this command will create a document with default properties
             adobe.app.documents.add()
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
     def _get_active_document(self):
         """

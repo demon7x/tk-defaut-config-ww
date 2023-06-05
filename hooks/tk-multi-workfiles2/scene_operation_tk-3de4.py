@@ -69,22 +69,22 @@ class SceneOperation(HookClass):
 
         elif operation == "open":
             tde4.loadProject(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'OPEN' )
 
         elif operation == "save":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE' )
 
         elif operation == "save_as":
             if not os.path.exists(os.path.dirname(file_path)):
                 os.makedirs(os.path.dirname(file_path))
             tde4.saveProject(file_path)
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'SAVE_AS' )
 
-        elif operation == "prepare_new":
-            TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
+        # elif operation == "prepare_new":
+            # TimeLogManager( user, tool, project_name, shot_name, file_name, 'NEW_FILE' )
 
 
         elif operation == "reset":
