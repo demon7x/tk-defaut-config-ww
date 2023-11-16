@@ -223,6 +223,9 @@ settings.tk-multi-publish2.maya.shot_step:
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py"
     settings: {}
+  - name: Global Settings
+    hook: "{config}/tk-multi-publish2/maya/global_settings.py"
+    settings: {}
   - name: Upload for review
     hook: "{self}/upload_version.py"
     settings: {}
@@ -253,24 +256,31 @@ settings.tk-multi-publish2.maya.shot_step:
  #   hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_component_xml.py"
  #   settings:
  #       Publish Template: shot_component_xml
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_usd.py"
+#  - name: Publish to Shotgun
+#    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_usd.py"
+#    settings:
+#        Publish Template: shot_camera_dummy
+  - name: Export Camera USD
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_camera_usd.py"
     settings:
         Publish Template: shot_camera_dummy
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_abc.py"
+
+
+
+  - name: Export Camera Alembic
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_camera_abc.py"
     settings:
         Publish Template: shot_camera_dummy
   - name: Publish to Shotgun
     hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_camera_ma.py"
     settings:
         Publish Template: shot_camera_dummy
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_dummy_usd.py"
+  - name: Export mmGeom USD
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_dummy_usd.py"
     settings:
         Publish Template: shot_camera_dummy
-  - name: Publish to Shotgun
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/publish_shot_dummy_abc.py"
+  - name: Export mmGeom Alembic
+    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_dummy_abc.py"
     settings:
         Publish Template: shot_camera_dummy
   - name: Publish to Shotgun

@@ -33,10 +33,13 @@ includes:
 settings.tk-desktop.site:
   apps:
   location: "@engines.tk-desktop.location"
-
+  action_hook: "{config}/tk-desktop/launch_python.py"
+  launch_python: "{config}/tk-desktop/launch_python.py"
 
 # project
 settings.tk-desktop.project:
+  action_hook: "{config}/tk-desktop/launch_python.py"
+  launch_python: "{config}/tk-desktop/launch_python.py"
   apps:
     tk-multi-pythonconsole:
       location: "@apps.tk-multi-pythonconsole.location"

@@ -9,11 +9,13 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import sys
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
 from tank_vendor import six
+import re
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
@@ -268,70 +270,6 @@ class MayaSessionShotCameraUSDPublishPlugin(HookBaseClass):
         :param item: Item to process
         """
         
-        publisher = self.parent
-
-        # get the path to create and publish
-        publish_path = item.properties["path"]
-
-        # ensure the publish folder exists:
-        publish_folder = os.path.dirname(publish_path)
-        self.parent.ensure_folder_exists(publish_folder)
-
-        # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an USD file that contains
-        # all visible geometry from the current scene together with UV's and
-        # face sets for use in Mari.
-
-        usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
-        
-        usd_args = [
-            '-shd "none"',
-            '-dms "none"',
-            '-uvs 1',
-            '-cls 0',
-            '-vis 0',
-            '-mt 0',
-            '-sl',
-            '-sn 1'
-            ]
-
-
-
-        # find the animated frame range to use:
-        start_frame, end_frame = _find_scene_animation_range()
-        if start_frame and end_frame:
-            usd_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-
-        usd_args.append('-f "%s"' % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed USD export help
-        usd_export_cmd = (usdexport_command + " ".join(usd_args))
-
-        # ...and execute it:
-        try:
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            cmds.select(item.properties['name'])
-            _to_tractor(self,item,usd_export_cmd)
-            #mel.eval(usd_export_cmd)
-        except Exception as  e:
-            import traceback
-            
-            self.parent.log_debug("Executing command: %s" % usd_export_cmd)
-            self.logger.error("Failed to export USD: %s"% e, 
-                extra = {
-                "action_show_more_info": {
-                    "label": "Error Details",
-                    "tooltip": "Show the full error stack trace",
-                    "text": "<pre>%s</pre>" % (traceback.format_exc(),)
-                }
-            }
-
-            )
-            return
 
         # Now that the path has been generated, hand it off to the
         super(MayaSessionShotCameraUSDPublishPlugin, self).publish(settings, item)

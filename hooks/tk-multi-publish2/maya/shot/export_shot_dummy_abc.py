@@ -9,16 +9,19 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import sys
+import re
 import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 import sgtk
 from tank_vendor import six
+from sgtk.platform.qt import QtGui, QtCore
 
 HookBaseClass = sgtk.get_hook_baseclass()
 
 
-class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
+class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
     """
     Plugin for publishing an open maya session.
 
@@ -66,7 +69,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         part of its environment configuration.
         """
         # inherit the settings from the base publish plugin
-        base_settings = super(MayaSessionComponentAlembicPublishPlugin, self).settings or {}
+        base_settings = super(MayaSessionShotDummyAlembicExportPlugin, self).settings or {}
 
         # settings specific to this class
         maya_publish_settings = {
@@ -77,6 +80,12 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
                                "correspond to a template defined in "
                                "templates.yml.",
             }
+        }
+
+        base_settings['pub_sg'] = {
+            "type": "bool",
+            "default": True,
+            "description": "Publishing Shotgrid",
         }
 
         # update the base settings
@@ -93,7 +102,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         accept() method. Strings can contain glob patters such as *, for example
         ["maya.*", "file.maya"]
         """
-        return ["maya.session.shot.component.abc"]
+        return ["maya.session.dummy.abc"]
 
     def accept(self, settings, item):
         """
@@ -193,6 +202,9 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             )
             raise Exception(error_msg)
 
+        if not settings['pub_sg'].value:
+            return True
+
         # get the normalized path
         path = sgtk.util.ShotgunPath.normalize(path)
 
@@ -205,11 +217,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
 
 
         work_fields = work_template.get_fields(path)
-        if not item.properties['name'].find("simDummy_grp") == -1 :
-
-            work_fields["asset_namespace"]= item.properties['name'].split(":")[0]+"_simdummy"
-        else:
-            work_fields["asset_namespace"]= item.properties['name'].split(":")[0]
+        work_fields["name"]= item.properties['name']
+        work_fields["shot_file_extension"]= item.properties['file_extension']
 
         # ensure the fields work for the publish template
         missing_keys = publish_template.missing_keys(work_fields)
@@ -231,7 +240,7 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             item.properties["publish_version"] = work_fields["version"]
 
         # run the base class validation
-        return super(MayaSessionComponentAlembicPublishPlugin, self).validate(
+        return super(MayaSessionShotDummyAlembicExportPlugin, self).validate(
             settings, item)
 
     def publish(self, settings, item):
@@ -243,110 +252,132 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
+
+        if settings['pub_sg'].value:
+            publisher = self.parent
+
+            # get the path to create and publish
+            publish_path = item.properties["path"]
+
+            # ensure the publish folder exists:
+            publish_folder = os.path.dirname(publish_path)
+            self.parent.ensure_folder_exists(publish_folder)
+
+
+        if item.parent.parent:
+            for x in item.parent.parent.tasks:
+                if 'Global' in x.name:
+                    global_settings = x.settings
+
+        sframe = global_settings['sframe'].value
+        eframe = global_settings['eframe'].value
+        handle = global_settings['handle_frame'].value
+        step   = global_settings['cache_step'].value
+        farm   = global_settings['farm'].value
+
+       
+        scene_path = global_settings['scene_path'].value
+        basename   = global_settings['basename'].value
+
+        abc_ver_path = global_settings['abc_ver_path'].value
+        abc_ver_py_folder = os.path.join( abc_ver_path , 'python' )    
+
+        if not os.path.exists( abc_ver_py_folder ):
+            os.makedirs( abc_ver_py_folder )
+
         
-
-        publisher = self.parent
-
-        for x in item.parent.parent.tasks: 
-            if 'Global' in x.name:
-                global_settings = x
-            elif 'Shotgun' in x.name:
-                settings['shotgun_publish'] = True if x.checked else False
-
-        # get the path to create and publish
-        publish_path = item.properties["path"]
-
-        # ensure the publish folder exists:
-        publish_folder = os.path.dirname(publish_path)
-        self.parent.ensure_folder_exists(publish_folder)
-
-        # set the alembic args that make the most sense when working with Mari.
-        # These flags will ensure the export of an Alembic file that contains
-        # all visible geometry from the current scene together with UV's and
-        # face sets for use in Mari.
-        alembic_args = [
-            # only renderable objects (visible and not templated)
-            "-renderableOnly",
-            # write shading group set assignments (Maya 2015+)
-            "-writeFaceSets",
-            # write uv's (only the current uv set gets written)
-            "-uvWrite",
-
-            "-eulerFilter",
-
-            "-writeVisibility",
-
-            "-sn",
-
-            "-step %f"%item.properties['sub_frame']
-
-        ]
-
-        # find the animated frame range to use:
-        start_frame, end_frame = _find_scene_animation_range()
-        if start_frame and end_frame:
-            alembic_args.append("-fr %d %d" % (start_frame, end_frame))
-
-        #alembic_args.append("-root %s" % item.properties['name'])
-        if not item.properties['name'].find("simDummy_grp") == -1:
-            alembic_args.append("-root %s" % item.properties['name'])
-        else:
-            child = cmds.listRelatives(item.properties['name'],c=1,f=1)[0]
-            alembic_args.append("-root %s" % child)
-
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-        alembic_args.append("-file %s" % publish_path.replace("\\", "/"))
-
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed Alembic export help
-        abc_export_cmd = ("AbcExport -j \"%s\"" % " ".join(alembic_args))
-
-        # ...and execute it:
-        try:
-            self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            _to_tractor(self,item,abc_export_cmd)
-            #mel.eval(abc_export_cmd)
-        except Exception as e:
-            self.logger.error("Failed to export Geometry: %s" % e)
+        mmGeom_list = cmds.ls( 'mmGeom' , r = 1 )
+        if not mmGeom_list:
             return
+        
+        mmGeom = mmGeom_list[0]
 
-        # Now that the path has been generated, hand it off to the
-        super(MayaSessionComponentAlembicPublishPlugin, self).publish(settings, item)
+        mmGeom_abc_path = os.path.join( abc_ver_path , mmGeom + '.abc' )
+
+        content = ''
+        content += 'import maya.cmds as cmds\n'
+        content += 'import maya.mel as mel\n'
+        content += 'import pymel.core as pm\n' 
+        content += 'import os\n'
+        content += 'import sys\n'
 
 
-def _to_tractor(instance,item,mel_command):
-    
-    file_type = instance.settings['File Types']['default'][0][0]
-    module_path = os.path.dirname(instance.disk_location)
-    import sys
-    sys.path.append(module_path)
-    from imp import reload
-    import to_tractor;reload(to_tractor)
-    start_frame, end_frame = _find_scene_animation_range()
-    tractor = to_tractor.MayaToTractor(item)
-    tractor.create_script(mel_command)
-    tractor.to_tractor(start_frame,end_frame,file_type)
+        content += 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so" ]\n'
+        content += 'for plugin in plugin_list:\n'
+        content += '    try:\n'
+        content += '        cmds.loadPlugin( plugin )\n'
+        content += '    except:\n'
+        content += '        print( "Error : " , plugin )\n'
+        content += '        pass\n'
 
-def _find_scene_animation_range():
-    """
-    Find the animation range from the current scene.
-    """
-    # look for any animation in the scene:
-    animation_curves = cmds.ls(typ="animCurve")
+        content += f"mel.eval('AbcExport -j \"-frameRange {sframe} {eframe} -step {step} -stripNamespaces "
+        content += f"-uvWrite -writeColorSets -writeFaceSets -worldSpace -writeVisibility -eulerFilter "
+        content += f"-dataFormat ogawa -root {mmGeom} -file {mmGeom_abc_path}\" ')" 
+#        content += f"-j \"-frameRange {sframe} {eframe} -step {step} "
+#        content += f"-stripNamespaces -uvWrite -writeColorSets -writeFaceSets -worldSpace -writeVisibility "
+#        content += f"-eulerFilter -dataFormat ogawa -attrPrefix MtlTag -attrPrefix Subdivision -attrPrefix "
+#        content += f"Displace -attrPrefix USD_UserExportedAttributesJson -attrPrefix Meshtype -attrPrefix USD_kind "
+#        content += f"-root {mmGeom} -file {mmGeom_path}\" ')"
 
-    # if there aren't any animation curves then just return
-    # a single frame:
-    if not animation_curves:
-        return 1, 1
 
-    # something in the scene is animated so return the
-    # current timeline.  This could be extended if needed
-    # to calculate the frame range of the animated curves.
-    start = int(cmds.playbackOptions(q=True, min=True)) - 5
-    end = int(cmds.playbackOptions(q=True, max=True)) + 5
+        if farm:
+            farm_content  = '# :coding: utf-8\n'
+            farm_content += 'import maya.standalone\n'
+            farm_content += 'maya.standalone.initialize()\n'
+            farm_content += 'cmds.file( new=1, force = 1)\n'
+            farm_content += 'cmds.file( "{}", o = 1 )\n'.format( scene_path )
 
-    return start, end
+            content = farm_content + content
+            py_content_path = os.path.join( abc_ver_path ,'python',  basename + '.py' )
+
+            if not os.path.exists( os.path.dirname( py_content_path ) ):
+                os.makedirs( os.path.dirname( py_content_path ), exist_ok = True )
+            with open( py_content_path, 'w', encoding= 'utf-8' ) as f:
+                f.write( content )
+
+            sys.path.append( '/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python3.6/site-packages' )
+            import tractor.api.author as author
+
+            job = author.Job()
+
+            job.service = 'cfx|cfx2' 
+            job.title = '[{}] Exporting mmGeom Alembic'.format( basename )
+            job.priority = 100
+            job.projects = ['RND']
+            job.spoolcwd = '/tmp'
+            task = author.Task( title = 'exporting mmGeom Alembic' )
+            cmd = author.Command( argv = ['rez-env', 'maya-2022', 'mayausd-0.19','pymel-1.2', '--', 'mayapy', py_content_path ] )
+            task.addCommand( cmd )
+            job.addChild( task )
+
+            result = job.spool( hostname = '10.0.20.82', owner = os.getenv( 'USER' ) )
+            author.closeEngineClient()
+            print( result )
+        else:
+            print( '\n' )
+            print( '_' * 50 )
+            print( content )
+            print( '_' * 50 )
+            print( '\n' )
+            exec( content )
+
+
+        return super(MayaSessionShotDummyAlembicExportPlugin, self).publish( settings, item )
+
+    def create_settings_widget( self , parent ):
+        self.pub_shotgrid = PublishShotgrid( parent , self.parent.shotgun )
+        return self.pub_shotgrid
+
+    def get_ui_settings( self, widget ):
+        return {
+            'pub_sg': widget.pub_sg
+        }
+
+    def set_ui_settings( self, widget, settings ):
+        for setting_block in settings:
+            pub_sg = setting_block.get( 'pub_sg' )
+            if pub_sg:
+                widget.pub_sg = pub_sg
 
 
 def _session_path():
@@ -385,3 +416,29 @@ def _get_save_as_action():
             "callback": callback
         }
     }
+
+
+
+
+class PublishShotgrid( QtGui.QWidget ):
+    def __init__( self, parent , sg ):
+        super( PublishShotgrid, self ).__init__( parent )
+
+        self.__setup_ui()
+
+    def __setup_ui( self ):
+        self.pub_sg_chk = QtGui.QCheckBox( 'Publish to ShotGrid' )
+
+        vlay = QtGui.QVBoxLayout()
+        vlay.addWidget( self.pub_sg_chk )
+
+        self.setLayout( vlay )
+
+    @property
+    def pub_sg( self ):
+        return self.pub_sg_chk.isChecked()
+
+    @pub_sg.setter
+    def pub_sg( self , value):
+        return self.pub_sg_chk.setChecked( value )
+

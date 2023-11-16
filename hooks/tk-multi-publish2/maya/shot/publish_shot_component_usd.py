@@ -11,6 +11,7 @@
 import os
 import re
 import pprint
+import sys
 import maya.cmds as cmds
 import maya.mel as mel
 from pxr import Kind, Sdf, Usd, UsdGeom
@@ -281,8 +282,18 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             instances.
         :param item: Item to process
         """
+
         
         publisher = self.parent
+
+        if item.parent.parent:
+            for x in item.parent.parent.tasks: 
+                if 'Global' in x.name:
+                    global_settings = x.settings
+                elif 'Shotgun' in x.name:
+                    settings['shotgun_publish'] = True if x.checked else False
+
+
 
         # get the path to create and publish
         publish_path = item.properties["path"]
@@ -295,6 +306,76 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # These flags will ensure the export of an USD file that contains
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
+
+        curr_scene = cmds.file( sn = 1 , q= 1 )
+        sframe = global_settings['sframe'].value
+        eframe = global_settings['eframe'].value
+        handle = global_settings['handle_frame'].value
+        step = global_settings['cache_step'].value
+        farm = global_settings['farm'].value
+
+
+        content = usd_export_content( curr_scene, sframe, eframe, handle, step, farm ) 
+
+
+        print( '=' * 50 )
+        print( '\n' )
+        print( 'shot component usd' )
+        print( global_settings['farm'].value )
+        print( type(global_settings['farm'].value ) )
+        print( '\n' )
+        print( '=' * 50 )
+
+
+
+        if global_settings['farm'].value:
+            print( '+' * 50 )
+            print( '\n' )
+            print( 'render farm' )
+            print( '\n' )
+            print( '+' * 50 )
+            
+            py_path = os.path.join( 
+                                os.path.dirname( curr_scene ),
+                                'python',
+                                 os.path.splitext( os.path.basename(curr_scene) )[0] + '.py'
+                         )
+            sys.path.append( '/westworld/inhouse/tool/rez-packages/tractor/2.2.0/platform-linux/arch-x86_64/lib/python3.6/site-packages' )
+            import tractor.api.author as author
+
+            with open( py_path, 'w' ) as f:
+                f.write( content )
+
+            job = author.Job()
+
+            job.service = 'cfx|cfx2' 
+            job.title = '[{}] Exporting USD '.format(   os.path.basename( item.parent.parent.name ) )
+            job.priority = 100
+            job.projects = ['RND']
+            job.spoolcwd = '/tmp'
+            task = author.Task( title = 'exporting usd ' )
+            cmd = author.Command( argv = ['rez-env', 'maya-2022', 'usd-19', '--', 'mayapy', py_path] )
+
+
+            task.addCommand( cmd )
+            job.addChild( task )
+
+            result = job.spool( hostname = '10.0.20.82', owner = os.getenv( 'USER' ) )
+            author.closeEngineClient()
+            print( result )
+            
+        else:
+            print( '+' * 50 )
+            print( '\n' )
+            pprint.pprint( content )
+            print( '\n' )
+            print( '+' * 50 )
+            exec( content ) 
+
+
+        return super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)   
+
+
 
         usdexport_command = "mayaUSDExport" if cmds.about(version=1)=="2022"  else "usdExport"     
 
@@ -518,4 +599,71 @@ def _set_assembly(prim_path):
     
     return
         
+def usd_export_content( curr_scene, sframe, eframe, handle, step , farm = False  ):
+    content = '''
 
+if farm:
+    import maya.standalone
+    maya.standalone.initialize()
+
+import maya.cmds as cmds
+import maya.mel as mel
+import os
+import sys
+
+sys.path.append( '/westworld/inhouse/ww_usd/Script/python/wwUsd/maya' )
+import maUSDwwPub
+
+plugin_list = ['AbcExport.so', 'cvJiggle.so', 'cvwrap.so', 'weightDriver.so', 'mayaUsdPlugin.so']
+for plugin in plugin_list:
+    try:
+        cmds.loadPlugin( plugin )
+    except:
+        print( 'Loading Error : ' , plugin )
+
+curr_scene = '%s'
+sframe = %s
+eframe = %s
+handle = %s
+step = %s
+farm = %s
+
+if farm :
+    cmds.file( new = 1, force = 1 )
+    cmds.file( curr_scene, o = 1 )
+pub_path = curr_scene.replace( os.sep + 'dev' + os.sep , os.sep + 'pub' + os.sep )
+
+pub_path_part = curr_scene.partition( 'dev' )[0] 
+pipelien_step = pub_path_part.split( os.sep )[-2]
+
+maya_path = os.path.join( pub_path_part, 'pub', 'maya' )
+info_path = os.path.join( maya_path, 'info' )
+
+pub_cache_path  = os.path.join( pub_path_part, 'pub', 'caches' )
+abc_path = os.path.join( pub_cache_path, 'abc' )
+usd_path = os.path.join( pub_cache_path, 'usd' )
+
+ver = re.search( '_v[0-9]{3}', curr_scene ).group()[2:] 
+abc_ver_path = os.path.join( abc_path , ver )
+usd_ver_path = os.path.join( usd_path , ver )
+abc_ver_py_path = os.path.join( abc_ver_path, 'python' )
+usd_ver_py_path = os.path.join( usd_ver_path, 'python' )
+info_ver_path = os.path.join( info_path, ver )
+
+
+asset_cache_grp_list = cmds.ls('*_cache_grp', r=1)
+asset_list = []
+
+if asset_cache_grp_list:
+    for cache_grp in asset_cache_grp_list:
+        child_list = cmds.listRelatives(cache_grp)
+        if child_list:
+            asset = child_list[0]
+            asset_list.append(asset)
+
+            asset_usd_path =  os.path.join( usd_ver_path , asset + '.usd' ) 
+            maUSDwwPub.mkExportUsdStandalone( asset, asset_usd_path , sframe - handle, eframe + handle,float(step), 1 )
+            
+
+''' % ( curr_scene, sframe, eframe, handle, step , farm )
+    return content
