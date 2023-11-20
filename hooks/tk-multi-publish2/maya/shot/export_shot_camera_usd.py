@@ -359,14 +359,9 @@ class MayaSessionShotCameraUSDExportPlugin(HookBaseClass):
         # usd_check
         if not os.path.exists( usd_ver_path ):
             os.makedirs( usd_ver_path )
+            os.chmod( usd_ver_path , 0o0777 )
             os.makedirs( usd_ver_py_folder ) 
-
-        # scene2pub check
-#        if not os.path.exists( maya_path ):
-#            os.makedirs( maya_path )
-#
-#
-#        shutil.copyfile( scene_path, maya_pub_path )
+            os.chmod( usd_ver_py_folder, 0o0777 )
 
 
         # local usd export
@@ -409,12 +404,14 @@ class MayaSessionShotCameraUSDExportPlugin(HookBaseClass):
                         cam_usd_path = os.path.join( usd_ver_path , cam_name + '.usd' )
                         content += f'maUSDwwPub.mkExportUsdStandalone( "{cam}", "{cam_usd_path}", '
                         content += f'{sframe} - {handle}, {eframe} + {handle}, float( {step} ) )\n'
+                        content += f'os.chmod( "{cam_usd_path}", 0o0777 )\n'
 
         if farm:
 
             farm_content  = '# :coding: utf-8\n'
             farm_content += 'import maya.standalone\n'
             farm_content += 'maya.standalone.initialize()\n'
+            farm_content += 'import maya.cmds as cmds\n'
             farm_content += 'cmds.file( new=1, force = 1)\n'
             farm_content += 'cmds.file( "{}", o = 1 )\n'.format( scene_path )
 
@@ -423,6 +420,7 @@ class MayaSessionShotCameraUSDExportPlugin(HookBaseClass):
 
             if not os.path.exists( os.path.dirname( py_content_path ) ):
                 os.makedirs( os.path.dirname( py_content_path ), exist_ok = True )
+                os.chmod( os.path.dirname( py_content_path ), 0o0777 )
             with open( py_content_path, 'w', encoding= 'utf-8' ) as f:
                 f.write( content )
 

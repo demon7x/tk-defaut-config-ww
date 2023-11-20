@@ -303,6 +303,8 @@ class MayaSessionShotDummyUSDExportPlugin(HookBaseClass):
         usd_ver_py_folder = global_settings['usd_ver_py_folder'].value
         if not os.path.exists( usd_ver_py_folder ):
             os.makedirs( usd_ver_py_folder ) 
+            os.chmod( usd_ver_path, 0o0777 )
+            os.chmod( usd_ver_py_folder, 0o0777 )
 
 
         # local usd export
@@ -339,12 +341,14 @@ class MayaSessionShotDummyUSDExportPlugin(HookBaseClass):
         mmGeom_usd_path = os.path.join( usd_ver_path , mmGeom + '.usd' )
         content += f'maUSDwwPub.mkExportUsdStandalone( "{mmGeom}", "{mmGeom_usd_path}", '
         content += f'{sframe} - {handle}, {eframe} + {handle}, float( {step} ) )\n'
+        content += f'os.chmod( "{mmGeom_usd_path}", 0o0777 )\n'
 
         if farm:
 
             farm_content  = '# :coding: utf-8\n'
             farm_content += 'import maya.standalone\n'
             farm_content += 'maya.standalone.initialize()\n'
+            farm_content += 'import maya.cmds as cmds\n'
             farm_content += 'cmds.file( new=1, force = 1)\n'
             farm_content += 'cmds.file( "{}", o = 1 )\n'.format( scene_path )
 
@@ -353,6 +357,7 @@ class MayaSessionShotDummyUSDExportPlugin(HookBaseClass):
 
             if not os.path.exists( os.path.dirname( py_content_path ) ):
                 os.makedirs( os.path.dirname( py_content_path ), exist_ok = True )
+                os.chmod( os.path.dirname( py_content_path ), 0o0777 )
             with open( py_content_path, 'w', encoding= 'utf-8' ) as f:
                 f.write( content )
 

@@ -284,6 +284,8 @@ class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
 
         if not os.path.exists( abc_ver_py_folder ):
             os.makedirs( abc_ver_py_folder )
+            os.chmod( abc_ver_path , 0o0777 )
+            os.chmod( abc_ver_py_folder, 0o0777 )
 
         
         mmGeom_list = cmds.ls( 'mmGeom' , r = 1 )
@@ -312,7 +314,8 @@ class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
 
         content += f"mel.eval('AbcExport -j \"-frameRange {sframe} {eframe} -step {step} -stripNamespaces "
         content += f"-uvWrite -writeColorSets -writeFaceSets -worldSpace -writeVisibility -eulerFilter "
-        content += f"-dataFormat ogawa -root {mmGeom} -file {mmGeom_abc_path}\" ')" 
+        content += f"-dataFormat ogawa -root {mmGeom} -file {mmGeom_abc_path}\" ')\n" 
+        content += f"os.chmod( '{mmGeom_abc_path}', 0o0777 )\n"
 #        content += f"-j \"-frameRange {sframe} {eframe} -step {step} "
 #        content += f"-stripNamespaces -uvWrite -writeColorSets -writeFaceSets -worldSpace -writeVisibility "
 #        content += f"-eulerFilter -dataFormat ogawa -attrPrefix MtlTag -attrPrefix Subdivision -attrPrefix "
@@ -324,6 +327,7 @@ class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
             farm_content  = '# :coding: utf-8\n'
             farm_content += 'import maya.standalone\n'
             farm_content += 'maya.standalone.initialize()\n'
+            farm_content += 'import maya.cmds as cmds\n'
             farm_content += 'cmds.file( new=1, force = 1)\n'
             farm_content += 'cmds.file( "{}", o = 1 )\n'.format( scene_path )
 
@@ -332,6 +336,7 @@ class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
 
             if not os.path.exists( os.path.dirname( py_content_path ) ):
                 os.makedirs( os.path.dirname( py_content_path ), exist_ok = True )
+                os.chmod( os.path.dirname( py_content_path ), 0o0777 )
             with open( py_content_path, 'w', encoding= 'utf-8' ) as f:
                 f.write( content )
 
