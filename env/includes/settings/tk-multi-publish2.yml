@@ -240,11 +240,11 @@ settings.tk-multi-publish2.maya.shot_step:
   #  settings:
   #      Publish Template: shot_usd
   - name: Export USD
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_component_usd.py"
+    hook: "{config}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_component_usd.py"
     settings:
         Publish Template: shot_cmpt_asmb_usd
   - name: Export Alembic
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_component_abc.py"
+    hook: "{config}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_component_abc.py"
     settings:
         Publish Template: shot_component_alembic
  # - name: Create sceneGraphXML
@@ -256,7 +256,7 @@ settings.tk-multi-publish2.maya.shot_step:
 #    settings:
 #        Publish Template: shot_camera_dummy
   - name: Export Camera USD
-    hook: "{self}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_camera_usd.py"
+    hook: "{config}/publish_file.py:{config}/tk-multi-publish2/maya/shot/export_shot_camera_usd.py"
     settings:
         Publish Template: shot_camera_dummy
 
