@@ -337,7 +337,7 @@ class MayaSessionAlembicForMariPublishPlugin(HookBaseClass):
 
         except Exception as  e:
             self.logger.error("Failed to export Mari: %s" % e)
-            return
+            #return
         finally:
             cmds.undoInfo(closeChunk=True)
             cmds.undo()
