@@ -551,7 +551,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             farm_content += 'scene_path = scene_path.replace("//10.0.40.42", "")\n'
             farm_content += 'cmds.file( scene_path, o = 1 )\n\n'
 
-            content += 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so", "mayaUsdPlugin.so"]\n'
+            content = 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so", "mayaUsdPlugin.so"]\n'
             content += 'for plugin in plugin_list:\n'
             content += '    try:\n'
             content += '        cmds.loadPlugin( plugin )\n'
