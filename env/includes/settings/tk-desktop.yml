@@ -25,6 +25,7 @@ includes:
 - ./tk-multi-txmake.yml
 - ./tk-multi-version.yml
 - ./tk-multi-library.yml
+- ./tk-download.yml
 
 ################################################################################
 
@@ -51,6 +52,7 @@ settings.tk-desktop.project:
     tk-iomanager: "@settings.tk-iomanager.standalone"
     tk-desktop-stock: "@settings.tk-desktop-stock.standalone"
     tk-outsourcing: "@settings.tk-outsourcing.standalone"
+    #tk-download: "@settings.tk-download.standalone"
     tk-timecard: "@settings.tk-desktop-timecard.standalone"
     tk-multi-txmake: "@settings.tk-multi-txmake.standalone"
     tk-multi-version: "@settings.tk-multi-version.standalone"
