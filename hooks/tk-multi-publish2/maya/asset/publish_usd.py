@@ -9,8 +9,10 @@
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
 import os
+import re
+import sys
 import copy
-import pprint
+from pprint import pprint
 import maya.cmds as cmds
 import maya.mel as mel
 from pxr import Kind, Sdf, Usd, UsdGeom
@@ -202,10 +204,9 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         """
 
         path = _session_path()
-        
-        
 
         # ---- ensure the session has been saved
+
 
         if not path:
             # the session still requires saving. provide a save button.
@@ -261,6 +262,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         return super(MayaSessionUSDPublishPlugin, self).validate(
             settings, item)
 
+
     def publish(self, settings, item):
         """
         Executes the publish logic for the given item and settings.
@@ -290,7 +292,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         # all visible geometry from the current scene together with UV's and
         # face sets for use in Mari.
 
-
         
         usd_args = [
             '-shd "none"',
@@ -301,7 +302,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             '-mt 0',
             '-sl'
             ]
-
 
 
         # find the animated frame range to use:
@@ -405,25 +405,27 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         # Now that the path has been generated, hand it off to the
 
-        self._export_wwusd()
+        self._export_wwusd(item)
 
         super(MayaSessionUSDPublishPlugin, self).publish(settings, item)
     
 
-    def _export_wwusd(self):
+    def _export_wwusd(self, item):
 
         #from WWUSD_MAYA import  Model
 
 #        import sys
 #        sys.path.append( '/home/w10137/work/ww_usd/WWUSD_MAYA' )
-        import sys
-        if 'linux' not in sys.platform:
-            sys.path.append( '\\\\10.0.40.42\\inhouse\\tool\\rez-packages\\ww_usd\\1.0.0\\ww_usd'  )
-            # sys.path.append( '\\\\10.0.40.42\\user\\pipeline\\kyoungmin\\work'  )
 
-        from WWUSD_MAYA import export_asset
-        import imp
-        imp.reload( export_asset )
+        # import sys
+        # if 'linux' not in sys.platform:
+        #     sys.path.append( '\\\\10.0.40.42\\inhouse\\tool\\rez-packages\\ww_usd\\1.0.0\\ww_usd\\WWUSD_MAYA'  )
+        #     sys.path.append( '\\\\10.0.40.42\\user\\pipeline\\kyoungmin\\work'  )
+
+
+        # from WWUSD_MAYA import export_asset
+        # import imp
+        # imp.reload( export_asset )
 
 
         current_engine = sgtk.platform.current_engine()
@@ -505,8 +507,128 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
                         'sg_project_name':context.project['name']}
     
             sg.create("CustomEntity06",desc)
-                
+        
+        
+        def submit_job(asset, item):
+            scene_path = cmds.file( sn=1 , q=1 )
+            basename = os.path.splitext( os.path.basename(scene_path) )[0]
+            pub_path_part = scene_path.partition('dev')[0]
 
+            # pub_path_part = pub_path_part.replace("//10.0.40.42", "")
+
+            pub_cache_path = os.path.join(pub_path_part+'pub', 'caches')
+            usd_path = os.path.join(pub_cache_path, 'usd')
+
+            ver = re.search( '_v[0-9]{3}', scene_path ).group()
+            
+            usd_ver_path = os.path.join(usd_path, asset + '_model'+ ver)
+            usd_ver_py_path = os.path.join(usd_ver_path, 'python')
+
+            if not os.path.exists( usd_ver_path ):
+                os.makedirs( usd_ver_path )
+                os.chmod( usd_ver_path, 0o0777)
+            
+            if not os.path.exists( usd_ver_py_path ):
+                os.makedirs( usd_ver_py_path )
+                os.chmod( usd_ver_py_path, 0o0777)
+            
+
+            
+            # sframe = int( cmds.playbackOptions( q=1, min=1 ) )
+            # eframe = int( cmds.playbackOptions( q=1, max=1 ) )
+            # handle = int(5)
+            # step = float(0.25)
+            
+
+            farm_content  = '# :coding: utf-8\n'
+            farm_content += 'import maya.standalone\n'
+            farm_content += 'maya.standalone.initialize()\n'
+            farm_content += 'from maya import mel\n'
+            farm_content += 'from maya import cmds\n\n'
+            farm_content += 'cmds.file( new=1, force = 1)\n'
+            farm_content += 'scene_path = "{}"\n'.format( scene_path )
+            farm_content += 'scene_path = scene_path.replace("{0}{0}", "/")\n'.format( '\\' )
+            farm_content += 'scene_path = scene_path.replace("//10.0.40.42", "")\n'
+            farm_content += 'cmds.file( scene_path, o = 1 )\n\n'
+
+            content += 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so", "mayaUsdPlugin.so"]\n'
+            content += 'for plugin in plugin_list:\n'
+            content += '    try:\n'
+            content += '        cmds.loadPlugin( plugin )\n'
+            content += '    except:\n'
+            content += '        print( "Error : ", plugin)\n'
+            content += '        pass\n\n'
+
+            content += 'from WWUSD_MAYA import export_asset\n'
+            content += 'export_asset.set_project("{}")\n'.format(item.context.project['name'])
+            content += 'export_asset.export_asset( "{}" )\n'.format(asset)
+
+            # asset_list = []
+
+            print( '\n' )
+            print( '+' * 100  )
+            print( '_' * 100 )
+            print( item.context )
+            print( '_' * 100 )
+            pprint( dir(item.context) )
+            print( '_' * 100 )
+            print( item )
+            print( item.name )
+            print( '_' * 100 )
+            pprint( dir(item) )
+            print( '+' * 100  )
+            print( '\n' )
+
+            # child_list = cmds.listRelatives( item.name )
+            # if child_list:
+            #     asset = child_list[0]
+            #     asset_name = asset.replace( ":" , "_")
+            #     asset_list.append(asset)
+
+            #     asset_usd_path = os.path.join(usd_ver_path, asset_name + '.usd')
+            #     content += 'maUSDwwPub.mkExportUsdStandalone("{0}", "{1}", '.format(asset, asset_usd_path)
+            #     content += '{0} - {1}, {2} + {1}, float( {3} )\n'.format(sframe, handle, eframe, step)
+            #     content += 'os.chmod( "{0}", 0o0777)\n\n'.format(asset_usd_path)
+            
+            content = farm_content + content
+
+            py_content_path = os.path.join(usd_ver_py_path, basename + '.py')
+
+            sys.path.append('\\\\10.0.40.42\\inhouse\\tool\\rez-packages\\tractor\\2.2.0\\platform-linux\\arch-x86_64\\lib\\python3.6\\site-packages')
+            import tractor.api.author as author
+
+            with open( py_content_path, 'w' ) as f:
+                f.write( content )
+
+            py_content_path = py_content_path.replace("\\", "/")
+            py_content_path = py_content_path.replace("//10.0.40.42", "")
+
+            job = author.Job()
+            job.service = 'Linux64'
+            job.title = '[{0}] Exporting Asset USD - {1}'.format(item.context.user['name'], basename)
+            job.priority = 100
+            job.projects = [ item.context.project['name'] ]
+            job.spoolcwd = '/tmp'
+            task = author.Task( title = 'exporting asset usd ')
+            maya_major = cmds.about(v=1)
+            cmd = author.Command( argv = ['rez-env', 'maya-{0}'.format(maya_major), 'ww_usd', 'mayausd-0.19', 'pymel-1.2', 'mtoa-4.2.4', '--', 'mayapy', py_content_path])
+
+            task.addCommand( cmd )
+            job.addChild( task )
+
+            user_id = sg.find_one('HumanUser', [['name', 'is', item.context.user['name']]], ['sg_ww_id'])
+
+            if not user_id['sg_ww_id']:
+                raise Exception('"ww_id" field is empty.')
+
+            result = job.spool( hostname = '10.0.20.81', owner = user_id['sg_ww_id'])
+            author.closeEngineClient()
+
+            print( '\n' )
+            print( '+' * 100 )
+            print(result)
+            print( '+' * 100 )
+            print( '\n' )
 
 
         if _chcek_publish(root_path,1):
@@ -525,15 +647,19 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             "asset" :  work_fields['Asset'],
             "dept" :  work_fields["Step"],
             "name" : work_fields['Asset'],
-            "ver" : work_fields['version']
+            "ver" : work_fields['version'],
+            "root_path": root_path
         }
+
         if not os.path.exists(asset_step_ver_path):
-            export_asset.export_asset( export_args['asset'] )
+            if 'linux' in sys.platform:
+                from WWUSD_MAYA import export_asset
+                export_asset.export_asset( export_args['asset'] )
+            else:
+                submit_job( export_args['asset'], item )
             #Model.export(export_args,os.path.dirname(root_path))
         _create_usd_library(root_path)
 
-
-    
 
     def _get_relatives_path(self,publish_path,asset_usd_path):
         common_prefix = os.path.commonprefix([os.path.dirname(publish_path),asset_usd_path])
@@ -569,7 +695,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
         xformAPI.SetTranslate(translate)
         xformAPI.SetRotate(rotate)
         xformAPI.SetScale(scale)
-       
+
 
     def _append_mesh_attr_usd(self):
         import sys
@@ -602,9 +728,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             print ('error line No = {}'.format(tb.tb_lineno))
             print (e)
             raise Exception("Failed to atnt mesh tag  <br> Detail :%s"%e)
-
-
-
 
 
 def _find_scene_animation_range():
