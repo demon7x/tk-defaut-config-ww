@@ -624,9 +624,10 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             fields = ['sg_rez']
 
             rez_packages = sg.find_one('Software', filters, fields)
+            rez_packages_list = rez_packages['sg_rez'].split(',')
 
             argv = ['rez-env']
-            argv += [rez_packages['sg_rez']]
+            argv += rez_packages_list
             argv += ['--', 'mayapy', py_content_path]
             
             cmd = author.Command( argv = argv)
