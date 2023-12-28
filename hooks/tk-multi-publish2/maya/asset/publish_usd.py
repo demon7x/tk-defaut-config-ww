@@ -207,7 +207,6 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
 
         # ---- ensure the session has been saved
 
-
         if not path:
             # the session still requires saving. provide a save button.
             # validation fails.
@@ -551,7 +550,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             farm_content += 'scene_path = scene_path.replace("//10.0.40.42", "")\n'
             farm_content += 'cmds.file( scene_path, o = 1 )\n\n'
 
-            content += 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so", "mayaUsdPlugin.so"]\n'
+            content = 'plugin_list = ["AbcExport.so", "cvJiggle.so", "cvwrap.so", "weightDriver.so", "mayaUsdPlugin.so"]\n'
             content += 'for plugin in plugin_list:\n'
             content += '    try:\n'
             content += '        cmds.loadPlugin( plugin )\n'
@@ -610,8 +609,28 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             job.projects = [ item.context.project['name'] ]
             job.spoolcwd = '/tmp'
             task = author.Task( title = 'exporting asset usd ')
-            maya_major = cmds.about(v=1)
-            cmd = author.Command( argv = ['rez-env', 'maya-{0}'.format(maya_major), 'ww_usd', 'mayausd-0.19', 'pymel-1.2', 'mtoa-4.2.4', '--', 'mayapy', py_content_path])
+
+            engine = sgtk.platform.current_engine()
+            project_info = item.context.project
+            maya_major = '{0}.{1}'.format(cmds.about(v=1), os.environ['REZ_MAYA_PATCH_VERSION'])
+
+            sg = engine.shotgun
+
+            filters = [
+                ['projects', 'is', {'type': 'Project', 'name': project_info['name'], 'id': project_info['id']}],
+                ['code', 'is', 'Maya '+ maya_major]
+            ]
+
+            fields = ['sg_rez']
+
+            rez_packages = sg.find_one('Software', filters, fields)
+            rez_packages_list = rez_packages['sg_rez'].split(',')
+
+            argv = ['rez-env']
+            argv += rez_packages_list
+            argv += ['--', 'mayapy', py_content_path]
+            
+            cmd = author.Command( argv = argv)
 
             task.addCommand( cmd )
             job.addChild( task )
