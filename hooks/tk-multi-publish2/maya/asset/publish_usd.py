@@ -559,8 +559,7 @@ class MayaSessionUSDPublishPlugin(HookBaseClass):
             content += '        pass\n\n'
 
             content += 'from WWUSD_MAYA import export_asset\n'
-            content += 'export_asset.set_project("{}")\n'.format(item.context.project['name'])
-            content += 'export_asset.export_asset( "{}" )\n'.format(asset)
+            content += 'export_asset.export_asset( "{0}", project="{1}" )\n'.format(asset, item.context.project['name'])
 
             # asset_list = []
 
