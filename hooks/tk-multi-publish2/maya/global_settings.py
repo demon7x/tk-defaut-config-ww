@@ -246,6 +246,12 @@ class BasicFilePublishPlugin(HookBaseClass):
     def publish( self, settings, item ):
         
         if not settings['note'].value :
+            print( '\n')
+            print( '@'*50 )
+            print( 'none note value' )
+            print( '@'*50 )
+            print( '\n')
+
             return
         proj            = item.context.project['name'] 
         pipeline_step   = item.context.task['name']
@@ -253,10 +259,19 @@ class BasicFilePublishPlugin(HookBaseClass):
         sframe          = settings['sframe'     ].value
         eframe          = settings['eframe'     ].value
         assembled_usd   = settings['usd_path'   ].value + os.sep + basename + '.usd'
-        mmCam_usd       = settings['usd_ver_path' ].value + os.sep + 'mmCam.usd'
-        mmGeom_usd      = settings['usd_ver_path' ].value + os.sep + 'mmGeom.usd'
-        mmCam_abc       = settings['abc_ver_path' ].value + os.sep + 'mmCam.abc'
-        mmGeom_abc      = settings['abc_ver_path' ].value + os.sep + 'mmGeom.abc'
+        if item.context.task == 'mm':
+            mmCam_usd       = settings['usd_ver_path' ].value + os.sep + 'mmCam.usd'
+            mmGeom_usd      = settings['usd_ver_path' ].value + os.sep + 'mmGeom.usd'
+            mmCam_abc       = settings['abc_ver_path' ].value + os.sep + 'mmCam.abc'
+            mmGeom_abc      = settings['abc_ver_path' ].value + os.sep + 'mmGeom.abc'
+        else:
+            mmCam_usd       = ''
+            mmGeom_usd      = ''
+            mmCam_abc       = ''
+            mmGeom_abc      = ''
+
+
+
         
         usd_asset_list =  mmGeom_usd 
         abc_asset_list =  mmGeom_abc 
@@ -271,6 +286,9 @@ class BasicFilePublishPlugin(HookBaseClass):
 
         print( '\n')
         print( '@'*50 )
+        print( note_content )
+        print( '@'*50 )
+        print( '\n')
         
         filters = [
                 ['project'  , 'is' , item.context.project   ],
@@ -548,13 +566,19 @@ def note_content_body(
     content += f'  {sframe} - {eframe}\n'
     content += f'3.Cache path\n\n'
     content += " ```\n"
-    content += '=========================='
-    content += 'Assmebled USD path:\n'
-    content += f'{assembled_usd}\n\n'
-    content += f'{usd_asset_list}\n'
-    content += '=========================='
-    content += 'ABC Cache path:\n'
-    content += f'{mmCam_abc}\n'
-    content += f'{abc_asset_list}\n'
+    if mmCam_usd or usd_asset_list:
+        content += '=========================='
+        content += 'Assmebled USD path:\n'
+        if assembled_usd:
+            content += f'{assembled_usd}\n\n'
+        if usd_asset_list:
+            content += f'{usd_asset_list}\n'
+    if mmCam_abc or abc_asset_list:
+        content += '=========================='
+        content += 'ABC Cache path:\n'
+        if mmCam_abc:
+            content += f'{mmCam_abc}\n'
+        if abc_asset_list:
+            content += f'{abc_asset_list}\n'
     content += " ```\n"
     return content
