@@ -376,6 +376,7 @@ class MayaSessionShotCameraAlembicExportPlugin(HookBaseClass):
             print( '\n' )
             exec( content )
 
+        item['asset_path'] = cam_abc_path
         super(MayaSessionShotCameraAlembicExportPlugin, self).publish(settings, item)
 
     def create_settings_widget( self , parent ):

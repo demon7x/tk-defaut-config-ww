@@ -382,7 +382,7 @@ class MayaSessionShotDummyUSDExportPlugin(HookBaseClass):
         else:
             exec( content )
 
-
+        item['asset_path'] = mmGeom_usd_path
         return super(MayaSessionShotDummyUSDExportPlugin, self).publish(settings, item)
 
     def create_settings_widget( self , parent ):

@@ -244,15 +244,37 @@ class BasicFilePublishPlugin(HookBaseClass):
 
 
     def publish( self, settings, item ):
+
+
+        usd_asset_list = [] 
+        abc_asset_list = []
+        for x in item.children :
+            for y in x.children:
+                if y.checked:
+                    print( '\n')
+                    print( y )
+                    print( '\n')
+                    if 'usd_cache_path' in y.properties.keys():
+                        print( 'usd : ' , y.properties['usd_cache_path'] )
+                        usd_asset_list.append( y.properties['usd_cache_path'] )
+                    elif 'abc_cache_path' in y.properties.keys():
+                        print( 'abc : ' , y.properties['abc_cache_path'] )
+                        abc_asset_list.append( y.properties['abc_cache_path'] )
+                
+        print( '\n')
+        print( '@'*50 )
+        print( '==== item.children =====' )
+        pprint.pprint( usd_asset_list )
+        pprint.pprint( abc_asset_list )
+        print( '@'*50 )
+        print( '\n')
         
         if not settings['note'].value :
-            print( '\n')
-            print( '@'*50 )
-            print( 'none note value' )
-            print( '@'*50 )
-            print( '\n')
-
+            print( '\n' )
+            print( 'Unchecked note' )
+            print( '\n' )
             return
+
         proj            = item.context.project['name'] 
         pipeline_step   = item.context.task['name']
         basename        = settings['basename'   ].value
@@ -273,8 +295,6 @@ class BasicFilePublishPlugin(HookBaseClass):
 
 
         
-        usd_asset_list =  mmGeom_usd 
-        abc_asset_list =  mmGeom_abc 
         ## Getting usd_asset_list
         
         note_content = note_content_body(
@@ -295,9 +315,11 @@ class BasicFilePublishPlugin(HookBaseClass):
                 ['entity'   , 'is' , item.context.entity    ],
                 ['sg_task'  , 'is' , item.context.task      ],
         ]
+        
+        _order = [{'field_name':'created_at','direction':'desc'}]
 
         sg = item.context.sgtk.shotgun
-        version = sg.find_one( 'Version', filters, )
+        version = sg.find_one( 'Version', filters, order = _order )
         if not version:
             return
 
@@ -337,8 +359,10 @@ class BasicFilePublishPlugin(HookBaseClass):
                     'subject' : '{} publish note'.format( basename ),
                     'content' : note_content,
                     'user' : item.context.user,
-                    'addressings_to' : assignees,
         }
+
+        if os.getenv('USER') != 'w10137':
+            note['addressings_to'] =  assignees
         note_result = sg.create( 'Note' ,  note )
         print( '_' * 50 )                
         pprint.pprint( note_result )
@@ -568,17 +592,21 @@ def note_content_body(
     content += " ```\n"
     if mmCam_usd or usd_asset_list:
         content += '=========================='
-        content += 'Assmebled USD path:\n'
+        if mmCam_usd:
+            content += f'{mmCam_usd}\n'
         if assembled_usd:
+            content += 'Assmebled USD path:\n'
             content += f'{assembled_usd}\n\n'
-        if usd_asset_list:
-            content += f'{usd_asset_list}\n'
+
+        for _usd_asset in usd_asset_list:
+            content += _usd_asset + '\n'
+
     if mmCam_abc or abc_asset_list:
-        content += '=========================='
+        content += '\n=========================='
         content += 'ABC Cache path:\n'
         if mmCam_abc:
             content += f'{mmCam_abc}\n'
-        if abc_asset_list:
-            content += f'{abc_asset_list}\n'
+        for _abc_asset in abc_asset_list:
+            content += _abc_asset + '\n'
     content += " ```\n"
     return content

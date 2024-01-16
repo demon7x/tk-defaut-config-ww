@@ -181,6 +181,8 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
         # for use in subsequent methods
         item.properties["publish_template"] = publish_template
 
+        item.properties['usd_cache_path'] = get_cache_path( item.name )
+
         # because a publish template is configured, disable context change. This
         # is a temporary measure until the publisher handles context switching
         # natively.
@@ -472,7 +474,6 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
             print( '\n' )
             exec( content ) 
 
-
         return super(MayaSessionShotComponentUSDPublishPlugin, self).publish(settings, item)   
 
 
@@ -494,6 +495,28 @@ class MayaSessionShotComponentUSDPublishPlugin(HookBaseClass):
 
 
 
+def get_cache_path( name ):
+    scene_path  = cmds.file( sn = 1 , q= 1 )
+    pub_path_part = scene_path.partition( 'dev' )[0] 
+    pipelien_step = pub_path_part.split( os.sep )[-2]
+
+    maya_path = os.path.join( pub_path_part, 'pub', 'maya' )
+    info_path = os.path.join( maya_path, 'info' )
+
+    pub_cache_path  = os.path.join( pub_path_part, 'pub', 'caches' )
+    usd_path = os.path.join( pub_cache_path, 'usd' )
+
+    ver = re.search( '_v[0-9]{3}', scene_path ).group()[2:] 
+    usd_ver_path = os.path.join( usd_path , ver )
+    child_list = cmds.listRelatives( name )
+    if child_list:
+        asset = child_list[0]
+        #asset = item.name
+        asset_name = asset.replace( ':' , '_' )
+        #asset_list.append(asset)
+
+        asset_usd_path =  os.path.join( usd_ver_path , asset_name + '.usd' ) 
+    return asset_usd_path
 
 
 def _session_path():

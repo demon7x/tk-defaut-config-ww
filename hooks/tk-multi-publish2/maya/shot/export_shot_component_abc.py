@@ -156,6 +156,8 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
         # for use in subsequent methods
         item.properties["publish_template"] = publish_template
 
+        item.properties['abc_cache_path'] = get_cache_path( item.name )
+
         # check that the AbcExport command is available!
         if not mel.eval("exists \"AbcExport\""):
             self.logger.debug(
@@ -364,7 +366,6 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             print( '\n' )
             exec( content )
 
-
         return super(MayaSessionComponentAlembicPublishPlugin , self).publish( settings, item )
 
 
@@ -383,6 +384,28 @@ class MayaSessionComponentAlembicPublishPlugin(HookBaseClass):
             if pub_sg:
                 widget.pub_sg = pub_sg
 
+def get_cache_path( name ):
+    scene_path  = cmds.file( sn = 1 , q= 1 )
+    pub_path_part = scene_path.partition( 'dev' )[0] 
+    pipelien_step = pub_path_part.split( os.sep )[-2]
+
+    maya_path = os.path.join( pub_path_part, 'pub', 'maya' )
+    info_path = os.path.join( maya_path, 'info' )
+
+    pub_cache_path  = os.path.join( pub_path_part, 'pub', 'caches' )
+    abc_path = os.path.join( pub_cache_path, 'abc' )
+
+    ver = re.search( '_v[0-9]{3}', scene_path ).group()[2:] 
+    abc_ver_path = os.path.join( abc_path , ver )
+    child_list = cmds.listRelatives( name )
+    if child_list:
+        asset = child_list[0]
+        #asset = item.name
+        asset_name = asset.replace( ':' , '_' )
+        #asset_list.append(asset)
+
+        asset_abc_path =  os.path.join( abc_ver_path , asset_name + '.abc' ) 
+    return asset_abc_path
 
 
 def _session_path():

@@ -366,7 +366,7 @@ class MayaSessionShotDummyAlembicExportPlugin(HookBaseClass):
             print( '\n' )
             exec( content )
 
-
+        item['asset_path'] = mmGeom_abc_path
         return super(MayaSessionShotDummyAlembicExportPlugin, self).publish( settings, item )
 
     def create_settings_widget( self , parent ):
